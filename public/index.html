@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santa'nın Gizli Görevi | Santa's Secret Mission</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="snowfall"></div>
+    
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h2 data-tr="Giriş Yap" data-en="Login">Giriş Yap</h2>
+            <p class="modal-subtitle" data-tr="Sosyal medya hesabınla giriş yap" data-en="Login with your social media account">Sosyal medya hesabınla giriş yap</p>
+            
+            <div class="social-login-buttons">
+                <button class="social-btn google-btn">
+                    <span class="social-icon">G</span>
+                    <span data-tr="Google ile Giriş" data-en="Login with Google">Google ile Giriş</span>
+                </button>
+                <button class="social-btn twitter-btn">
+                    <span class="social-icon">𝕏</span>
+                    <span data-tr="Twitter ile Giriş" data-en="Login with Twitter">Twitter ile Giriş</span>
+                </button>
+                <button class="social-btn instagram-btn">
+                    <span class="social-icon">📷</span>
+                    <span data-tr="Instagram ile Giriş" data-en="Login with Instagram">Instagram ile Giriş</span>
+                </button>
+            </div>
+            
+            <p class="modal-note" data-tr="Not: Giriş sistemi yakında aktif olacak" data-en="Note: Login system coming soon">Not: Giriş sistemi yakında aktif olacak</p>
+        </div>
+    </div>
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-text" data-tr="Santa'nın Gizli Görevi" data-en="Santa's Secret Mission">Santa'nın Gizli Görevi</span>
+            </div>
+            <div class="nav-right">
+                <div class="language-switcher">
+                    <button class="lang-btn active" data-lang="tr">🇹🇷 TR</button>
+                    <button class="lang-btn" data-lang="en">🇺🇸 EN</button>
+                </div>
+                <button class="login-btn" id="loginBtn" data-tr="Giriş Yap" data-en="Login">Giriş Yap</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title" data-tr="Santa'nın Gizli Görevi" data-en="Santa's Secret Mission">Santa'nın Gizli Görevi</h1>
+            <p class="hero-subtitle" data-tr="Bu yılbaşında Santa'ya yardım et ve sihirli görevini tamamla!" data-en="Help Santa this Christmas and complete his magical mission!">Bu yılbaşında Santa'ya yardım et ve sihirli görevini tamamla!</p>
+            <button class="cta-button" data-tr="Göreve Başla" data-en="Start Mission">Göreve Başla</button>
+        </div>
+        
+
+    </main>
+
+    <section class="mission-section">
+        <div class="container">
+            <h2 data-tr="Görev Detayları" data-en="Mission Details">Görev Detayları</h2>
+            <div class="mission-cards">
+                <div class="mission-card">
+                    <div class="card-icon">🎁</div>
+                    <h3 data-tr="Hediyeleri Topla" data-en="Collect Gifts">Hediyeleri Topla</h3>
+                    <p data-tr="Dünyanın dört bir yanındaki hediyeleri topla" data-en="Collect gifts from around the world">Dünyanın dört bir yanındaki hediyeleri topla</p>
+                </div>
+                <div class="mission-card">
+                    <div class="card-icon">🦌</div>
+                    <h3 data-tr="Ren Geyiklerini Bul" data-en="Find Reindeer">Ren Geyiklerini Bul</h3>
+                    <p data-tr="Kayıp ren geyiklerini bulup Santa'ya getir" data-en="Find lost reindeer and bring them to Santa">Kayıp ren geyiklerini bulup Santa'ya getir</p>
+                </div>
+                <div class="mission-card">
+                    <div class="card-icon">⭐</div>
+                    <h3 data-tr="Yıldızı Yakala" data-en="Catch the Star">Yıldızı Yakala</h3>
+                    <p data-tr="Sihirli yıldızı yakala ve yılbaşı mucizesini başlat" data-en="Catch the magic star and start the Christmas miracle">Sihirli yıldızı yakala ve yılbaşı mucizesini başlat</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p data-tr="© 2025 Santa'nın Gizli Görevi - Tüm hakları saklıdır" data-en="© 2025 Santa's Secret Mission - All rights reserved">© 2025 Santa'nın Gizli Görevi - Tüm hakları saklıdır</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
