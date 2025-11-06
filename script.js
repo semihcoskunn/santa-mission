@@ -83,10 +83,7 @@ class LanguageManager {
             const googleBtn = document.querySelector('.google-btn');
             if (googleBtn) {
                 googleBtn.addEventListener('click', () => {
-                    const backendUrl = window.location.hostname === 'localhost' 
-                        ? 'http://localhost:3000'
-                        : 'https://santa-secret-mission.vercel.app';
-                    window.location.href = `${backendUrl}/auth/google`;
+                    window.location.href = 'http://localhost:3000/auth/google';
                 });
             }
             
@@ -106,10 +103,7 @@ class LanguageManager {
 
     async checkUserStatus() {
         try {
-            const backendUrl = window.location.hostname === 'localhost' 
-                ? 'http://localhost:3000'
-                : 'https://santa-secret-mission.vercel.app';
-            const response = await fetch(`${backendUrl}/api/user`, {
+            const response = await fetch('http://localhost:3000/api/user', {
                 credentials: 'include'
             });
             
@@ -138,10 +132,7 @@ class LanguageManager {
             loginBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
             loginBtn.onclick = () => {
                 if (confirm(this.currentLang === 'tr' ? 'Çıkış yapmak istiyor musunuz?' : 'Do you want to logout?')) {
-                    const backendUrl = window.location.hostname === 'localhost' 
-                        ? 'http://localhost:3000'
-                        : 'https://santa-secret-mission.vercel.app';
-                    window.location.href = `${backendUrl}/logout`;
+                    window.location.href = 'http://localhost:3000/logout';
                 }
             };
         }
