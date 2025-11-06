@@ -1,31 +1,16 @@
 {
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/auth/(.*)",
-      "dest": "/api/index.js"
+      "source": "/auth/:path*",
+      "destination": "/api"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "/api/index.js"
+      "source": "/api/:path*",
+      "destination": "/api"
     },
     {
-      "src": "/logout",
-      "dest": "/api/index.js"
-    },
-    {
-      "src": "/(.*\\.(css|js|html|png|jpg|jpeg|gif|svg|ico))",
-      "dest": "/$1"
-    },
-    {
-      "src": "/",
-      "dest": "/index.html"
+      "source": "/logout",
+      "destination": "/api"
     }
   ]
 }
