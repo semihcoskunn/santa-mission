@@ -1,0 +1,8 @@
+{
+  "name": "santa-mission",
+  "version": "1.0.0",
+  "description": "Santa's Secret Mission - Christmas Game",
+  "scripts": {
+    "start": "node backend/server.js"
+  }
+}
