@@ -9,8 +9,8 @@ const app = express();
 
 app.use(cors({ 
     origin: process.env.NODE_ENV === 'production' 
-        ? process.env.FRONTEND_URL || 'https://your-project.vercel.app'
-        : 'http://localhost:8080', 
+        ? 'https://semihcoskun.com.tr'
+        : 'http://localhost:5500', 
     credentials: true 
 }));
 
@@ -30,8 +30,8 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID !== 'your_googl
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: process.env.NODE_ENV === 'production'
-        ? `${process.env.BACKEND_URL || 'https://your-project.vercel.app'}/auth/google/callback`
-        : "http://localhost:3000/auth/google/callback"
+        ? 'https://semihcoskun.com.tr/auth/google/callback'
+        : 'http://localhost:3000/auth/google/callback'
       },
       (accessToken, refreshToken, profile, done) => {
         console.log('Google Profile:', profile);
@@ -78,10 +78,14 @@ app.get('/auth/google', (req, res, next) => {
 
 app.get('/auth/google/callback', 
     passport.authenticate('google', { 
-        failureRedirect: process.env.FRONTEND_URL || 'http://localhost:8080' 
+        failureRedirect: process.env.NODE_ENV === 'production' 
+            ? 'https://semihcoskun.com.tr' 
+            : 'http://localhost:5500'
     }),
     (req, res) => {
-        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+        const frontendUrl = process.env.NODE_ENV === 'production' 
+            ? 'https://semihcoskun.com.tr' 
+            : 'http://localhost:5500';
         res.redirect(`${frontendUrl}?login=success`);
     }
 );
@@ -105,7 +109,9 @@ app.get('/api/user', (req, res) => {
 app.get('/logout', (req, res) => {
     req.logout((err) => {
         if (err) return res.status(500).json({ error: err });
-        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+        const frontendUrl = process.env.NODE_ENV === 'production' 
+            ? 'https://semihcoskun.com.tr' 
+            : 'http://localhost:5500';
         res.redirect(frontendUrl);
     });
 });
