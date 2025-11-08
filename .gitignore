@@ -3,3 +3,8 @@ node_modules/
 *.log
 .DS_Store
 .vercel
+backend/
+api/
+package.json
+DEPLOY.md
+KURULUM.md
