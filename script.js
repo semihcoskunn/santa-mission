@@ -89,18 +89,6 @@ class LanguageManager {
                     window.location.href = `${backendUrl}/auth/google`;
                 });
             }
-            
-            // Diğer sosyal medya butonları (henüz aktif değil)
-            const otherBtns = document.querySelectorAll('.twitter-btn, .instagram-btn');
-            otherBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const messages = {
-                        tr: 'Bu giriş yöntemi yakında aktif olacak! 🎅',
-                        en: 'This login method coming soon! 🎅'
-                    };
-                    alert(messages[this.currentLang]);
-                });
-            });
         }
     }
 
