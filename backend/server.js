@@ -8,9 +8,7 @@ require('dotenv').config();
 const app = express();
 
 app.use(cors({ 
-    origin: process.env.NODE_ENV === 'production' 
-        ? 'https://semihcoskun.com.tr'
-        : 'http://localhost:5500', 
+    origin: ['https://semihcoskun.com.tr', 'http://localhost:5500', 'http://127.0.0.1:5500'], 
     credentials: true 
 }));
 
@@ -78,15 +76,10 @@ app.get('/auth/google', (req, res, next) => {
 
 app.get('/auth/google/callback', 
     passport.authenticate('google', { 
-        failureRedirect: process.env.NODE_ENV === 'production' 
-            ? 'https://semihcoskun.com.tr' 
-            : 'http://localhost:5500'
+        failureRedirect: 'https://semihcoskun.com.tr'
     }),
     (req, res) => {
-        const frontendUrl = process.env.NODE_ENV === 'production' 
-            ? 'https://semihcoskun.com.tr' 
-            : 'http://localhost:5500';
-        res.redirect(`${frontendUrl}?login=success`);
+        res.redirect('https://semihcoskun.com.tr?login=success');
     }
 );
 
@@ -109,10 +102,7 @@ app.get('/api/user', (req, res) => {
 app.get('/logout', (req, res) => {
     req.logout((err) => {
         if (err) return res.status(500).json({ error: err });
-        const frontendUrl = process.env.NODE_ENV === 'production' 
-            ? 'https://semihcoskun.com.tr' 
-            : 'http://localhost:5500';
-        res.redirect(frontendUrl);
+        res.redirect('https://semihcoskun.com.tr');
     });
 });
 

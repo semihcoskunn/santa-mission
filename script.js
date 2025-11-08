@@ -83,10 +83,7 @@ class LanguageManager {
             const googleBtn = document.querySelector('.google-btn');
             if (googleBtn) {
                 googleBtn.addEventListener('click', () => {
-                    const isLocal = window.location.hostname === 'localhost' || 
-                                   window.location.hostname === '127.0.0.1' ||
-                                   window.location.hostname.includes('192.168');
-                    const backendUrl = isLocal ? 'http://localhost:3000' : 'https://semihcoskun.com.tr';
+                    const backendUrl = 'https://hybridizable-russel-abridgeable.ngrok-free.dev';
                     console.log('Backend URL:', backendUrl);
                     window.location.href = `${backendUrl}/auth/google`;
                 });
@@ -96,10 +93,7 @@ class LanguageManager {
 
     async checkUserStatus() {
         try {
-            const isLocal = window.location.hostname === 'localhost' || 
-                           window.location.hostname === '127.0.0.1' ||
-                           window.location.hostname.includes('192.168');
-            const backendUrl = isLocal ? 'http://localhost:3000' : 'https://semihcoskun.com.tr';
+            const backendUrl = 'https://hybridizable-russel-abridgeable.ngrok-free.dev';
             const response = await fetch(`${backendUrl}/api/user`, {
                 credentials: 'include'
             });
@@ -169,10 +163,7 @@ class LanguageManager {
             document.getElementById('logoutBtn').onclick = (e) => {
                 e.preventDefault();
                 if (confirm(this.currentLang === 'tr' ? 'Çıkış yapmak istiyor musunuz?' : 'Do you want to logout?')) {
-                    const isLocal = window.location.hostname === 'localhost' || 
-                                   window.location.hostname === '127.0.0.1' ||
-                                   window.location.hostname.includes('192.168');
-                    const backendUrl = isLocal ? 'http://localhost:3000' : 'https://semihcoskun.com.tr';
+                    const backendUrl = 'https://hybridizable-russel-abridgeable.ngrok-free.dev';
                     window.location.href = `${backendUrl}/logout`;
                 }
             };
