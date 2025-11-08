@@ -83,6 +83,7 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
+    position: relative;
 }
 
 .logo-text {
@@ -129,6 +130,102 @@ body {
 .login-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+/* User Profile Menu */
+.user-menu {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    min-width: 280px;
+    z-index: 1000;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.user-menu-header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 3px solid #e74c3c;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.user-email {
+    font-size: 12px;
+    color: #7f8c8d;
+}
+
+.user-menu-items {
+    padding: 10px 0;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: #2c3e50;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.menu-item:hover {
+    background: rgba(231, 76, 60, 0.1);
+    padding-left: 25px;
+}
+
+.menu-icon {
+    font-size: 20px;
+}
+
+.notification-badge {
+    position: absolute;
+    right: 20px;
+    background: #e74c3c;
+    color: white;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.menu-divider {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 5px 0;
 }
 
 /* Login Modal */
@@ -234,31 +331,6 @@ body {
 .google-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(66, 133, 244, 0.4);
-}
-
-.twitter-btn {
-    background: linear-gradient(45deg, #1da1f2, #0d8bd9);
-}
-
-.twitter-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(29, 161, 242, 0.4);
-}
-
-.instagram-btn {
-    background: linear-gradient(45deg, #e1306c, #fd1d1d, #f77737);
-}
-
-.instagram-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(225, 48, 108, 0.4);
-}
-
-.modal-note {
-    text-align: center;
-    color: #999;
-    font-size: 0.9rem;
-    margin-top: 1.5rem;
 }
 
 /* Hero Section */

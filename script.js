@@ -83,9 +83,11 @@ class LanguageManager {
             const googleBtn = document.querySelector('.google-btn');
             if (googleBtn) {
                 googleBtn.addEventListener('click', () => {
-                    const backendUrl = window.location.hostname === 'localhost' 
-                        ? 'http://localhost:3000'
-                        : 'https://semihcoskun.com.tr';
+                    const isLocal = window.location.hostname === 'localhost' || 
+                                   window.location.hostname === '127.0.0.1' ||
+                                   window.location.hostname.includes('192.168');
+                    const backendUrl = isLocal ? 'http://localhost:3000' : 'https://semihcoskun.com.tr';
+                    console.log('Backend URL:', backendUrl);
                     window.location.href = `${backendUrl}/auth/google`;
                 });
             }
@@ -94,9 +96,10 @@ class LanguageManager {
 
     async checkUserStatus() {
         try {
-            const backendUrl = window.location.hostname === 'localhost' 
-                ? 'http://localhost:3000'
-                : 'https://semihcoskun.com.tr';
+            const isLocal = window.location.hostname === 'localhost' || 
+                           window.location.hostname === '127.0.0.1' ||
+                           window.location.hostname.includes('192.168');
+            const backendUrl = isLocal ? 'http://localhost:3000' : 'https://semihcoskun.com.tr';
             const response = await fetch(`${backendUrl}/api/user`, {
                 credentials: 'include'
             });
@@ -121,14 +124,55 @@ class LanguageManager {
 
     updateUIForLoggedInUser(user) {
         const loginBtn = document.getElementById('loginBtn');
-        if (loginBtn) {
+        const userMenu = document.getElementById('userMenu');
+        const loginModal = document.getElementById('loginModal');
+        
+        if (loginBtn && userMenu) {
             loginBtn.textContent = user.name;
             loginBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
-            loginBtn.onclick = () => {
+            
+            // Profil bilgilerini doldur
+            document.getElementById('userAvatar').src = user.photo;
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userEmail').textContent = user.email;
+            
+            // Login butonuna tıklayınca menüyü aç/kapat
+            loginBtn.onclick = (e) => {
+                e.stopPropagation();
+                loginModal.classList.remove('active');
+                userMenu.style.display = userMenu.style.display === 'none' ? 'block' : 'none';
+            };
+            
+            // Menü dışına tıklayınca kapat
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target) && e.target !== loginBtn) {
+                    userMenu.style.display = 'none';
+                }
+            });
+            
+            // Menü butonları
+            document.getElementById('profileBtn').onclick = (e) => {
+                e.preventDefault();
+                alert(this.currentLang === 'tr' ? 'Profil sayfası yakında!' : 'Profile page coming soon!');
+            };
+            
+            document.getElementById('notificationsBtn').onclick = (e) => {
+                e.preventDefault();
+                alert(this.currentLang === 'tr' ? 'Bildirimler yakında!' : 'Notifications coming soon!');
+            };
+            
+            document.getElementById('settingsBtn').onclick = (e) => {
+                e.preventDefault();
+                alert(this.currentLang === 'tr' ? 'Ayarlar yakında!' : 'Settings coming soon!');
+            };
+            
+            document.getElementById('logoutBtn').onclick = (e) => {
+                e.preventDefault();
                 if (confirm(this.currentLang === 'tr' ? 'Çıkış yapmak istiyor musunuz?' : 'Do you want to logout?')) {
-                    const backendUrl = window.location.hostname === 'localhost' 
-                        ? 'http://localhost:3000'
-                        : 'https://semihcoskun.com.tr';
+                    const isLocal = window.location.hostname === 'localhost' || 
+                                   window.location.hostname === '127.0.0.1' ||
+                                   window.location.hostname.includes('192.168');
+                    const backendUrl = isLocal ? 'http://localhost:3000' : 'https://semihcoskun.com.tr';
                     window.location.href = `${backendUrl}/logout`;
                 }
             };
