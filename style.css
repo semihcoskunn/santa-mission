@@ -544,7 +544,7 @@ body {
 /* Hediye Paketi Oyunu */
 .gift-box {
     position: fixed;
-    font-size: 50px;
+    font-size: 70px;
     cursor: pointer;
     z-index: 999;
     animation: giftBounce 1s ease-in-out infinite;
@@ -557,7 +557,7 @@ body {
 
 @keyframes giftBounce {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-5px); }
 }
 
 @keyframes giftCollect {

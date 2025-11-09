@@ -304,6 +304,10 @@ class GameManager {
     }
 
     async collectIcon(icon, iconData) {
+        if (!icon.parentNode || icon.dataset.collected) return;
+        icon.dataset.collected = 'true';
+        icon.style.pointerEvents = 'none';
+        
         const rect = icon.getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
