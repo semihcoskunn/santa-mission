@@ -32,9 +32,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID !== 'your_googl
     passport.use(new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: process.env.NODE_ENV === 'production'
-        ? 'https://semihcoskun.com.tr/auth/google/callback'
-        : 'http://localhost:3000/auth/google/callback'
+        callbackURL: 'https://hybridizable-russel-abridgeable.ngrok-free.dev/auth/google/callback'
       },
       (accessToken, refreshToken, profile, done) => {
         console.log('Google Profile:', profile);
