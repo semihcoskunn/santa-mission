@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santa'nın Hediye Avı 🎁</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="game.css">
+</head>
+<body>
+    <!-- Kar Efekti -->
+    <div class="snowfall"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo-text">🎅 Santa'nın Hediye Avı</div>
+            <div class="nav-right">
+                <button class="back-btn" onclick="window.location.href='index.html'">
+                    ← Ana Sayfa
+                </button>
+                <button class="login-btn" id="loginBtn">Giriş Yap</button>
+                <div class="user-menu" id="userMenu" style="display: none;">
+                    <div class="user-menu-header">
+                        <img src="" alt="Avatar" class="user-avatar" id="userAvatar">
+                        <div class="user-info">
+                            <div class="user-name" id="userName"></div>
+                            <div class="user-email" id="userEmail"></div>
+                        </div>
+                    </div>
+                    <div class="user-menu-items">
+                        <a href="#" class="menu-item" id="profileBtn">
+                            <span class="menu-icon">👤</span>
+                            <span>Profil</span>
+                        </a>
+                        <a href="#" class="menu-item" id="settingsBtn">
+                            <span class="menu-icon">⚙️</span>
+                            <span>Ayarlar</span>
+                        </a>
+                        <hr class="menu-divider">
+                        <a href="#" class="menu-item" id="logoutBtn">
+                            <span class="menu-icon">🚪</span>
+                            <span>Çıkış Yap</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Günlük Görevler Panel -->
+    <div class="quests-panel" id="questsPanel">
+        <div class="quests-header">
+            <h3>🌟 Günlük Görevler</h3>
+            <button class="toggle-quests" id="toggleQuests">−</button>
+        </div>
+        <div class="quests-content" id="questsContent">
+            <div class="quest-item" data-quest="collect5">
+                <div class="quest-info">
+                    <span class="quest-emoji">🎁</span>
+                    <span class="quest-text">5 Hediye Topla</span>
+                </div>
+                <div class="quest-reward">+50</div>
+                <div class="quest-progress-mini">0/5</div>
+            </div>
+            <div class="quest-item" data-quest="collect10">
+                <div class="quest-info">
+                    <span class="quest-emoji">🔥</span>
+                    <span class="quest-text">10 İkon Topla</span>
+                </div>
+                <div class="quest-reward">+100</div>
+                <div class="quest-progress-mini">0/10</div>
+            </div>
+            <div class="quest-item" data-quest="combo5">
+                <div class="quest-info">
+                    <span class="quest-emoji">⚡</span>
+                    <span class="quest-text">5 Combo Yap</span>
+                </div>
+                <div class="quest-reward">+150</div>
+                <div class="quest-progress-mini">0/5</div>
+            </div>
+            <div class="quest-item" data-quest="score200">
+                <div class="quest-info">
+                    <span class="quest-emoji">🏆</span>
+                    <span class="quest-text">200 Puan Kazan</span>
+                </div>
+                <div class="quest-reward">+200</div>
+                <div class="quest-progress-mini">0/200</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Section -->
+    <section class="game-section">
+        <div class="game-container">
+            <div class="game-header">
+                <h1 class="game-title">🎁 Hediye Avı Başladı!</h1>
+                <p class="game-subtitle">Ekranda beliren hediyeleri, ren geyiklerini ve yıldızları yakala!</p>
+            </div>
+
+            <div class="game-info">
+                <div class="info-card">
+                    <div class="info-icon">🎁</div>
+                    <div class="info-text">
+                        <div class="info-title">Hediye Paketi</div>
+                        <div class="info-desc">1 dakikada bir • 10 Puan</div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">🦌</div>
+                    <div class="info-text">
+                        <div class="info-title">Ren Geyiği</div>
+                        <div class="info-desc">5 dakikada bir • 25 Puan</div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">⭐</div>
+                    <div class="info-text">
+                        <div class="info-title">Yıldız</div>
+                        <div class="info-desc">30 dakikada bir • 50 Puan</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-status">
+                <div class="status-message" id="statusMessage">
+                    Giriş yap ve oyuna başla! 🎮
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h2>Hoş Geldin! 🎅</h2>
+            <p class="modal-subtitle">Oyuna başlamak için giriş yap</p>
+            <div class="social-login-buttons">
+                <button class="social-btn google-btn">
+                    <span class="social-icon">🔐</span>
+                    <span>Google ile Giriş Yap</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

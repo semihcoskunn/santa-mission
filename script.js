@@ -2,6 +2,9 @@
 class LanguageManager {
     constructor() {
         this.currentLang = 'tr';
+        this.score = 0;
+        this.isLoggedIn = false;
+        this.giftInterval = null;
         this.init();
     }
 
@@ -10,6 +13,119 @@ class LanguageManager {
         this.setupLanguageSwitcher();
         this.setupMissionButton();
         this.setupLoginButton();
+    }
+
+    setupGiftGame() {
+        // Sadece giriş yapmış kullanıcılar için
+        if (this.isLoggedIn && !this.giftInterval) {
+            this.activeIcon = null; // Şu anda aktif ikon var mı?
+            this.scheduleNextIcon();
+            this.updateScoreDisplay();
+        }
+    }
+
+    scheduleNextIcon() {
+        if (!this.isLoggedIn) return;
+        
+        // Rastgele ikon seç
+        const icons = [
+            { emoji: '🎁', points: 5, name: 'Hediye', weight: 60 },  // 60% şans
+            { emoji: '🦌', points: 10, name: 'Ren Geyik', weight: 30 }, // 30% şans
+            { emoji: '⭐', points: 20, name: 'Yıldız', weight: 10 }  // 10% şans
+        ];
+        
+        // Ağırlıklı rastgele seçim
+        const totalWeight = icons.reduce((sum, icon) => sum + icon.weight, 0);
+        let random = Math.random() * totalWeight;
+        let selectedIcon = icons[0];
+        
+        for (const icon of icons) {
+            if (random < icon.weight) {
+                selectedIcon = icon;
+                break;
+            }
+            random -= icon.weight;
+        }
+        
+        // Süreyi belirle (TEST MODU)
+        let delay;
+        if (selectedIcon.emoji === '🎁') {
+            delay = 5000; // 5 saniye (TEST)
+        } else if (selectedIcon.emoji === '🦌') {
+            delay = 15000; // 15 saniye (TEST)
+        } else {
+            delay = 30000; // 30 saniye (TEST)
+        }
+        
+        setTimeout(() => {
+            if (!this.activeIcon) {
+                this.spawnIcon(selectedIcon);
+            }
+            this.scheduleNextIcon();
+        }, delay);
+    }
+
+    spawnIcon(iconData) {
+        if (this.activeIcon) return; // Zaten bir ikon varsa çıkarma
+        
+        const icon = document.createElement('div');
+        icon.className = 'gift-box';
+        icon.innerHTML = iconData.emoji;
+        icon.style.left = Math.random() * (window.innerWidth - 60) + 'px';
+        icon.style.top = Math.random() * (window.innerHeight - 60) + 'px';
+        icon.dataset.points = iconData.points;
+        icon.dataset.name = iconData.name;
+        
+        this.activeIcon = icon;
+        
+        icon.addEventListener('click', () => {
+            this.collectIcon(icon, iconData);
+        });
+        
+        document.body.appendChild(icon);
+        
+        // 10 saniye sonra kaybolsun
+        setTimeout(() => {
+            if (icon.parentNode) {
+                icon.remove();
+                this.activeIcon = null;
+            }
+        }, 10000);
+    }
+
+    collectIcon(icon, iconData) {
+        this.score += iconData.points;
+        this.updateScoreDisplay();
+        
+        // Animasyon
+        icon.style.animation = 'giftCollect 0.5s ease-out';
+        setTimeout(() => {
+            icon.remove();
+            this.activeIcon = null;
+        }, 500);
+        
+        // Bildirim
+        this.showNotification(`+${iconData.points} Puan! ${iconData.emoji}`);
+    }
+
+    updateScoreDisplay() {
+        let scoreEl = document.getElementById('scoreDisplay');
+        if (!scoreEl) {
+            scoreEl = document.createElement('div');
+            scoreEl.id = 'scoreDisplay';
+            scoreEl.className = 'score-display';
+            document.body.appendChild(scoreEl);
+        }
+        scoreEl.innerHTML = `<span style="font-size: 20px; font-weight: 700;">${this.score}</span> <span style="opacity: 0.9;">Puan</span>`;
+    }
+
+    showNotification(message) {
+        const notif = document.createElement('div');
+        notif.className = 'gift-notification';
+        notif.textContent = message;
+        document.body.appendChild(notif);
+        
+        setTimeout(() => notif.remove(), 2000);
     }
 
     setupLanguageSwitcher() {
@@ -45,11 +161,7 @@ class LanguageManager {
     setupMissionButton() {
         const ctaButton = document.querySelector('.cta-button');
         ctaButton.addEventListener('click', () => {
-            const messages = {
-                tr: 'Görev yakında başlayacak! 🎅✨',
-                en: 'Mission starting soon! 🎅✨'
-            };
-            alert(messages[this.currentLang]);
+            window.location.href = 'game.html';
         });
     }
 
@@ -62,15 +174,19 @@ class LanguageManager {
         this.checkUserStatus();
         
         if (loginBtn && loginModal) {
-            // Modal aç
+            // Modal aç (sadece giriş yapılmamışsa)
             loginBtn.addEventListener('click', () => {
-                loginModal.classList.add('active');
+                if (!this.isLoggedIn) {
+                    loginModal.classList.add('active');
+                }
             });
             
             // Modal kapat (X butonu)
-            closeModal.addEventListener('click', () => {
-                loginModal.classList.remove('active');
-            });
+            if (closeModal) {
+                closeModal.addEventListener('click', () => {
+                    loginModal.classList.remove('active');
+                });
+            }
             
             // Modal kapat (dışarı tıklama)
             loginModal.addEventListener('click', (e) => {
@@ -83,7 +199,7 @@ class LanguageManager {
             const googleBtn = document.querySelector('.google-btn');
             if (googleBtn) {
                 googleBtn.addEventListener('click', () => {
-                    const backendUrl = 'https://hybridizable-russel-abridgeable.ngrok-free.dev';
+                    const backendUrl = 'http://localhost:3000';
                     console.log('Backend URL:', backendUrl);
                     window.location.href = `${backendUrl}/auth/google`;
                 });
@@ -93,7 +209,7 @@ class LanguageManager {
 
     async checkUserStatus() {
         try {
-            const backendUrl = 'https://hybridizable-russel-abridgeable.ngrok-free.dev';
+            const backendUrl = 'http://localhost:3000';
             const response = await fetch(`${backendUrl}/api/user`, {
                 credentials: 'include'
             });
@@ -121,6 +237,9 @@ class LanguageManager {
         const userMenu = document.getElementById('userMenu');
         const loginModal = document.getElementById('loginModal');
         
+        // Kullanıcı giriş yaptı
+        this.isLoggedIn = true;
+        
         if (loginBtn && userMenu) {
             loginBtn.textContent = user.name;
             loginBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
@@ -147,7 +266,7 @@ class LanguageManager {
             // Menü butonları
             document.getElementById('profileBtn').onclick = (e) => {
                 e.preventDefault();
-                alert(this.currentLang === 'tr' ? 'Profil sayfası yakında!' : 'Profile page coming soon!');
+                window.location.href = 'profile.html';
             };
             
             document.getElementById('notificationsBtn').onclick = (e) => {
@@ -163,7 +282,7 @@ class LanguageManager {
             document.getElementById('logoutBtn').onclick = (e) => {
                 e.preventDefault();
                 if (confirm(this.currentLang === 'tr' ? 'Çıkış yapmak istiyor musunuz?' : 'Do you want to logout?')) {
-                    const backendUrl = 'https://hybridizable-russel-abridgeable.ngrok-free.dev';
+                    const backendUrl = 'http://localhost:3000';
                     window.location.href = `${backendUrl}/logout`;
                 }
             };

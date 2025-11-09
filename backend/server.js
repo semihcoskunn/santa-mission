@@ -17,8 +17,7 @@ app.use(session({
     resave: false, 
     saveUninitialized: false,
     cookie: { 
-        secure: true,
-        sameSite: 'none',
+        secure: false,
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000 // 24 saat
     }
@@ -32,7 +31,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID !== 'your_googl
     passport.use(new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: 'https://hybridizable-russel-abridgeable.ngrok-free.dev/auth/google/callback'
+        callbackURL: 'http://localhost:3000/auth/google/callback'
       },
       (accessToken, refreshToken, profile, done) => {
         console.log('Google Profile:', profile);
@@ -79,10 +78,10 @@ app.get('/auth/google', (req, res, next) => {
 
 app.get('/auth/google/callback', 
     passport.authenticate('google', { 
-        failureRedirect: 'https://semihcoskun.com.tr'
+        failureRedirect: 'http://localhost:5500'
     }),
     (req, res) => {
-        res.redirect('https://semihcoskun.com.tr?login=success');
+        res.redirect('http://localhost:5500?login=success');
     }
 );
 
@@ -105,7 +104,7 @@ app.get('/api/user', (req, res) => {
 app.get('/logout', (req, res) => {
     req.logout((err) => {
         if (err) return res.status(500).json({ error: err });
-        res.redirect('https://semihcoskun.com.tr');
+        res.redirect('http://localhost:5500');
     });
 });
 

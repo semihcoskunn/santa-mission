@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profilim - Santa'nın Gizli Görevi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <div class="snowfall"></div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo-text">🎅 Santa'nın Gizli Görevi</div>
+            <div class="nav-right">
+                <button class="back-btn" onclick="window.location.href='index.html'">← Ana Sayfa</button>
+                <button class="login-btn" id="loginBtn">Giriş Yap</button>
+                <div class="user-menu" id="userMenu" style="display: none;">
+                    <div class="user-menu-header">
+                        <img src="" alt="Avatar" class="user-avatar" id="userAvatar">
+                        <div class="user-info">
+                            <div class="user-name" id="userName"></div>
+                            <div class="user-email" id="userEmail"></div>
+                        </div>
+                    </div>
+                    <div class="user-menu-items">
+                        <a href="profile.html" class="menu-item">
+                            <span class="menu-icon">👤</span>
+                            <span>Profil</span>
+                        </a>
+                        <a href="#" class="menu-item" id="settingsBtn">
+                            <span class="menu-icon">⚙️</span>
+                            <span>Ayarlar</span>
+                        </a>
+                        <hr class="menu-divider">
+                        <a href="#" class="menu-item" id="logoutBtn">
+                            <span class="menu-icon">🚪</span>
+                            <span>Çıkış Yap</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="profile-section">
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-avatar-large" id="profileAvatarLarge"></div>
+                <h1 class="profile-name" id="profileName">Yükleniyor...</h1>
+                <p class="profile-email" id="profileEmail"></p>
+            </div>
+
+            <div class="profile-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">🎁</div>
+                    <div class="stat-value" id="totalScore">0</div>
+                    <div class="stat-label">Toplam Puan</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-value" id="totalStreak">0</div>
+                    <div class="stat-label">Toplam Toplama</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value" id="userRank">-</div>
+                    <div class="stat-label">Sıralama</div>
+                </div>
+            </div>
+
+            <div class="profile-achievements">
+                <h2 class="section-title">🏅 Başarılar</h2>
+                <div class="achievements-grid">
+                    <div class="achievement-card locked">
+                        <div class="achievement-icon">🎯</div>
+                        <div class="achievement-name">İlk Adım</div>
+                        <div class="achievement-desc">İlk hediyeni topla</div>
+                    </div>
+                    <div class="achievement-card locked">
+                        <div class="achievement-icon">⭐</div>
+                        <div class="achievement-name">Yıldız Avcısı</div>
+                        <div class="achievement-desc">10 yıldız topla</div>
+                    </div>
+                    <div class="achievement-card locked">
+                        <div class="achievement-icon">🦌</div>
+                        <div class="achievement-name">Ren Geyiği Dostu</div>
+                        <div class="achievement-desc">25 ren geyiği topla</div>
+                    </div>
+                    <div class="achievement-card locked">
+                        <div class="achievement-icon">💯</div>
+                        <div class="achievement-name">Yüzlük</div>
+                        <div class="achievement-desc">100 puana ulaş</div>
+                    </div>
+                    <div class="achievement-card locked">
+                        <div class="achievement-icon">🔥</div>
+                        <div class="achievement-name">Ateş Topu</div>
+                        <div class="achievement-desc">10 combo yap</div>
+                    </div>
+                    <div class="achievement-card locked">
+                        <div class="achievement-icon">👑</div>
+                        <div class="achievement-name">Kral</div>
+                        <div class="achievement-desc">1000 puana ulaş</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="profile.js"></script>
+</body>
+</html>
