@@ -16,7 +16,12 @@ app.use(session({
     secret: 'santa-secret-key-2025', 
     resave: false, 
     saveUninitialized: false,
-    cookie: { secure: false }
+    cookie: { 
+        secure: true,
+        sameSite: 'none',
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000 // 24 saat
+    }
 }));
 
 app.use(passport.initialize());
