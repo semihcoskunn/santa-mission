@@ -4,8 +4,14 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 const cors = require('cors');
 require('dotenv').config();
+const { initDatabase } = require('./database');
+const User = require('./models/User');
 
 const app = express();
+app.use(express.json());
+
+// Veritabanını başlat
+initDatabase();
 
 app.use(cors({ 
     origin: ['https://semihcoskun.com.tr', 'http://localhost:5500', 'http://127.0.0.1:5500'], 
@@ -33,9 +39,13 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID !== 'your_googl
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: 'http://localhost:3000/auth/google/callback'
       },
-      (accessToken, refreshToken, profile, done) => {
-        console.log('Google Profile:', profile);
-        return done(null, profile);
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+            const user = await User.findOrCreate(profile);
+            return done(null, user);
+        } catch (error) {
+            return done(error, null);
+        }
       }
     ));
 } else {
@@ -43,11 +53,18 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID !== 'your_googl
 }
 
 passport.serializeUser((user, done) => {
-    done(null, user);
+    done(null, user._id);
 });
 
-passport.deserializeUser((user, done) => {
-    done(null, user);
+passport.deserializeUser(async (id, done) => {
+    try {
+        const mongoose = require('mongoose');
+        const User = mongoose.model('User');
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (error) {
+        done(error, null);
+    }
 });
 
 // Routes
@@ -85,19 +102,115 @@ app.get('/auth/google/callback',
     }
 );
 
-app.get('/api/user', (req, res) => {
+app.get('/api/user', async (req, res) => {
     if (req.isAuthenticated()) {
         res.json({ 
             success: true,
             user: {
-                id: req.user.id,
-                name: req.user.displayName,
-                email: req.user.emails[0].value,
-                photo: req.user.photos[0].value
+                id: req.user._id,
+                name: req.user.name,
+                email: req.user.email,
+                photo: req.user.photo,
+                total_score: req.user.total_score,
+                max_streak: req.user.max_streak
             }
         });
     } else {
         res.status(401).json({ success: false, error: 'Not authenticated' });
+    }
+});
+
+app.post('/api/update-score', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ success: false, error: 'Not authenticated' });
+    }
+    
+    try {
+        const { score, streak } = req.body;
+        await User.updateScore(req.user._id, score, streak);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/stats', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ success: false, error: 'Not authenticated' });
+    }
+    
+    try {
+        const stats = await User.getStats(req.user._id);
+        res.json({ success: true, stats });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/leaderboard', async (req, res) => {
+    try {
+        const leaderboard = await User.getLeaderboard();
+        res.json({ success: true, leaderboard });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/my-rank', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ success: false, error: 'Not authenticated' });
+    }
+    
+    try {
+        const rank = await User.getUserRank(req.user._id);
+        res.json({ success: true, rank });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/daily-quests', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ success: false, error: 'Not authenticated' });
+    }
+    
+    try {
+        const quests = await User.getDailyQuests(req.user._id);
+        res.json({ success: true, quests });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/update-quest', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ success: false, error: 'Not authenticated' });
+    }
+    
+    try {
+        const { type, value } = req.body;
+        await User.updateQuestProgress(req.user._id, type, value);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/claim-quest', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ success: false, error: 'Not authenticated' });
+    }
+    
+    try {
+        const { questId } = req.body;
+        const result = await User.claimQuest(req.user._id, questId);
+        if (result) {
+            res.json({ success: true, reward: result.reward, total_score: result.total_score });
+        } else {
+            res.status(400).json({ success: false, error: 'Quest not available' });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
     }
 });
 
@@ -122,6 +235,9 @@ app.get('/', (req, res) => {
             <ul style="list-style: none; padding: 0;">
                 <li>✅ GET /auth/google - Google ile giriş</li>
                 <li>✅ GET /api/user - Kullanıcı bilgisi</li>
+                <li>✅ GET /api/daily-quests - Günlük görevler</li>
+                <li>✅ POST /api/update-quest - Görev ilerlemesi</li>
+                <li>✅ POST /api/claim-quest - Görev ödülü al</li>
                 <li>✅ GET /logout - Çıkış yap</li>
             </ul>
             <p style="margin-top: 30px;">

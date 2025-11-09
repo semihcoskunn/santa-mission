@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liderlik Tablosu | Santa'nın Gizli Görevi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="leaderboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2922505559554247"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="snowfall"></div>
+    
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h2>Giriş Yap</h2>
+            <p class="modal-subtitle">Sosyal medya hesabınla giriş yap</p>
+            
+            <div class="social-login-buttons">
+                <button class="social-btn google-btn">
+                    <span class="social-icon">G</span>
+                    <span>Google ile Giriş</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                <span class="logo-icon">🎅</span>
+                <span class="logo-text">Santa'nın Gizli Görevi</span>
+            </div>
+            <div class="nav-right">
+                <button class="leaderboard-btn" onclick="window.location.href='leaderboard.html'">🏆 Liderlik</button>
+                <button class="login-btn" id="loginBtn">Giriş Yap</button>
+                
+                <!-- User Profile Menu -->
+                <div class="user-menu" id="userMenu" style="display: none;">
+                    <div class="user-menu-header">
+                        <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
+                        <div class="user-info">
+                            <span class="user-name" id="userName"></span>
+                            <span class="user-email" id="userEmail"></span>
+                        </div>
+                    </div>
+                    <div class="user-menu-items">
+                        <a href="#" class="menu-item" id="profileBtn">
+                            <span class="menu-icon">👤</span>
+                            <span>Profil</span>
+                        </a>
+                        <a href="#" class="menu-item" id="notificationsBtn">
+                            <span class="menu-icon">🔔</span>
+                            <span>Bildirimler</span>
+                            <span class="notification-badge">3</span>
+                        </a>
+                        <a href="#" class="menu-item" id="settingsBtn">
+                            <span class="menu-icon">⚙️</span>
+                            <span>Ayarlar</span>
+                        </a>
+                        <hr class="menu-divider">
+                        <a href="#" class="menu-item" id="logoutBtn">
+                            <span class="menu-icon">🚪</span>
+                            <span>Çıkış Yap</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="leaderboard-section">
+        <div class="container">
+            <div class="leaderboard-header">
+                <h1>🏆 En İyi Oyuncular</h1>
+                <p class="update-info">Sıralama 5 dakikada bir güncellenir</p>
+            </div>
+
+            <!-- Kullanıcının Kendi Sırası -->
+            <div class="my-rank-card" id="myRankCard" style="display: none;">
+                <div class="rank-badge">Senin Sıran</div>
+                <div class="rank-info">
+                    <span class="rank-number" id="myRankNumber">#-</span>
+                    <span class="rank-score" id="myRankScore">0 Puan</span>
+                </div>
+            </div>
+
+            <!-- Top 3 Podium -->
+            <div class="podium">
+                <div class="podium-item second" id="rank2">
+                    <div class="podium-medal">🥈</div>
+                    <img class="podium-avatar" src="" alt="">
+                    <div class="podium-name">-</div>
+                    <div class="podium-score">0</div>
+                    <div class="podium-stand">2</div>
+                </div>
+                <div class="podium-item first" id="rank1">
+                    <div class="podium-medal">🥇</div>
+                    <img class="podium-avatar" src="" alt="">
+                    <div class="podium-name">-</div>
+                    <div class="podium-score">0</div>
+                    <div class="podium-stand">1</div>
+                </div>
+                <div class="podium-item third" id="rank3">
+                    <div class="podium-medal">🥉</div>
+                    <img class="podium-avatar" src="" alt="">
+                    <div class="podium-name">-</div>
+                    <div class="podium-score">0</div>
+                    <div class="podium-stand">3</div>
+                </div>
+            </div>
+
+            <!-- Liderlik Listesi -->
+            <div class="leaderboard-list" id="leaderboardList">
+                <!-- JavaScript ile doldurulacak -->
+            </div>
+        </div>
+    </section>
+
+    <!-- AdSense Banner -->
+    <div style="text-align: center; margin: 40px 0; padding: 20px;">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2922505559554247"
+             data-ad-slot="AUTO"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <script src="leaderboard.js"></script>
+</body>
+</html>

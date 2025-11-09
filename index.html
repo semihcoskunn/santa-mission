@@ -6,6 +6,8 @@
     <title>Santa'nın Gizli Görevi | Santa's Secret Mission</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2922505559554247"
+     crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="snowfall"></div>
@@ -30,15 +32,17 @@
     
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">
+            <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                <span class="logo-icon">🎅</span>
                 <span class="logo-text" data-tr="Santa'nın Gizli Görevi" data-en="Santa's Secret Mission">Santa'nın Gizli Görevi</span>
             </div>
             <div class="nav-right">
+                <button class="leaderboard-btn" onclick="window.location.href='leaderboard.html'">🏆 Liderlik</button>
+                <button class="login-btn" id="loginBtn" data-tr="Giriş Yap" data-en="Login">Giriş Yap</button>
                 <div class="language-switcher">
                     <button class="lang-btn active" data-lang="tr">🇹🇷 TR</button>
                     <button class="lang-btn" data-lang="en">🇺🇸 EN</button>
                 </div>
-                <button class="login-btn" id="loginBtn" data-tr="Giriş Yap" data-en="Login">Giriş Yap</button>
                 
                 <!-- User Profile Menu -->
                 <div class="user-menu" id="userMenu" style="display: none;">
@@ -109,6 +113,18 @@
 
     <footer class="footer">
         <div class="container">
+            <!-- AdSense Banner -->
+            <div class="ad-container" style="text-align: center; margin: 20px 0;">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-2922505559554247"
+                     data-ad-slot="AUTO"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
             <p data-tr="© 2025 Santa'nın Gizli Görevi - Tüm hakları saklıdır" data-en="© 2025 Santa's Secret Mission - All rights reserved">© 2025 Santa'nın Gizli Görevi - Tüm hakları saklıdır</p>
         </div>
     </footer>

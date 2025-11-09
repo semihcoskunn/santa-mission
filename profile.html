@@ -9,15 +9,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="profile.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2922505559554247"
+     crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="snowfall"></div>
 
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo-text">🎅 Santa'nın Gizli Görevi</div>
+            <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                <span class="logo-icon">🎅</span>
+                <span class="logo-text">Santa'nın Gizli Görevi</span>
+            </div>
             <div class="nav-right">
-                <button class="back-btn" onclick="window.location.href='index.html'">← Ana Sayfa</button>
+                <button class="leaderboard-btn" onclick="window.location.href='leaderboard.html'">🏆 Liderlik</button>
                 <button class="login-btn" id="loginBtn">Giriş Yap</button>
                 <div class="user-menu" id="userMenu" style="display: none;">
                     <div class="user-menu-header">
@@ -28,9 +33,14 @@
                         </div>
                     </div>
                     <div class="user-menu-items">
-                        <a href="profile.html" class="menu-item">
+                        <a href="#" class="menu-item" id="profileBtn">
                             <span class="menu-icon">👤</span>
                             <span>Profil</span>
+                        </a>
+                        <a href="#" class="menu-item" id="notificationsBtn">
+                            <span class="menu-icon">🔔</span>
+                            <span>Bildirimler</span>
+                            <span class="notification-badge">3</span>
                         </a>
                         <a href="#" class="menu-item" id="settingsBtn">
                             <span class="menu-icon">⚙️</span>
@@ -110,6 +120,19 @@
             </div>
         </div>
     </section>
+
+    <!-- AdSense Banner -->
+    <div style="text-align: center; margin: 40px 0; padding: 20px;">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2922505559554247"
+             data-ad-slot="AUTO"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
 
     <script src="profile.js"></script>
 </body>

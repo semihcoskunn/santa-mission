@@ -8,6 +8,7 @@ class GameManager {
         this.streak = 0;
         this.lastCollectTime = 0;
         this.comboTimeout = null;
+        this.userId = null;
         this.init();
     }
 
@@ -77,6 +78,9 @@ class GameManager {
         const statusMessage = document.getElementById('statusMessage');
         
         this.isLoggedIn = true;
+        this.userId = user.id;
+        this.score = user.total_score || 0;
+        this.streak = user.max_streak || 0;
         
         if (loginBtn && userMenu) {
             loginBtn.textContent = user.name;
@@ -102,6 +106,11 @@ class GameManager {
                 window.location.href = 'profile.html';
             };
             
+            document.getElementById('notificationsBtn').onclick = (e) => {
+                e.preventDefault();
+                alert('Bildirimler yakında!');
+            };
+            
             document.getElementById('settingsBtn').onclick = (e) => {
                 e.preventDefault();
                 alert('Ayarlar yakında!');
@@ -122,11 +131,18 @@ class GameManager {
 
     startGame() {
         this.updateScoreDisplay();
-        this.scheduleNextIcon();
         this.setupQuests();
+        
+        // İlk ikon için rastgele bekleme (0-60 saniye)
+        const firstDelay = Math.random() * 60000;
+        setTimeout(() => {
+            this.spawnRandomIcon();
+            // Sonraki ikonlar 30 saniyede bir
+            setInterval(() => this.spawnRandomIcon(), 30000);
+        }, firstDelay);
     }
     
-    setupQuests() {
+    async setupQuests() {
         const toggleBtn = document.getElementById('toggleQuests');
         const questsContent = document.getElementById('questsContent');
         
@@ -137,7 +153,7 @@ class GameManager {
             });
         }
         
-        this.loadQuests();
+        await this.loadQuests();
         
         document.querySelectorAll('.quest-item').forEach(item => {
             item.addEventListener('click', () => {
@@ -147,25 +163,27 @@ class GameManager {
         });
     }
     
-    loadQuests() {
-        const quests = JSON.parse(localStorage.getItem('dailyQuests') || '{}');
-        const today = new Date().toDateString();
-        
-        if (quests.date !== today) {
-            localStorage.setItem('dailyQuests', JSON.stringify({
-                date: today,
-                collect5: { progress: 0, claimed: false },
-                collect10: { progress: 0, claimed: false },
-                combo5: { progress: 0, claimed: false },
-                score200: { progress: 0, claimed: false }
-            }));
+    async loadQuests() {
+        try {
+            const response = await fetch('http://localhost:3000/api/daily-quests', {
+                credentials: 'include'
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    this.quests = data.quests;
+                    this.updateQuestsUI();
+                }
+            }
+        } catch (error) {
+            console.log('Görevler yüklenemedi:', error);
         }
-        
-        this.updateQuestsUI();
     }
     
     updateQuestsUI() {
-        const quests = JSON.parse(localStorage.getItem('dailyQuests') || '{}');
+        if (!this.quests) return;
+        
         const configs = {
             collect5: { max: 5 },
             collect10: { max: 10 },
@@ -174,7 +192,7 @@ class GameManager {
         };
         
         Object.keys(configs).forEach(questId => {
-            const quest = quests[questId] || { progress: 0, claimed: false };
+            const quest = this.quests[questId] || { progress: 0, claimed: false };
             const config = configs[questId];
             const item = document.querySelector(`[data-quest="${questId}"]`);
             
@@ -192,55 +210,50 @@ class GameManager {
         });
     }
     
-    claimQuest(questId, item) {
-        const quests = JSON.parse(localStorage.getItem('dailyQuests') || '{}');
-        const rewards = { collect5: 50, collect10: 100, combo5: 150, score200: 200 };
-        const configs = { collect5: 5, collect10: 10, combo5: 5, score200: 200 };
-        
-        if (quests[questId] && !quests[questId].claimed && quests[questId].progress >= configs[questId]) {
-            quests[questId].claimed = true;
-            localStorage.setItem('dailyQuests', JSON.stringify(quests));
+    async claimQuest(questId, item) {
+        try {
+            const response = await fetch('http://localhost:3000/api/claim-quest', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ questId })
+            });
             
-            this.score += rewards[questId];
-            this.updateScoreDisplay(rewards[questId]);
-            
-            const stats = JSON.parse(localStorage.getItem('userStats') || '{"score": 0, "streak": 0}');
-            stats.score = (stats.score || 0) + rewards[questId];
-            localStorage.setItem('userStats', JSON.stringify(stats));
-            
-            this.updateQuestsUI();
-            
-            this.showCombo(1, rewards[questId]);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    this.score = data.total_score;
+                    this.updateScoreDisplay(data.reward);
+                    await this.loadQuests();
+                    this.showCombo(1, data.reward);
+                }
+            }
+        } catch (error) {
+            console.log('Görev ödülü alınamadı:', error);
         }
     }
     
-    updateQuestProgress(type, value = 1) {
-        const quests = JSON.parse(localStorage.getItem('dailyQuests') || '{}');
-        
-        if (type === 'collect') {
-            quests.collect5 = quests.collect5 || { progress: 0, claimed: false };
-            quests.collect10 = quests.collect10 || { progress: 0, claimed: false };
-            if (!quests.collect5.claimed) quests.collect5.progress++;
-            if (!quests.collect10.claimed) quests.collect10.progress++;
-        } else if (type === 'combo') {
-            quests.combo5 = quests.combo5 || { progress: 0, claimed: false };
-            if (!quests.combo5.claimed) quests.combo5.progress++;
-        } else if (type === 'score') {
-            quests.score200 = quests.score200 || { progress: 0, claimed: false };
-            if (!quests.score200.claimed) quests.score200.progress += value;
+    async updateQuestProgress(type, value = 1) {
+        try {
+            await fetch('http://localhost:3000/api/update-quest', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ type, value })
+            });
+            await this.loadQuests();
+        } catch (error) {
+            console.log('Görev ilerlemesi kaydedilemedi:', error);
         }
-        
-        localStorage.setItem('dailyQuests', JSON.stringify(quests));
-        this.updateQuestsUI();
     }
 
-    scheduleNextIcon() {
-        if (!this.isLoggedIn) return;
+    spawnRandomIcon() {
+        if (!this.isLoggedIn || this.activeIcon) return;
         
         const icons = [
-            { emoji: '🎁', points: 10, name: 'Hediye', weight: 60 },
-            { emoji: '🦌', points: 25, name: 'Ren Geyik', weight: 30 },
-            { emoji: '⭐', points: 50, name: 'Yıldız', weight: 10 }
+            { emoji: '🎁', points: 10, name: 'Hediye', weight: 80 },
+            { emoji: '🦌', points: 25, name: 'Ren Geyik', weight: 15 },
+            { emoji: '⭐', points: 50, name: 'Yıldız', weight: 5 }
         ];
         
         const totalWeight = icons.reduce((sum, icon) => sum + icon.weight, 0);
@@ -255,21 +268,7 @@ class GameManager {
             random -= icon.weight;
         }
         
-        let delay;
-        if (selectedIcon.emoji === '🎁') {
-            delay = 60000;
-        } else if (selectedIcon.emoji === '🦌') {
-            delay = 300000;
-        } else {
-            delay = 1800000;
-        }
-        
-        setTimeout(() => {
-            if (!this.activeIcon) {
-                this.spawnIcon(selectedIcon);
-            }
-            this.scheduleNextIcon();
-        }, delay);
+        this.spawnIcon(selectedIcon);
     }
 
     spawnIcon(iconData) {
@@ -304,7 +303,7 @@ class GameManager {
         }, 10000);
     }
 
-    collectIcon(icon, iconData) {
+    async collectIcon(icon, iconData) {
         const rect = icon.getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
@@ -325,6 +324,9 @@ class GameManager {
         }
         const totalPoints = iconData.points * comboMultiplier;
         this.score += totalPoints;
+        
+        // Veritabanına kaydet
+        await this.saveScoreToDatabase(totalPoints, this.streak);
         
         this.createParticles(x, y, iconData.emoji);
         this.playSound(this.combo > 1 ? 'combo' : 'collect');
@@ -348,6 +350,19 @@ class GameManager {
         this.comboTimeout = setTimeout(() => {
             this.combo = 0;
         }, 5000);
+    }
+    
+    async saveScoreToDatabase(score, streak) {
+        try {
+            await fetch('http://localhost:3000/api/update-score', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ score, streak })
+            });
+        } catch (error) {
+            console.log('Skor kaydedilemedi:', error);
+        }
     }
 
     updateScoreDisplay(earnedPoints = 0) {

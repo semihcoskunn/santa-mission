@@ -68,6 +68,16 @@ class ProfileManager {
                 }
             });
             
+            document.getElementById('profileBtn').onclick = (e) => {
+                e.preventDefault();
+                window.location.href = 'profile.html';
+            };
+            
+            document.getElementById('notificationsBtn').onclick = (e) => {
+                e.preventDefault();
+                alert('Bildirimler yakında!');
+            };
+            
             document.getElementById('settingsBtn').onclick = (e) => {
                 e.preventDefault();
                 alert('Ayarlar yakında!');
@@ -90,13 +100,40 @@ class ProfileManager {
         this.loadStats();
     }
 
-    loadStats() {
-        // LocalStorage'dan veya backend'den istatistikleri yükle
-        const stats = JSON.parse(localStorage.getItem('userStats') || '{"score": 0, "streak": 0}');
-        
-        document.getElementById('totalScore').textContent = stats.score || 0;
-        document.getElementById('totalStreak').textContent = stats.streak || 0;
-        document.getElementById('userRank').textContent = '#-';
+    async loadStats() {
+        try {
+            // Backend'den istatistikleri yükle
+            const response = await fetch('http://localhost:3000/api/user', {
+                credentials: 'include'
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('totalScore').textContent = data.user.total_score || 0;
+                    document.getElementById('totalStreak').textContent = data.user.max_streak || 0;
+                }
+            }
+            
+            // Sıralamayı yükle
+            const rankResponse = await fetch('http://localhost:3000/api/my-rank', {
+                credentials: 'include'
+            });
+            
+            if (rankResponse.ok) {
+                const rankData = await rankResponse.json();
+                if (rankData.success && rankData.rank) {
+                    document.getElementById('userRank').textContent = `#${rankData.rank.rank}`;
+                } else {
+                    document.getElementById('userRank').textContent = '#-';
+                }
+            }
+        } catch (error) {
+            console.error('Stats yüklenemedi:', error);
+            document.getElementById('totalScore').textContent = '0';
+            document.getElementById('totalStreak').textContent = '0';
+            document.getElementById('userRank').textContent = '#-';
+        }
     }
 
     createSnowfall() {

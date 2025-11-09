@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="game.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2922505559554247"
+     crossorigin="anonymous"></script>
 </head>
 <body>
     <!-- Kar Efekti -->
@@ -17,11 +19,12 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo-text">🎅 Santa'nın Hediye Avı</div>
+            <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                <span class="logo-icon">🎅</span>
+                <span class="logo-text">Santa'nın Gizli Görevi</span>
+            </div>
             <div class="nav-right">
-                <button class="back-btn" onclick="window.location.href='index.html'">
-                    ← Ana Sayfa
-                </button>
+                <button class="leaderboard-btn" onclick="window.location.href='leaderboard.html'">🏆 Liderlik</button>
                 <button class="login-btn" id="loginBtn">Giriş Yap</button>
                 <div class="user-menu" id="userMenu" style="display: none;">
                     <div class="user-menu-header">
@@ -35,6 +38,11 @@
                         <a href="#" class="menu-item" id="profileBtn">
                             <span class="menu-icon">👤</span>
                             <span>Profil</span>
+                        </a>
+                        <a href="#" class="menu-item" id="notificationsBtn">
+                            <span class="menu-icon">🔔</span>
+                            <span>Bildirimler</span>
+                            <span class="notification-badge">3</span>
                         </a>
                         <a href="#" class="menu-item" id="settingsBtn">
                             <span class="menu-icon">⚙️</span>
@@ -106,21 +114,21 @@
                     <div class="info-icon">🎁</div>
                     <div class="info-text">
                         <div class="info-title">Hediye Paketi</div>
-                        <div class="info-desc">1 dakikada bir • 10 Puan</div>
+                        <div class="info-desc">10 Puan</div>
                     </div>
                 </div>
                 <div class="info-card">
                     <div class="info-icon">🦌</div>
                     <div class="info-text">
                         <div class="info-title">Ren Geyiği</div>
-                        <div class="info-desc">5 dakikada bir • 25 Puan</div>
+                        <div class="info-desc">25 Puan</div>
                     </div>
                 </div>
                 <div class="info-card">
                     <div class="info-icon">⭐</div>
                     <div class="info-text">
                         <div class="info-title">Yıldız</div>
-                        <div class="info-desc">30 dakikada bir • 50 Puan</div>
+                        <div class="info-desc">50 Puan</div>
                     </div>
                 </div>
             </div>
@@ -146,6 +154,18 @@
                 </button>
             </div>
         </div>
+    </div>
+
+    <!-- AdSense Sidebar (Oyun sırasında) -->
+    <div class="ad-sidebar" style="position: fixed; top: 150px; right: 20px; width: 160px; z-index: 100;">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2922505559554247"
+             data-ad-slot="AUTO"
+             data-ad-format="vertical"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
 
     <script src="game.js"></script>
