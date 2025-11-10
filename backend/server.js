@@ -82,7 +82,7 @@ app.get('/auth/google', (req, res, next) => {
                     <li>Google Cloud Console'a git: <a href="https://console.cloud.google.com">console.cloud.google.com</a></li>
                     <li>Yeni proje oluştur</li>
                     <li>OAuth 2.0 Client ID oluştur</li>
-                    <li>Redirect URI ekle: <code>http://localhost:3000/auth/google/callback</code></li>
+                    <li>Redirect URI ekle: <code>https://santa-mission.onrender.com/auth/google/callback</code></li>
                     <li>Client ID ve Secret'i <code>backend/.env</code> dosyasına ekle</li>
                     <li>Backend'i yeniden başlat</li>
                 </ol>
@@ -242,7 +242,7 @@ app.get('/', (req, res) => {
                 <li>✅ GET /logout - Çıkış yap</li>
             </ul>
             <p style="margin-top: 30px;">
-                <a href="http://localhost:8080" style="background: #e74c3c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Frontend'e Git</a>
+                <a href="https://semihcoskun.com.tr" style="background: #e74c3c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Frontend'e Git</a>
             </p>
         </body>
         </html>
@@ -251,11 +251,11 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`\n🎅 ========================================`);
+    console.log(`\n🌸5 ========================================`);
     console.log(`   Santa Backend Başlatıldı!`);
     console.log(`========================================`);
-    console.log(`📍 Backend: http://localhost:${PORT}`);
-    console.log(`📍 Frontend: http://localhost:8080`);
+    console.log(`📍 Backend: https://santa-mission.onrender.com`);
+    console.log(`📍 Frontend: https://semihcoskun.com.tr`);
     console.log(`========================================\n`);
     
     if (!process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID === 'your_google_client_id_here') {
