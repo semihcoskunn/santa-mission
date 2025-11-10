@@ -227,8 +227,28 @@ class LanguageManager {
         // URL'de login=success varsa kontrol et
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('login') === 'success') {
+            const userDataStr = urlParams.get('user');
+            if (userDataStr) {
+                try {
+                    const userData = JSON.parse(decodeURIComponent(userDataStr));
+                    localStorage.setItem('santa_user', JSON.stringify(userData));
+                    this.updateUIForLoggedInUser(userData);
+                } catch (e) {
+                    console.error('User data parse error:', e);
+                }
+            }
             window.history.replaceState({}, document.title, window.location.pathname);
-            setTimeout(() => this.checkUserStatus(), 500);
+        }
+        
+        // localStorage'dan kullanıcıyı kontrol et
+        const savedUser = localStorage.getItem('santa_user');
+        if (savedUser) {
+            try {
+                const userData = JSON.parse(savedUser);
+                this.updateUIForLoggedInUser(userData);
+            } catch (e) {
+                localStorage.removeItem('santa_user');
+            }
         }
     }
 
@@ -282,8 +302,8 @@ class LanguageManager {
             document.getElementById('logoutBtn').onclick = (e) => {
                 e.preventDefault();
                 if (confirm(this.currentLang === 'tr' ? 'Çıkış yapmak istiyor musunuz?' : 'Do you want to logout?')) {
-                    const backendUrl = 'https://santa-mission.onrender.com';
-                    window.location.href = `${backendUrl}/logout`;
+                    localStorage.removeItem('santa_user');
+                    window.location.href = 'index.html';
                 }
             };
         }
