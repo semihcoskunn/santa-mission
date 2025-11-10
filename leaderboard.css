@@ -149,6 +149,33 @@
     color: white;
 }
 
+.podium-stand.first-stand {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #1e3c72;
+}
+
+.podium-stand.second-stand {
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+    color: #1e3c72;
+}
+
+.podium-stand.third-stand {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #cd7f32, #e6a157);
+    color: #1e3c72;
+}
+
 .leaderboard-list {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(15px);
