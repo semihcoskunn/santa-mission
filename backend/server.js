@@ -14,19 +14,32 @@ app.use(express.json());
 initDatabase();
 
 app.use(cors({ 
-    origin: ['https://semihcoskun.com.tr', 'http://localhost:5500', 'http://127.0.0.1:5500'], 
-    credentials: true 
+    origin: function(origin, callback) {
+        const allowedOrigins = ['https://semihcoskun.com.tr', 'http://localhost:5500', 'http://127.0.0.1:5500'];
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.set('trust proxy', 1);
 
 app.use(session({ 
     secret: process.env.SESSION_SECRET || 'santa-secret-key-2025', 
     resave: false, 
     saveUninitialized: false,
+    proxy: true,
     cookie: { 
-        secure: process.env.NODE_ENV === 'production',
+        secure: true,
         httpOnly: true,
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        maxAge: 24 * 60 * 60 * 1000 // 24 saat
+        sameSite: 'none',
+        maxAge: 24 * 60 * 60 * 1000,
+        domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined
     }
 }));
 
