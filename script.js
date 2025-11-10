@@ -199,9 +199,7 @@ class LanguageManager {
             const googleBtn = document.querySelector('.google-btn');
             if (googleBtn) {
                 googleBtn.addEventListener('click', () => {
-                    const backendUrl = 'https://santa-mission.onrender.com';
-                    console.log('Backend URL:', backendUrl);
-                    window.location.href = `${backendUrl}/auth/google`;
+                    window.location.href = 'https://api.semihcoskun.com.tr/auth/google';
                 });
             }
         }
@@ -209,8 +207,7 @@ class LanguageManager {
 
     async checkUserStatus() {
         try {
-            const backendUrl = 'https://santa-mission.onrender.com';
-            const response = await fetch(`${backendUrl}/api/user`, {
+            const response = await fetch('https://api.semihcoskun.com.tr/api/user', {
                 credentials: 'include'
             });
             
@@ -224,33 +221,11 @@ class LanguageManager {
             console.log('Backend bağlantısı yok veya kullanıcı giriş yapmamış');
         }
         
-        // URL'de login=success varsa kontrol et
+        // URL'de login=success varsa sayfayı yenile
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('login') === 'success') {
-            const userDataEncoded = urlParams.get('data');
-            if (userDataEncoded) {
-                try {
-                    const userDataStr = atob(userDataEncoded);
-                    const userData = JSON.parse(userDataStr);
-                    localStorage.setItem('santa_user', JSON.stringify(userData));
-                    this.updateUIForLoggedInUser(userData);
-                    console.log('✅ Giriş başarılı:', userData.name);
-                } catch (e) {
-                    console.error('❌ Giriş hatası:', e);
-                }
-            }
             window.history.replaceState({}, document.title, window.location.pathname);
-        }
-        
-        // localStorage'dan kullanıcıyı kontrol et
-        const savedUser = localStorage.getItem('santa_user');
-        if (savedUser) {
-            try {
-                const userData = JSON.parse(savedUser);
-                this.updateUIForLoggedInUser(userData);
-            } catch (e) {
-                localStorage.removeItem('santa_user');
-            }
+            setTimeout(() => this.checkUserStatus(), 500);
         }
     }
 
@@ -304,8 +279,7 @@ class LanguageManager {
             document.getElementById('logoutBtn').onclick = (e) => {
                 e.preventDefault();
                 if (confirm(this.currentLang === 'tr' ? 'Çıkış yapmak istiyor musunuz?' : 'Do you want to logout?')) {
-                    localStorage.removeItem('santa_user');
-                    window.location.href = 'index.html';
+                    window.location.href = 'https://api.semihcoskun.com.tr/logout';
                 }
             };
         }

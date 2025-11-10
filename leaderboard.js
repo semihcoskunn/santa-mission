@@ -44,7 +44,7 @@ class LeaderboardManager {
             const googleBtn = document.querySelector('.google-btn');
             if (googleBtn) {
                 googleBtn.addEventListener('click', () => {
-                    window.location.href = 'https://santa-mission.onrender.com/auth/google';
+                    window.location.href = 'https://api.semihcoskun.com.tr/auth/google';
                 });
             }
         }
@@ -52,7 +52,7 @@ class LeaderboardManager {
     
     async checkUserStatus() {
         try {
-            const response = await fetch('https://santa-mission.onrender.com/api/user', {
+            const response = await fetch('https://api.semihcoskun.com.tr/api/user', {
                 credentials: 'include'
             });
             
@@ -111,7 +111,7 @@ class LeaderboardManager {
             document.getElementById('logoutBtn').onclick = (e) => {
                 e.preventDefault();
                 if (confirm('Çıkış yapmak istiyor musunuz?')) {
-                    window.location.href = 'https://santa-mission.onrender.com/logout';
+                    window.location.href = 'https://api.semihcoskun.com.tr/logout';
                 }
             };
         }
@@ -119,7 +119,7 @@ class LeaderboardManager {
 
     async loadLeaderboard() {
         try {
-            const response = await fetch('https://santa-mission.onrender.com/api/leaderboard');
+            const response = await fetch('https://api.semihcoskun.com.tr/api/leaderboard');
             const data = await response.json();
             
             if (data.success) {
@@ -135,7 +135,7 @@ class LeaderboardManager {
         if (!this.user) return;
         
         try {
-            const response = await fetch('https://santa-mission.onrender.com/api/my-rank', {
+            const response = await fetch('https://api.semihcoskun.com.tr/api/my-rank', {
                 credentials: 'include'
             });
             const data = await response.json();

@@ -37,9 +37,9 @@ app.use(session({
     cookie: { 
         secure: true,
         httpOnly: true,
-        sameSite: 'none',
+        sameSite: 'lax',
         maxAge: 24 * 60 * 60 * 1000,
-        domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined
+        domain: process.env.NODE_ENV === 'production' ? '.semihcoskun.com.tr' : undefined
     }
 }));
 
@@ -51,7 +51,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID !== 'your_googl
     passport.use(new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: 'https://santa-mission.onrender.com/auth/google/callback'
+        callbackURL: 'https://api.semihcoskun.com.tr/auth/google/callback'
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
@@ -95,7 +95,7 @@ app.get('/auth/google', (req, res, next) => {
                     <li>Google Cloud Console'a git: <a href="https://console.cloud.google.com">console.cloud.google.com</a></li>
                     <li>Yeni proje oluştur</li>
                     <li>OAuth 2.0 Client ID oluştur</li>
-                    <li>Redirect URI ekle: <code>https://santa-mission.onrender.com/auth/google/callback</code></li>
+                    <li>Redirect URI ekle: <code>https://api.semihcoskun.com.tr/auth/google/callback</code></li>
                     <li>Client ID ve Secret'i <code>backend/.env</code> dosyasına ekle</li>
                     <li>Backend'i yeniden başlat</li>
                 </ol>
@@ -112,28 +112,7 @@ app.get('/auth/google/callback',
         failureRedirect: 'https://semihcoskun.com.tr?error=auth_failed'
     }),
     (req, res) => {
-        console.log('✅ Google auth başarılı, kullanıcı:', req.user?.name);
-        
-        if (!req.user) {
-            console.error('❌ req.user yok!');
-            return res.redirect('https://semihcoskun.com.tr?error=no_user');
-        }
-        
-        try {
-            const userData = {
-                id: req.user._id.toString(),
-                name: req.user.name,
-                email: req.user.email,
-                photo: req.user.photo
-            };
-            const userDataStr = JSON.stringify(userData);
-            const userDataEncoded = Buffer.from(userDataStr).toString('base64');
-            console.log('✅ Redirect ediliyor, data uzunluğu:', userDataEncoded.length);
-            res.redirect(`https://semihcoskun.com.tr?login=success&data=${userDataEncoded}`);
-        } catch (error) {
-            console.error('❌ Redirect hatası:', error);
-            res.redirect('https://semihcoskun.com.tr?error=redirect_failed');
-        }
+        res.redirect('https://semihcoskun.com.tr?login=success');
     }
 );
 
@@ -285,10 +264,10 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`\n🌸5 ========================================`);
+    console.log(`\n🎅 ========================================`);
     console.log(`   Santa Backend Başlatıldı!`);
     console.log(`========================================`);
-    console.log(`📍 Backend: https://santa-mission.onrender.com`);
+    console.log(`📍 Backend: https://api.semihcoskun.com.tr`);
     console.log(`📍 Frontend: https://semihcoskun.com.tr`);
     console.log(`========================================\n`);
     
