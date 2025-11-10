@@ -37,7 +37,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID !== 'your_googl
     passport.use(new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: 'http://localhost:3000/auth/google/callback'
+        callbackURL: 'https://santa-mission.onrender.com/auth/google/callback'
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
@@ -95,10 +95,10 @@ app.get('/auth/google', (req, res, next) => {
 
 app.get('/auth/google/callback', 
     passport.authenticate('google', { 
-        failureRedirect: 'http://localhost:5500'
+        failureRedirect: 'https://semihcoskun.com.tr'
     }),
     (req, res) => {
-        res.redirect('http://localhost:5500?login=success');
+        res.redirect('https://semihcoskun.com.tr?login=success');
     }
 );
 
@@ -217,7 +217,7 @@ app.post('/api/claim-quest', async (req, res) => {
 app.get('/logout', (req, res) => {
     req.logout((err) => {
         if (err) return res.status(500).json({ error: err });
-        res.redirect('http://localhost:5500');
+        res.redirect('https://semihcoskun.com.tr');
     });
 });
 
