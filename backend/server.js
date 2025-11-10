@@ -19,12 +19,13 @@ app.use(cors({
 }));
 
 app.use(session({ 
-    secret: 'santa-secret-key-2025', 
+    secret: process.env.SESSION_SECRET || 'santa-secret-key-2025', 
     resave: false, 
     saveUninitialized: false,
     cookie: { 
-        secure: false,
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 24 * 60 * 60 * 1000 // 24 saat
     }
 }));
