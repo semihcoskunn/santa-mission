@@ -225,7 +225,8 @@ class LanguageManager {
         }
         
         // URL'de login=success varsa kontrol et
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlString = window.location.search.replace(/&amp;/g, '&');
+        const urlParams = new URLSearchParams(urlString);
         if (urlParams.get('login') === 'success') {
             const userDataStr = urlParams.get('user');
             if (userDataStr) {
@@ -233,6 +234,7 @@ class LanguageManager {
                     const userData = JSON.parse(decodeURIComponent(userDataStr));
                     localStorage.setItem('santa_user', JSON.stringify(userData));
                     this.updateUIForLoggedInUser(userData);
+                    console.log('User logged in:', userData.name);
                 } catch (e) {
                     console.error('User data parse error:', e);
                 }
