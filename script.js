@@ -225,18 +225,18 @@ class LanguageManager {
         }
         
         // URL'de login=success varsa kontrol et
-        const urlString = window.location.search.replace(/&amp;/g, '&');
-        const urlParams = new URLSearchParams(urlString);
+        const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('login') === 'success') {
-            const userDataStr = urlParams.get('user');
-            if (userDataStr) {
+            const userDataEncoded = urlParams.get('data');
+            if (userDataEncoded) {
                 try {
-                    const userData = JSON.parse(decodeURIComponent(userDataStr));
+                    const userDataStr = atob(userDataEncoded);
+                    const userData = JSON.parse(userDataStr);
                     localStorage.setItem('santa_user', JSON.stringify(userData));
                     this.updateUIForLoggedInUser(userData);
-                    console.log('User logged in:', userData.name);
+                    console.log('✅ Giriş başarılı:', userData.name);
                 } catch (e) {
-                    console.error('User data parse error:', e);
+                    console.error('❌ Giriş hatası:', e);
                 }
             }
             window.history.replaceState({}, document.title, window.location.pathname);

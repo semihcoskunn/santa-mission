@@ -112,15 +112,16 @@ app.get('/auth/google/callback',
         failureRedirect: 'https://semihcoskun.com.tr'
     }),
     (req, res) => {
-        // Kullanıcı bilgilerini URL'de gönder (geçici çözüm)
+        // Kullanıcı bilgilerini URL'de gönder
         const userData = {
-            id: req.user._id,
+            id: req.user._id.toString(),
             name: req.user.name,
             email: req.user.email,
             photo: req.user.photo
         };
-        const userDataEncoded = encodeURIComponent(JSON.stringify(userData));
-        res.redirect(`https://semihcoskun.com.tr?login=success&user=${userDataEncoded}`);
+        const userDataStr = JSON.stringify(userData);
+        const userDataEncoded = Buffer.from(userDataStr).toString('base64');
+        res.redirect(`https://semihcoskun.com.tr?login=success&data=${userDataEncoded}`);
     }
 );
 
