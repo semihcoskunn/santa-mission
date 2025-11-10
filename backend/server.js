@@ -109,19 +109,31 @@ app.get('/auth/google', (req, res, next) => {
 
 app.get('/auth/google/callback', 
     passport.authenticate('google', { 
-        failureRedirect: 'https://semihcoskun.com.tr'
+        failureRedirect: 'https://semihcoskun.com.tr?error=auth_failed'
     }),
     (req, res) => {
-        // Kullanıcı bilgilerini URL'de gönder
-        const userData = {
-            id: req.user._id.toString(),
-            name: req.user.name,
-            email: req.user.email,
-            photo: req.user.photo
-        };
-        const userDataStr = JSON.stringify(userData);
-        const userDataEncoded = Buffer.from(userDataStr).toString('base64');
-        res.redirect(`https://semihcoskun.com.tr?login=success&data=${userDataEncoded}`);
+        console.log('✅ Google auth başarılı, kullanıcı:', req.user?.name);
+        
+        if (!req.user) {
+            console.error('❌ req.user yok!');
+            return res.redirect('https://semihcoskun.com.tr?error=no_user');
+        }
+        
+        try {
+            const userData = {
+                id: req.user._id.toString(),
+                name: req.user.name,
+                email: req.user.email,
+                photo: req.user.photo
+            };
+            const userDataStr = JSON.stringify(userData);
+            const userDataEncoded = Buffer.from(userDataStr).toString('base64');
+            console.log('✅ Redirect ediliyor, data uzunluğu:', userDataEncoded.length);
+            res.redirect(`https://semihcoskun.com.tr?login=success&data=${userDataEncoded}`);
+        } catch (error) {
+            console.error('❌ Redirect hatası:', error);
+            res.redirect('https://semihcoskun.com.tr?error=redirect_failed');
+        }
     }
 );
 
