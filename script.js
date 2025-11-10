@@ -199,7 +199,7 @@ class LanguageManager {
             const googleBtn = document.querySelector('.google-btn');
             if (googleBtn) {
                 googleBtn.addEventListener('click', () => {
-                    const backendUrl = 'http://localhost:3000';
+                    const backendUrl = 'https://santa-mission.onrender.com';
                     console.log('Backend URL:', backendUrl);
                     window.location.href = `${backendUrl}/auth/google`;
                 });
@@ -209,7 +209,7 @@ class LanguageManager {
 
     async checkUserStatus() {
         try {
-            const backendUrl = 'http://localhost:3000';
+            const backendUrl = 'https://santa-mission.onrender.com';
             const response = await fetch(`${backendUrl}/api/user`, {
                 credentials: 'include'
             });
@@ -282,7 +282,7 @@ class LanguageManager {
             document.getElementById('logoutBtn').onclick = (e) => {
                 e.preventDefault();
                 if (confirm(this.currentLang === 'tr' ? 'Çıkış yapmak istiyor musunuz?' : 'Do you want to logout?')) {
-                    const backendUrl = 'http://localhost:3000';
+                    const backendUrl = 'https://santa-mission.onrender.com';
                     window.location.href = `${backendUrl}/logout`;
                 }
             };

@@ -24,7 +24,7 @@ class ProfileManager {
 
     async checkUserStatus() {
         try {
-            const response = await fetch('http://localhost:3000/api/user', {
+            const response = await fetch('https://santa-mission.onrender.com/api/user', {
                 credentials: 'include'
             });
             
@@ -86,7 +86,7 @@ class ProfileManager {
             document.getElementById('logoutBtn').onclick = (e) => {
                 e.preventDefault();
                 if (confirm('Çıkış yapmak istiyor musunuz?')) {
-                    window.location.href = 'http://localhost:3000/logout';
+                    window.location.href = 'https://santa-mission.onrender.com/logout';
                 }
             };
         }
@@ -103,7 +103,7 @@ class ProfileManager {
     async loadStats() {
         try {
             // Backend'den istatistikleri yükle
-            const response = await fetch('http://localhost:3000/api/user', {
+            const response = await fetch('https://santa-mission.onrender.com/api/user', {
                 credentials: 'include'
             });
             
@@ -116,7 +116,7 @@ class ProfileManager {
             }
             
             // Sıralamayı yükle
-            const rankResponse = await fetch('http://localhost:3000/api/my-rank', {
+            const rankResponse = await fetch('https://santa-mission.onrender.com/api/my-rank', {
                 credentials: 'include'
             });
             

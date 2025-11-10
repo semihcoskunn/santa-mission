@@ -43,7 +43,7 @@ class GameManager {
             const googleBtn = document.querySelector('.google-btn');
             if (googleBtn) {
                 googleBtn.addEventListener('click', () => {
-                    window.location.href = 'http://localhost:3000/auth/google';
+                    window.location.href = 'https://santa-mission.onrender.com/auth/google';
                 });
             }
         }
@@ -51,7 +51,7 @@ class GameManager {
 
     async checkUserStatus() {
         try {
-            const response = await fetch('http://localhost:3000/api/user', {
+            const response = await fetch('https://santa-mission.onrender.com/api/user', {
                 credentials: 'include'
             });
             
@@ -119,7 +119,7 @@ class GameManager {
             document.getElementById('logoutBtn').onclick = (e) => {
                 e.preventDefault();
                 if (confirm('Çıkış yapmak istiyor musunuz?')) {
-                    window.location.href = 'http://localhost:3000/logout';
+                    window.location.href = 'https://santa-mission.onrender.com/logout';
                 }
             };
         }
@@ -165,7 +165,7 @@ class GameManager {
     
     async loadQuests() {
         try {
-            const response = await fetch('http://localhost:3000/api/daily-quests', {
+            const response = await fetch('https://santa-mission.onrender.com/api/daily-quests', {
                 credentials: 'include'
             });
             
@@ -212,7 +212,7 @@ class GameManager {
     
     async claimQuest(questId, item) {
         try {
-            const response = await fetch('http://localhost:3000/api/claim-quest', {
+            const response = await fetch('https://santa-mission.onrender.com/api/claim-quest', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -235,7 +235,7 @@ class GameManager {
     
     async updateQuestProgress(type, value = 1) {
         try {
-            await fetch('http://localhost:3000/api/update-quest', {
+            await fetch('https://santa-mission.onrender.com/api/update-quest', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -358,7 +358,7 @@ class GameManager {
     
     async saveScoreToDatabase(score, streak) {
         try {
-            await fetch('http://localhost:3000/api/update-score', {
+            await fetch('https://santa-mission.onrender.com/api/update-score', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
