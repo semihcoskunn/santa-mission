@@ -21,10 +21,11 @@
             <p class="modal-subtitle" data-tr="Sosyal medya hesabınla giriş yap" data-en="Login with your social media account">Sosyal medya hesabınla giriş yap</p>
             
             <div class="social-login-buttons">
-                <button class="social-btn google-btn">
-                    <span class="social-icon">G</span>
-                    <span data-tr="Google ile Giriş" data-en="Login with Google">Google ile Giriş</span>
-                </button>
+                <div id="g_id_onload"
+                     data-client_id="795368355462-ci2fsn6o37aig5do8670jm6sr3hr4786.apps.googleusercontent.com"
+                     data-callback="handleGoogleSignIn">
+                </div>
+                <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left"></div>
             </div>
             
 
@@ -137,6 +138,8 @@
         </div>
     </footer>
 
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="auth.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

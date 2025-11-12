@@ -44,7 +44,7 @@ class LeaderboardManager {
             const googleBtn = document.querySelector('.google-btn');
             if (googleBtn) {
                 googleBtn.addEventListener('click', () => {
-                    window.location.href = 'https://api.semihcoskun.com.tr/auth/google';
+                    window.location.href = 'https://santa-mission.onrender.com/auth/google';
                 });
             }
         }
