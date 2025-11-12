@@ -358,7 +358,7 @@ class GameManager {
     
     async saveScoreToDatabase(score, streak) {
         try {
-            await fetch('https://api.semihcoskun.com.tr/api/update-score', {
+            await fetch('https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/update-score', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

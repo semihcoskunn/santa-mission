@@ -119,7 +119,7 @@ class LeaderboardManager {
 
     async loadLeaderboard() {
         try {
-            const response = await fetch('https://api.semihcoskun.com.tr/api/leaderboard');
+            const response = await fetch('https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/leaderboard');
             const data = await response.json();
             
             if (data.success) {
