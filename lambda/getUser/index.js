@@ -5,31 +5,17 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
-    const headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
-    };
-    
-    if (event.httpMethod === 'OPTIONS') {
-        return { statusCode: 200, headers, body: '' };
-    }
-    
-    // POST - Create/Update user
-    if (event.httpMethod === 'POST') {
-        try {
-            const body = event['body-json'] || JSON.parse(event.body || '{}');
-            const { userId, name, email, photo } = body;
+    try {
+        // Non-proxy integration: check if it's GET or POST
+        const isGet = event.userId !== undefined; // GET has userId in query
+        
+        if (!isGet) {
+            // POST - Create/Update user
+            const { userId, name, email, photo, firstName, lastName, username } = event;
             
             if (!userId) {
-                return {
-                    statusCode: 400,
-                    headers,
-                    body: JSON.stringify({ error: 'userId required' })
-                };
+                return { success: false, error: 'userId required' };
             }
-            
-            const { firstName, lastName, username } = body;
             
             // Check if username is taken
             if (username) {
@@ -43,11 +29,7 @@ exports.handler = async (event) => {
                 }));
                 
                 if (scanResponse.Items && scanResponse.Items.length > 0) {
-                    return {
-                        statusCode: 400,
-                        headers,
-                        body: JSON.stringify({ success: false, error: 'Username already taken' })
-                    };
+                    return { success: false, error: 'Username already taken' };
                 }
             }
             
@@ -64,57 +46,25 @@ exports.handler = async (event) => {
                 }
             }));
             
-            return {
-                statusCode: 200,
-                headers,
-                body: JSON.stringify({ success: true })
-            };
-        } catch (error) {
-            return {
-                statusCode: 500,
-                headers,
-                body: JSON.stringify({ error: error.message })
-            };
+            return { success: true };
+        } else {
+            // GET - Retrieve user
+            const userId = event.userId;
+            
+            if (!userId) {
+                return { success: false, error: 'userId is required' };
+            }
+            
+            const command = new GetCommand({
+                TableName: 'SantaUsers',
+                Key: { userID: userId }
+            });
+            
+            const response = await docClient.send(command);
+            
+            return response.Item || {};
         }
-    }
-    
-    // GET - Retrieve user
-    try {
-        const userId = event.queryStringParameters?.userId;
-        
-        if (!userId) {
-            return {
-                statusCode: 400,
-                headers,
-                body: JSON.stringify({ success: false, error: 'userId is required' })
-            };
-        }
-        
-        const command = new GetCommand({
-            TableName: 'SantaUsers',
-            Key: { userId }
-        });
-        
-        const response = await docClient.send(command);
-        
-        if (!response.Item) {
-            return {
-                statusCode: 404,
-                headers,
-                body: JSON.stringify({ success: false, error: 'User not found' })
-            };
-        }
-        
-        return {
-            statusCode: 200,
-            headers,
-            body: JSON.stringify(response.Item || {})
-        };
     } catch (error) {
-        return {
-            statusCode: 500,
-            headers,
-            body: JSON.stringify({ success: false, error: error.message })
-        };
+        return { success: false, error: error.message };
     }
 };
