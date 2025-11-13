@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, PutCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -19,9 +19,9 @@ exports.handler = async (event) => {
     
     try {
         const body = event['body-json'] || JSON.parse(event.body || '{}');
-        const { userId, score, streak, name, email, photo } = body;
+        const { userId, score, streak } = body;
         
-        if (!userId) {
+        if (!userId || score === undefined) {
             return {
                 statusCode: 400,
                 headers: {
@@ -29,41 +29,20 @@ exports.handler = async (event) => {
                     'Access-Control-Allow-Methods': 'POST,OPTIONS',
                     'Access-Control-Allow-Headers': 'Content-Type'
                 },
-                body: JSON.stringify({ success: false, error: 'userId required' })
+                body: JSON.stringify({ success: false, error: 'userId and score required' })
             };
         }
         
-        // Update score by adding to existing, update streak only if higher
-        const command = new UpdateCommand({
-            TableName: 'SantaUsers',
-            Key: { userID: userId },
-            UpdateExpression: 'SET #name = :name, email = :email, photo = :photo, total_score = if_not_exists(total_score, :zero) + :score, max_streak = if_not_exists(max_streak, :zero)',
-            ExpressionAttributeNames: {
-                '#name': 'name'
-            },
-            ExpressionAttributeValues: {
-                ':name': name || 'Anonymous',
-                ':email': email || '',
-                ':photo': photo || '',
-                ':score': score || 0,
-                ':zero': 0
-            },
-            ReturnValues: 'ALL_NEW'
-        });
-        
-        const result = await docClient.send(command);
-        
-        // Update max_streak separately if current streak is higher
-        if (streak && (!result.Attributes.max_streak || streak > result.Attributes.max_streak)) {
-            await docClient.send(new UpdateCommand({
-                TableName: 'SantaUsers',
-                Key: { userID: userId },
-                UpdateExpression: 'SET max_streak = :streak',
-                ExpressionAttributeValues: {
-                    ':streak': streak
-                }
-            }));
-        }
+        // Save score to SantaScores table
+        await docClient.send(new PutCommand({
+            TableName: 'SantaScores',
+            Item: {
+                userID: userId,
+                timestamp: Date.now(),
+                score: score,
+                streak: streak || 0
+            }
+        }));
         
         return {
             statusCode: 200,

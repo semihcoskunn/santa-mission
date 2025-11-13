@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, GetCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, GetCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -7,7 +7,7 @@ const docClient = DynamoDBDocumentClient.from(client);
 exports.handler = async (event) => {
     const headers = {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET,OPTIONS',
+        'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type'
     };
     
@@ -15,6 +15,45 @@ exports.handler = async (event) => {
         return { statusCode: 200, headers, body: '' };
     }
     
+    // POST - Create/Update user
+    if (event.httpMethod === 'POST') {
+        try {
+            const body = event['body-json'] || JSON.parse(event.body || '{}');
+            const { userId, name, email, photo } = body;
+            
+            if (!userId) {
+                return {
+                    statusCode: 400,
+                    headers,
+                    body: JSON.stringify({ error: 'userId required' })
+                };
+            }
+            
+            await docClient.send(new PutCommand({
+                TableName: 'SantaUsers',
+                Item: {
+                    userID: userId,
+                    name: name || 'Anonymous',
+                    email: email || '',
+                    photo: photo || ''
+                }
+            }));
+            
+            return {
+                statusCode: 200,
+                headers,
+                body: JSON.stringify({ success: true })
+            };
+        } catch (error) {
+            return {
+                statusCode: 500,
+                headers,
+                body: JSON.stringify({ error: error.message })
+            };
+        }
+    }
+    
+    // GET - Retrieve user
     try {
         const userId = event.queryStringParameters?.userId;
         

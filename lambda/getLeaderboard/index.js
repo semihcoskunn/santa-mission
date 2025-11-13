@@ -16,16 +16,38 @@ exports.handler = async (event) => {
     }
     
     try {
-        const command = new ScanCommand({
+        // Get all users
+        const usersResponse = await docClient.send(new ScanCommand({
             TableName: 'SantaUsers',
-            ProjectionExpression: 'userID, #n, photo, total_score, max_streak',
+            ProjectionExpression: 'userID, #n, photo',
             ExpressionAttributeNames: { '#n': 'name' }
+        }));
+        
+        // Get all scores
+        const scoresResponse = await docClient.send(new ScanCommand({
+            TableName: 'SantaScores'
+        }));
+        
+        // Calculate total scores and max streaks per user
+        const userStats = {};
+        scoresResponse.Items.forEach(score => {
+            if (!userStats[score.userID]) {
+                userStats[score.userID] = { total_score: 0, max_streak: 0 };
+            }
+            userStats[score.userID].total_score += score.score || 0;
+            userStats[score.userID].max_streak = Math.max(userStats[score.userID].max_streak, score.streak || 0);
         });
         
-        const response = await docClient.send(command);
-        
-        const leaderboard = response.Items
-            .sort((a, b) => (b.total_score || 0) - (a.total_score || 0))
+        // Combine user info with stats
+        const leaderboard = usersResponse.Items
+            .map(user => ({
+                userID: user.userID,
+                name: user.name,
+                photo: user.photo,
+                total_score: userStats[user.userID]?.total_score || 0,
+                max_streak: userStats[user.userID]?.max_streak || 0
+            }))
+            .sort((a, b) => b.total_score - a.total_score)
             .slice(0, 1000);
         
         return {

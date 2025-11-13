@@ -33,18 +33,16 @@ async function handleGoogleSignIn(response) {
     // LocalStorage'a kaydet
     localStorage.setItem('santa_user', JSON.stringify(userData));
     
-    // Database'e kullanıcıyı ekle (0 skor ile)
+    // Database'e kullanıcıyı ekle
     try {
-        await fetch(`${API_URL}/update-score`, {
+        await fetch(`${API_URL}/user`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 userId: userData.userId,
                 name: userData.name,
                 email: userData.email,
-                photo: userData.photo,
-                score: 0,
-                streak: 0
+                photo: userData.photo
             })
         });
     } catch (error) {
