@@ -49,6 +49,8 @@ exports.handler = async (event) => {
                 }
             }
             
+            const { profileEdited } = body;
+            
             await docClient.send(new PutCommand({
                 TableName: 'SantaUsers',
                 Item: {
@@ -58,7 +60,8 @@ exports.handler = async (event) => {
                     username: username || '',
                     name: name || `${firstName || ''} ${lastName || ''}`.trim() || 'Anonymous',
                     email: email || '',
-                    photo: photo || ''
+                    photo: photo || '',
+                    profileEdited: profileEdited || false
                 }
             }));
             

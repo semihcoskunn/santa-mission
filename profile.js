@@ -1,166 +1,157 @@
-class ProfileManager {
-    constructor() {
-        this.user = null;
-        this.init();
-    }
+const API_URL = 'https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod';
 
-    init() {
-        this.createSnowfall();
-        this.setupLoginButton();
-        this.checkUserStatus();
-    }
+const user = getCurrentUser();
+if (!user) {
+    window.location.href = 'index.html';
+}
 
-    setupLoginButton() {
-        const loginBtn = document.getElementById('loginBtn');
+let userData = null;
+
+// Load user data
+async function loadProfile() {
+    try {
+        const response = await fetch(`${API_URL}/user?userId=${user.userId}`);
+        userData = await response.json();
         
-        if (loginBtn) {
-            loginBtn.addEventListener('click', () => {
-                if (!this.user) {
-                    window.location.href = 'index.html';
-                }
-            });
-        }
-    }
-
-    async checkUserStatus() {
-        try {
-            const response = await fetch('https://santa-mission.onrender.com/api/user', {
-                credentials: 'include'
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    this.user = data.user;
-                    this.updateProfile();
-                } else {
-                    window.location.href = 'index.html';
-                }
-            } else {
-                window.location.href = 'index.html';
-            }
-        } catch (error) {
-            console.log('Backend bağlantısı yok');
-            window.location.href = 'index.html';
-        }
-    }
-
-    updateProfile() {
-        const loginBtn = document.getElementById('loginBtn');
-        const userMenu = document.getElementById('userMenu');
+        document.getElementById('profilePhoto').src = user.photo;
+        document.getElementById('profileName').textContent = `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || 'Kullanıcı';
+        document.getElementById('profileUsername').textContent = `@${userData.username || 'username'}`;
+        document.getElementById('profileEmail').textContent = user.email;
         
-        if (loginBtn && userMenu) {
-            loginBtn.textContent = this.user.name;
-            loginBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
-            
-            document.getElementById('userAvatar').src = this.user.photo;
-            document.getElementById('userName').textContent = this.user.name;
-            document.getElementById('userEmail').textContent = this.user.email;
-            
-            loginBtn.onclick = (e) => {
-                e.stopPropagation();
-                userMenu.style.display = userMenu.style.display === 'none' ? 'block' : 'none';
-            };
-            
-            document.addEventListener('click', (e) => {
-                if (!userMenu.contains(e.target) && e.target !== loginBtn) {
-                    userMenu.style.display = 'none';
-                }
-            });
-            
-            document.getElementById('profileBtn').onclick = (e) => {
-                e.preventDefault();
-                window.location.href = 'profile.html';
-            };
-            
-            document.getElementById('notificationsBtn').onclick = (e) => {
-                e.preventDefault();
-                alert('Bildirimler yakında!');
-            };
-            
-            document.getElementById('settingsBtn').onclick = (e) => {
-                e.preventDefault();
-                alert('Ayarlar yakında!');
-            };
-            
-            document.getElementById('logoutBtn').onclick = (e) => {
-                e.preventDefault();
-                if (confirm('Çıkış yapmak istiyor musunuz?')) {
-                    window.location.href = 'https://santa-mission.onrender.com/logout';
-                }
-            };
+        // Get scores from SantaScores
+        const scoresResponse = await fetch(`${API_URL}/leaderboard`);
+        const scoresData = await scoresResponse.json();
+        const userScore = scoresData.leaderboard?.find(u => u.userID === user.userId);
+        
+        document.getElementById('totalScore').textContent = userScore?.total_score || 0;
+        document.getElementById('maxStreak').textContent = userScore?.max_streak || 0;
+        
+        // Check if profile can be edited (profileEdited flag)
+        if (userData.profileEdited) {
+            document.getElementById('editBtn').style.display = 'none';
         }
-
-        // Profil bilgilerini doldur
-        document.getElementById('profileAvatarLarge').style.backgroundImage = `url(${this.user.photo})`;
-        document.getElementById('profileName').textContent = this.user.name;
-        document.getElementById('profileEmail').textContent = this.user.email;
-
-        // İstatistikleri yükle
-        this.loadStats();
-    }
-
-    async loadStats() {
-        try {
-            // Backend'den istatistikleri yükle
-            const response = await fetch('https://santa-mission.onrender.com/api/user', {
-                credentials: 'include'
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    document.getElementById('totalScore').textContent = data.user.total_score || 0;
-                    document.getElementById('totalStreak').textContent = data.user.max_streak || 0;
-                }
-            }
-            
-            // Sıralamayı yükle
-            const rankResponse = await fetch('https://santa-mission.onrender.com/api/my-rank', {
-                credentials: 'include'
-            });
-            
-            if (rankResponse.ok) {
-                const rankData = await rankResponse.json();
-                if (rankData.success && rankData.rank) {
-                    document.getElementById('userRank').textContent = `#${rankData.rank.rank}`;
-                } else {
-                    document.getElementById('userRank').textContent = '#-';
-                }
-            }
-        } catch (error) {
-            console.error('Stats yüklenemedi:', error);
-            document.getElementById('totalScore').textContent = '0';
-            document.getElementById('totalStreak').textContent = '0';
-            document.getElementById('userRank').textContent = '#-';
-        }
-    }
-
-    createSnowfall() {
-        const snowfall = document.querySelector('.snowfall');
-        const snowflakeCount = 120;
-        const snowflakeTypes = ['❄', '❅', '✻', '✼', '❆'];
-
-        for (let i = 0; i < snowflakeCount; i++) {
-            const snowflake = document.createElement('div');
-            snowflake.classList.add('snowflake');
-            snowflake.innerHTML = snowflakeTypes[Math.floor(Math.random() * snowflakeTypes.length)];
-            
-            snowflake.style.left = Math.random() * 100 + '%';
-            snowflake.style.animationDuration = Math.random() * 8 + 6 + 's';
-            snowflake.style.animationDelay = Math.random() * 5 + 's';
-            snowflake.style.fontSize = Math.random() * 20 + 15 + 'px';
-            snowflake.style.opacity = Math.random() * 0.9 + 0.3;
-            
-            if (Math.random() > 0.7) {
-                snowflake.style.filter = 'blur(1px)';
-            }
-            
-            snowfall.appendChild(snowflake);
-        }
+    } catch (error) {
+        console.error('Profile load error:', error);
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    new ProfileManager();
+// Edit button
+document.getElementById('editBtn').addEventListener('click', () => {
+    document.getElementById('editSection').style.display = 'block';
+    document.getElementById('editBtn').style.display = 'none';
+    
+    document.getElementById('editFirstName').value = userData.firstName || '';
+    document.getElementById('editLastName').value = userData.lastName || '';
+    document.getElementById('editUsername').value = userData.username || '';
 });
+
+// Cancel button
+document.getElementById('cancelBtn').addEventListener('click', () => {
+    document.getElementById('editSection').style.display = 'none';
+    document.getElementById('editBtn').style.display = 'inline-block';
+});
+
+// Username check
+let usernameTimeout;
+document.getElementById('editUsername').addEventListener('input', (e) => {
+    clearTimeout(usernameTimeout);
+    const username = e.target.value.trim();
+    const check = document.getElementById('usernameCheck');
+    
+    if (username === userData.username) {
+        check.textContent = '';
+        return;
+    }
+    
+    if (username.length < 3) {
+        check.textContent = '';
+        return;
+    }
+    
+    usernameTimeout = setTimeout(async () => {
+        try {
+            const response = await fetch(`${API_URL}/check-username?username=${username}`);
+            const data = await response.json();
+            
+            if (data.available) {
+                check.textContent = '✓ Kullanıcı adı müsait';
+                check.style.color = '#27ae60';
+            } else {
+                check.textContent = '✗ Bu kullanıcı adı alınmış';
+                check.style.color = '#dc3545';
+            }
+        } catch (error) {
+            console.error('Username check error:', error);
+        }
+    }, 500);
+});
+
+// Save button
+document.getElementById('saveBtn').addEventListener('click', async () => {
+    const firstName = document.getElementById('editFirstName').value.trim();
+    const lastName = document.getElementById('editLastName').value.trim();
+    const username = document.getElementById('editUsername').value.trim();
+    
+    if (!firstName || !lastName || !username) {
+        alert('Lütfen tüm alanları doldurun');
+        return;
+    }
+    
+    if (username.length < 3) {
+        alert('Kullanıcı adı en az 3 karakter olmalı');
+        return;
+    }
+    
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Kaydediliyor...';
+    
+    try {
+        const response = await fetch(`${API_URL}/user`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: user.userId,
+                firstName,
+                lastName,
+                username,
+                email: user.email,
+                photo: user.photo,
+                profileEdited: true
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert('Profil güncellendi! Artık bilgilerinizi değiştiremezsiniz.');
+            location.reload();
+        } else {
+            alert(data.error || 'Bir hata oluştu');
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Kaydet';
+        }
+    } catch (error) {
+        console.error('Save error:', error);
+        alert('Bir hata oluştu');
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Kaydet';
+    }
+});
+
+// Snowfall
+const snowfall = document.querySelector('.snowfall');
+const snowflakeTypes = ['❄', '❅', '✻'];
+for (let i = 0; i < 80; i++) {
+    const snowflake = document.createElement('div');
+    snowflake.className = 'snowflake';
+    snowflake.textContent = snowflakeTypes[i % 3];
+    snowflake.style.left = Math.random() * 100 + '%';
+    snowflake.style.animationDuration = (Math.random() * 8 + 6) + 's';
+    snowflake.style.animationDelay = '0s';
+    snowflake.style.fontSize = (Math.random() * 10 + 15) + 'px';
+    snowflake.style.opacity = Math.random() * 0.6 + 0.3;
+    snowfall.appendChild(snowflake);
+}
+
+loadProfile();

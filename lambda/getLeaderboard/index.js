@@ -19,8 +19,7 @@ exports.handler = async (event) => {
         // Get all users
         const usersResponse = await docClient.send(new ScanCommand({
             TableName: 'SantaUsers',
-            ProjectionExpression: 'userID, #n, photo',
-            ExpressionAttributeNames: { '#n': 'name' }
+            ProjectionExpression: 'userID, username, photo',
         }));
         
         // Get all scores
@@ -42,11 +41,12 @@ exports.handler = async (event) => {
         const leaderboard = usersResponse.Items
             .map(user => ({
                 userID: user.userID,
-                name: user.name,
+                name: user.username || 'User',
                 photo: user.photo,
                 total_score: userStats[user.userID]?.total_score || 0,
                 max_streak: userStats[user.userID]?.max_streak || 0
             }))
+            .filter(user => user.total_score > 0)
             .sort((a, b) => b.total_score - a.total_score)
             .slice(0, 1000);
         
