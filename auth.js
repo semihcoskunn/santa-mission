@@ -52,6 +52,8 @@ async function handleGoogleSignIn(response) {
 
 // Çıkış
 function logout() {
+    // Google oturumunu kapat
+    google.accounts.id.disableAutoSelect();
     localStorage.removeItem('santa_user');
     window.location.href = '/';
 }
