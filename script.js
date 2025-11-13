@@ -149,7 +149,7 @@ class LanguageManager {
         const snowfall = document.querySelector('.snowfall');
         if (!snowfall) return;
         
-        const snowflakeCount = 50;
+        const snowflakeCount = 80;
         const snowflakeTypes = ['❄', '❅', '✻'];
 
         for (let i = 0; i < snowflakeCount; i++) {
@@ -157,8 +157,9 @@ class LanguageManager {
             snowflake.className = 'snowflake';
             snowflake.textContent = snowflakeTypes[i % 3];
             snowflake.style.left = Math.random() * 100 + '%';
+            snowflake.style.top = Math.random() * -100 + '%';
             snowflake.style.animationDuration = (Math.random() * 8 + 6) + 's';
-            snowflake.style.animationDelay = (Math.random() * 5) + 's';
+            snowflake.style.animationDelay = '0s';
             snowflake.style.fontSize = (Math.random() * 10 + 15) + 'px';
             snowflake.style.opacity = Math.random() * 0.6 + 0.3;
             snowfall.appendChild(snowflake);
