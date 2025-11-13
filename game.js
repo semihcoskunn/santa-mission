@@ -134,10 +134,10 @@ class GameManager {
         this.setupQuests();
         this.loadQuests();
         
-        const firstDelay = Math.random() * 60000;
+        const firstDelay = Math.random() * 30000;
         setTimeout(() => {
             this.spawnRandomIcon();
-            setInterval(() => this.spawnRandomIcon(), 30000);
+            setInterval(() => this.spawnRandomIcon(), 20000);
         }, firstDelay);
     }
     
