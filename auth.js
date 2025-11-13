@@ -48,11 +48,11 @@ async function handleGoogleSignIn(response) {
             window.location.reload();
         } else {
             // Profile incomplete, redirect to complete profile
-            window.location.href = 'complete-profile.html';
+            window.location.href = '/complete-profile';
         }
     } catch (error) {
         // New user, redirect to complete profile
-        window.location.href = 'complete-profile.html';
+        window.location.href = '/complete-profile';
     }
 }
 
