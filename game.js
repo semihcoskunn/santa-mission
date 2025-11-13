@@ -40,35 +40,35 @@ class GameManager {
                 }
             });
             
-            const googleBtn = document.querySelector('.google-btn');
-            if (googleBtn) {
-                googleBtn.addEventListener('click', () => {
-                    window.location.href = 'https://santa-mission.onrender.com/auth/google';
-                });
-            }
+
         }
     }
 
     async checkUserStatus() {
+        // LocalStorage'dan kullanıcı bilgisini al
+        const user = getCurrentUser();
+        if (user) {
+            await this.loadUserFromDatabase(user.userId);
+        }
+    }
+    
+    async loadUserFromDatabase(userId) {
         try {
-            const response = await fetch('https://api.semihcoskun.com.tr/api/user', {
-                credentials: 'include'
-            });
-            
+            const response = await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/user?userId=${userId}`);
             if (response.ok) {
                 const data = await response.json();
-                if (data.success) {
-                    this.updateUIForLoggedInUser(data.user);
-                }
+                const user = getCurrentUser();
+                const fullUser = {
+                    ...user,
+                    total_score: data.total_score || 0,
+                    max_streak: data.max_streak || 0
+                };
+                this.updateUIForLoggedInUser(fullUser);
             }
         } catch (error) {
-            console.log('Backend bağlantısı yok');
-        }
-        
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('login') === 'success') {
-            window.history.replaceState({}, document.title, window.location.pathname);
-            setTimeout(() => this.checkUserStatus(), 500);
+            console.log('Kullanıcı verileri yüklenemedi:', error);
+            const user = getCurrentUser();
+            if (user) this.updateUIForLoggedInUser(user);
         }
     }
 
@@ -78,7 +78,7 @@ class GameManager {
         const statusMessage = document.getElementById('statusMessage');
         
         this.isLoggedIn = true;
-        this.userId = user.id;
+        this.userId = user.userId;
         this.score = user.total_score || 0;
         this.streak = user.max_streak || 0;
         
@@ -86,9 +86,9 @@ class GameManager {
             loginBtn.textContent = user.name;
             loginBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
             
-            document.getElementById('userAvatar').src = user.photo;
-            document.getElementById('userName').textContent = user.name;
-            document.getElementById('userEmail').textContent = user.email;
+            document.getElementById('userAvatar').src = user.photo || '';
+            document.getElementById('userName').textContent = user.name || '';
+            document.getElementById('userEmail').textContent = user.email || '';
             
             loginBtn.onclick = (e) => {
                 e.stopPropagation();
@@ -119,7 +119,7 @@ class GameManager {
             document.getElementById('logoutBtn').onclick = (e) => {
                 e.preventDefault();
                 if (confirm('Çıkış yapmak istiyor musunuz?')) {
-                    window.location.href = 'https://api.semihcoskun.com.tr/logout';
+                    logout();
                 }
             };
         }
@@ -151,99 +151,6 @@ class GameManager {
                 questsContent.classList.toggle('collapsed');
                 toggleBtn.textContent = questsContent.classList.contains('collapsed') ? '+' : '−';
             });
-        }
-        
-        await this.loadQuests();
-        
-        document.querySelectorAll('.quest-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const questId = item.dataset.quest;
-                this.claimQuest(questId, item);
-            });
-        });
-    }
-    
-    async loadQuests() {
-        try {
-            const response = await fetch('https://api.semihcoskun.com.tr/api/daily-quests', {
-                credentials: 'include'
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    this.quests = data.quests;
-                    this.updateQuestsUI();
-                }
-            }
-        } catch (error) {
-            console.log('Görevler yüklenemedi:', error);
-        }
-    }
-    
-    updateQuestsUI() {
-        if (!this.quests) return;
-        
-        const configs = {
-            collect5: { max: 5 },
-            collect10: { max: 10 },
-            combo5: { max: 5 },
-            score200: { max: 200 }
-        };
-        
-        Object.keys(configs).forEach(questId => {
-            const quest = this.quests[questId] || { progress: 0, claimed: false };
-            const config = configs[questId];
-            const item = document.querySelector(`[data-quest="${questId}"]`);
-            
-            if (item) {
-                const progress = Math.min(quest.progress, config.max);
-                item.querySelector('.quest-progress-mini').textContent = `${progress}/${config.max}`;
-                
-                if (quest.claimed) {
-                    item.classList.add('claimed');
-                    item.querySelector('.quest-progress-mini').textContent = '✓';
-                } else if (progress >= config.max) {
-                    item.classList.add('completed');
-                }
-            }
-        });
-    }
-    
-    async claimQuest(questId, item) {
-        try {
-            const response = await fetch('https://api.semihcoskun.com.tr/api/claim-quest', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ questId })
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    this.score = data.total_score;
-                    this.updateScoreDisplay(data.reward);
-                    await this.loadQuests();
-                    this.showCombo(1, data.reward);
-                }
-            }
-        } catch (error) {
-            console.log('Görev ödülü alınamadı:', error);
-        }
-    }
-    
-    async updateQuestProgress(type, value = 1) {
-        try {
-            await fetch('https://api.semihcoskun.com.tr/api/update-quest', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ type, value })
-            });
-            await this.loadQuests();
-        } catch (error) {
-            console.log('Görev ilerlemesi kaydedilemedi:', error);
         }
     }
 
@@ -337,11 +244,8 @@ class GameManager {
         
         if (comboMultiplier > 1) {
             this.showCombo(comboMultiplier, totalPoints);
-            this.updateQuestProgress('combo');
         }
         
-        this.updateQuestProgress('collect');
-        this.updateQuestProgress('score', totalPoints);
         this.updateScoreDisplay(totalPoints);
         
         icon.style.animation = 'collectPulse 0.3s ease';
@@ -361,8 +265,11 @@ class GameManager {
             await fetch('https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/update-score', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ score, streak })
+                body: JSON.stringify({ 
+                    userId: this.userId,
+                    score: this.score,
+                    streak: this.streak
+                })
             });
         } catch (error) {
             console.log('Skor kaydedilemedi:', error);

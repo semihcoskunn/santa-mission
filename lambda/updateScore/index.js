@@ -6,8 +6,15 @@ const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
     try {
-        const userId = event.requestContext.authorizer.claims.sub;
-        const { score, streak } = JSON.parse(event.body);
+        const { userId, score, streak } = JSON.parse(event.body);
+        
+        if (!userId) {
+            return {
+                statusCode: 400,
+                headers: { 'Access-Control-Allow-Origin': '*' },
+                body: JSON.stringify({ success: false, error: 'userId is required' })
+            };
+        }
         
         const command = new UpdateCommand({
             TableName: 'SantaUsers',

@@ -195,37 +195,15 @@ class LanguageManager {
                 }
             });
             
-            // Google giriş butonu
-            const googleBtn = document.querySelector('.google-btn');
-            if (googleBtn) {
-                googleBtn.addEventListener('click', () => {
-                    window.location.href = 'https://api.semihcoskun.com.tr/auth/google';
-                });
-            }
+
         }
     }
 
     async checkUserStatus() {
-        try {
-            const response = await fetch('https://api.semihcoskun.com.tr/api/user', {
-                credentials: 'include'
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    this.updateUIForLoggedInUser(data.user);
-                }
-            }
-        } catch (error) {
-            console.log('Backend bağlantısı yok veya kullanıcı giriş yapmamış');
-        }
-        
-        // URL'de login=success varsa sayfayı yenile
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('login') === 'success') {
-            window.history.replaceState({}, document.title, window.location.pathname);
-            setTimeout(() => this.checkUserStatus(), 500);
+        // LocalStorage'dan kullanıcı bilgisini al
+        const user = getCurrentUser();
+        if (user) {
+            this.updateUIForLoggedInUser(user);
         }
     }
 
@@ -279,7 +257,7 @@ class LanguageManager {
             document.getElementById('logoutBtn').onclick = (e) => {
                 e.preventDefault();
                 if (confirm(this.currentLang === 'tr' ? 'Çıkış yapmak istiyor musunuz?' : 'Do you want to logout?')) {
-                    window.location.href = 'https://api.semihcoskun.com.tr/logout';
+                    logout();
                 }
             };
         }
