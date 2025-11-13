@@ -139,27 +139,45 @@ class LeaderboardManager {
     }
 
     renderLeaderboard() {
+        // Top 3 Podium
+        if (this.leaderboard[0]) {
+            this.renderPodiumItem('rank1', this.leaderboard[0]);
+        }
+        if (this.leaderboard[1]) {
+            this.renderPodiumItem('rank2', this.leaderboard[1]);
+        }
+        if (this.leaderboard[2]) {
+            this.renderPodiumItem('rank3', this.leaderboard[2]);
+        }
+
+        // Geri kalan liste (4-1000)
         const listContainer = document.getElementById('leaderboardList');
         listContainer.innerHTML = '';
         
-        for (let i = 0; i < this.leaderboard.length; i++) {
+        for (let i = 3; i < this.leaderboard.length; i++) {
             const user = this.leaderboard[i];
             const item = this.createLeaderboardItem(user, i + 1);
             listContainer.appendChild(item);
         }
     }
 
+    renderPodiumItem(elementId, user) {
+        const element = document.getElementById(elementId);
+        const avatar = element.querySelector('.podium-avatar');
+        const name = element.querySelector('.podium-name');
+        const score = element.querySelector('.podium-score');
+        
+        avatar.src = user.photo || 'https://via.placeholder.com/80';
+        name.textContent = user.name;
+        score.textContent = user.total_score || 0;
+    }
+
     createLeaderboardItem(user, rank) {
         const item = document.createElement('div');
         item.className = 'leaderboard-item';
         
-        let rankDisplay = `#${rank}`;
-        if (rank === 1) rankDisplay = '🥇';
-        else if (rank === 2) rankDisplay = '🥈';
-        else if (rank === 3) rankDisplay = '🥉';
-        
         item.innerHTML = `
-            <div class="item-rank">${rankDisplay}</div>
+            <div class="item-rank">#${rank}</div>
             <img class="item-avatar" src="${user.photo || 'https://via.placeholder.com/50'}" alt="${user.name}">
             <div class="item-info">
                 <div class="item-name">${user.name}</div>
