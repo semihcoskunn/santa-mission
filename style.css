@@ -610,27 +610,34 @@ body {
     
     /* Compact Score Display */
     .score-display {
-        top: 55px;
-        right: 8px;
-        padding: 10px 15px;
-        min-width: 80px;
-        border-radius: 15px;
+        top: 50px;
+        right: 5px;
+        padding: 6px 10px;
+        min-width: 60px;
+        border-radius: 12px;
     }
     
     .score-display .score-value {
-        font-size: 20px;
-    }
-    
-    .score-display .score-label {
-        font-size: 11px;
-    }
-    
-    .score-display .streak-icon {
         font-size: 16px;
     }
     
+    .score-display .score-label {
+        font-size: 9px;
+        margin-top: 2px;
+    }
+    
+    .score-display .streak-container {
+        margin-top: 5px;
+        padding-top: 5px;
+        gap: 5px;
+    }
+    
+    .score-display .streak-icon {
+        font-size: 12px;
+    }
+    
     .score-display .streak-count {
-        font-size: 14px;
+        font-size: 12px;
     }
     
     /* Hero Section */
@@ -750,13 +757,26 @@ body {
     }
     
     .score-display {
-        top: 48px;
-        right: 6px;
-        padding: 8px 12px;
+        top: 45px;
+        right: 4px;
+        padding: 5px 8px;
+        min-width: 50px;
     }
     
     .score-display .score-value {
-        font-size: 18px;
+        font-size: 14px;
+    }
+    
+    .score-display .score-label {
+        font-size: 8px;
+    }
+    
+    .score-display .streak-icon {
+        font-size: 10px;
+    }
+    
+    .score-display .streak-count {
+        font-size: 10px;
     }
     
     .hero-title {
