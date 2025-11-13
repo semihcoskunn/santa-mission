@@ -569,14 +569,96 @@ body {
     
     .nav-container {
         padding: 0 1rem;
+        flex-wrap: wrap;
     }
     
     .logo-text {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
+    }
+    
+    .logo-icon {
+        font-size: 1.8rem;
+    }
+    
+    .nav-right {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .leaderboard-btn,
+    .login-btn,
+    .home-btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+        min-width: auto;
+    }
+    
+    .language-switcher {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.5rem;
     }
     
     .mission-cards {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .mission-card {
+        padding: 1.5rem;
+    }
+    
+    .modal-content {
+        padding: 2rem 1.5rem;
+        width: 95%;
+    }
+    
+    .user-menu {
+        right: -10px;
+        min-width: 260px;
+    }
+    
+    .score-display {
+        top: 70px;
+        right: 10px;
+        padding: 15px 20px;
+        min-width: 100px;
+    }
+    
+    .score-display .score-value {
+        font-size: 24px;
+    }
+    
+    .container {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .cta-button {
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+    }
+    
+    .mission-section h2 {
+        font-size: 2rem;
+    }
+    
+    .logo-text {
+        display: none;
+    }
+    
+    .navbar {
+        padding: 0.5rem 0;
     }
 }
 
