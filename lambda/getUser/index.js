@@ -6,7 +6,15 @@ const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
     try {
-        const userId = event.requestContext.authorizer.claims.sub;
+        const userId = event.queryStringParameters?.userId;
+        
+        if (!userId) {
+            return {
+                statusCode: 400,
+                headers: { 'Access-Control-Allow-Origin': '*' },
+                body: JSON.stringify({ success: false, error: 'userId is required' })
+            };
+        }
         
         const command = new GetCommand({
             TableName: 'SantaUsers',
@@ -26,10 +34,7 @@ exports.handler = async (event) => {
         return {
             statusCode: 200,
             headers: { 'Access-Control-Allow-Origin': '*' },
-            body: JSON.stringify({
-                success: true,
-                user: response.Item
-            })
+            body: JSON.stringify(response.Item || {})
         };
     } catch (error) {
         return {
