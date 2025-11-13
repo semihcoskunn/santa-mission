@@ -191,24 +191,18 @@ class LeaderboardManager {
 
     createSnowfall() {
         const snowfall = document.querySelector('.snowfall');
-        const snowflakeCount = 120;
-        const snowflakeTypes = ['❄', '❅', '✻', '✼', '❆'];
-
-        for (let i = 0; i < snowflakeCount; i++) {
+        if (!snowfall) return;
+        
+        const snowflakeTypes = ['❄', '❅', '✻'];
+        for (let i = 0; i < 80; i++) {
             const snowflake = document.createElement('div');
-            snowflake.classList.add('snowflake');
-            snowflake.innerHTML = snowflakeTypes[Math.floor(Math.random() * snowflakeTypes.length)];
-            
+            snowflake.className = 'snowflake';
+            snowflake.textContent = snowflakeTypes[i % 3];
             snowflake.style.left = Math.random() * 100 + '%';
-            snowflake.style.animationDuration = Math.random() * 8 + 6 + 's';
-            snowflake.style.animationDelay = Math.random() * 5 + 's';
-            snowflake.style.fontSize = Math.random() * 20 + 15 + 'px';
-            snowflake.style.opacity = Math.random() * 0.9 + 0.3;
-            
-            if (Math.random() > 0.7) {
-                snowflake.style.filter = 'blur(1px)';
-            }
-            
+            snowflake.style.animationDuration = (Math.random() * 8 + 6) + 's';
+            snowflake.style.animationDelay = (Math.random() * 5) + 's';
+            snowflake.style.fontSize = (Math.random() * 10 + 15) + 'px';
+            snowflake.style.opacity = Math.random() * 0.6 + 0.3;
             snowfall.appendChild(snowflake);
         }
     }
