@@ -10,17 +10,22 @@ let userData = null;
 // Load user data
 async function loadProfile() {
     try {
+        console.log('Loading profile for userId:', user.userId);
         const response = await fetch(`${API_URL}/user?userId=${user.userId}`);
+        console.log('Response status:', response.status);
         userData = await response.json();
+        console.log('User data:', userData);
         
-        document.getElementById('profilePhoto').src = user.photo;
-        document.getElementById('profileName').textContent = `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || 'Kullanıcı';
+        document.getElementById('profilePhoto').src = user.photo || '';
+        document.getElementById('profileName').textContent = `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || user.name || 'Kullanıcı';
         document.getElementById('profileUsername').textContent = `@${userData.username || 'username'}`;
-        document.getElementById('profileEmail').textContent = user.email;
+        document.getElementById('profileEmail').textContent = user.email || 'Email yok';
         
         // Get leaderboard data
+        console.log('Loading leaderboard...');
         const scoresResponse = await fetch(`${API_URL}/leaderboard`);
         const scoresData = await scoresResponse.json();
+        console.log('Leaderboard data:', scoresData);
         const leaderboard = scoresData.leaderboard || [];
         
         // Find user rank
@@ -46,6 +51,7 @@ async function loadProfile() {
         }
     } catch (error) {
         console.error('Profile load error:', error);
+        document.getElementById('profileName').textContent = 'Hata: ' + error.message;
     }
 }
 
