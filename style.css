@@ -236,8 +236,10 @@ body {
     font-weight: 600;
     color: #2c3e50;
     font-size: 16px;
-    word-break: break-word;
     max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .user-email {
