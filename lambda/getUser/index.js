@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, GetCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, GetCommand, PutCommand, ScanCommand } = require('@aws-sdk/lib-dynamodb');
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -29,11 +29,36 @@ exports.handler = async (event) => {
                 };
             }
             
+            const { firstName, lastName, username } = body;
+            
+            // Check if username is taken
+            if (username) {
+                const scanResponse = await docClient.send(new ScanCommand({
+                    TableName: 'SantaUsers',
+                    FilterExpression: 'username = :username AND userID <> :userId',
+                    ExpressionAttributeValues: {
+                        ':username': username,
+                        ':userId': userId
+                    }
+                }));
+                
+                if (scanResponse.Items && scanResponse.Items.length > 0) {
+                    return {
+                        statusCode: 400,
+                        headers,
+                        body: JSON.stringify({ success: false, error: 'Username already taken' })
+                    };
+                }
+            }
+            
             await docClient.send(new PutCommand({
                 TableName: 'SantaUsers',
                 Item: {
                     userID: userId,
-                    name: name || 'Anonymous',
+                    firstName: firstName || '',
+                    lastName: lastName || '',
+                    username: username || '',
+                    name: name || `${firstName || ''} ${lastName || ''}`.trim() || 'Anonymous',
                     email: email || '',
                     photo: photo || ''
                 }

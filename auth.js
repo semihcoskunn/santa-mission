@@ -33,24 +33,27 @@ async function handleGoogleSignIn(response) {
     // LocalStorage'a kaydet
     localStorage.setItem('santa_user', JSON.stringify(userData));
     
-    // Database'e kullanıcıyı ekle
+    // Check if user profile is complete
     try {
-        await fetch(`${API_URL}/user`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userId: userData.userId,
-                name: userData.name,
-                email: userData.email,
-                photo: userData.photo
-            })
-        });
+        const response = await fetch(`${API_URL}/user?userId=${userData.userId}`);
+        const data = await response.json();
+        
+        if (data.username) {
+            // Profile complete, reload page
+            userData.profileCompleted = true;
+            userData.firstName = data.firstName;
+            userData.lastName = data.lastName;
+            userData.username = data.username;
+            localStorage.setItem('santa_user', JSON.stringify(userData));
+            window.location.reload();
+        } else {
+            // Profile incomplete, redirect to complete profile
+            window.location.href = 'complete-profile.html';
+        }
     } catch (error) {
-        console.error('Kullanıcı kaydedilemedi:', error);
+        // New user, redirect to complete profile
+        window.location.href = 'complete-profile.html';
     }
-    
-    // Sayfayı yenile
-    window.location.reload();
 }
 
 // Çıkış

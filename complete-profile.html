@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profili Tamamla | Santa's Secret Mission</title>
+    <link rel="icon" type="image/png" href="logo/santas-secret-mission.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .complete-profile-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .profile-form-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .profile-form-card h1 {
+            color: #c41e3a;
+            margin-bottom: 10px;
+            font-family: 'Mountains of Christmas', cursive;
+        }
+        .profile-form-card p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #c41e3a;
+        }
+        .form-group .error {
+            color: #c41e3a;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        .form-group .success {
+            color: #27ae60;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #c41e3a, #a01729);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="snowfall"></div>
+    
+    <div class="complete-profile-container">
+        <div class="profile-form-card">
+            <h1>🎅 Profili Tamamla</h1>
+            <p>Oyuna başlamadan önce profil bilgilerini tamamla</p>
+            
+            <form id="profileForm">
+                <div class="form-group">
+                    <label for="firstName">Ad *</label>
+                    <input type="text" id="firstName" required>
+                    <div class="error" id="firstNameError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Soyad *</label>
+                    <input type="text" id="lastName" required>
+                    <div class="error" id="lastNameError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="username">Kullanıcı Adı * (benzersiz olmalı)</label>
+                    <input type="text" id="username" required pattern="[a-zA-Z0-9_]{3,20}">
+                    <div class="error" id="usernameError"></div>
+                    <div class="success" id="usernameSuccess"></div>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">Devam Et</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="complete-profile.js"></script>
+</body>
+</html>

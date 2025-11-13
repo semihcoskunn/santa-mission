@@ -5,44 +5,14 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
-    if (event.httpMethod === 'OPTIONS') {
-        return {
-            statusCode: 200,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST,OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type'
-            },
-            body: ''
-        };
-    }
-    
     try {
         console.log('Event:', JSON.stringify(event));
         
-        let body;
-        if (event['body-json']) {
-            body = event['body-json'];
-        } else if (typeof event.body === 'string') {
-            body = JSON.parse(event.body);
-        } else {
-            body = event.body || {};
-        }
-        
-        console.log('Parsed body:', JSON.stringify(body));
-        
-        const { userId, score, streak } = body;
+        // Non-proxy integration: body comes directly as event
+        const { userId, score, streak } = event;
         
         if (!userId || score === undefined) {
-            return {
-                statusCode: 400,
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'POST,OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type'
-                },
-                body: JSON.stringify({ success: false, error: 'userId and score required', debug: { userId, score, body } })
-            };
+            return { success: false, error: 'userId and score required', debug: { userId, score, event } };
         }
         
         // Save score to SantaScores table
@@ -56,16 +26,8 @@ exports.handler = async (event) => {
             }
         }));
         
-        return {
-            statusCode: 200,
-            headers: { 'Access-Control-Allow-Origin': '*' },
-            body: JSON.stringify({ success: true })
-        };
+        return { success: true };
     } catch (error) {
-        return {
-            statusCode: 500,
-            headers: { 'Access-Control-Allow-Origin': '*' },
-            body: JSON.stringify({ success: false, error: error.message })
-        };
+        return { success: false, error: error.message };
     }
 };
