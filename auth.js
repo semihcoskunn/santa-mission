@@ -1,6 +1,6 @@
 // Google Sign-In
 const GOOGLE_CLIENT_ID = '795368355462-ci2fsn6o37aig5do8670jm6sr3hr4786.apps.googleusercontent.com';
-const API_URL = 'https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod';
+const API_URL = 'https://YOUR_NEW_API_ID.execute-api.eu-central-1.amazonaws.com/prod';
 
 // Google SDK yükle
 function loadGoogleSDK() {
