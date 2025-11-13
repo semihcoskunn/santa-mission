@@ -13,7 +13,15 @@ async function loadProfile() {
         console.log('Loading profile for userId:', user.userId);
         const response = await fetch(`${API_URL}/user?userId=${user.userId}`);
         console.log('Response status:', response.status);
-        userData = await response.json();
+        const rawData = await response.json();
+        console.log('Raw data:', rawData);
+        
+        // Handle non-proxy response
+        if (rawData.body) {
+            userData = JSON.parse(rawData.body);
+        } else {
+            userData = rawData;
+        }
         console.log('User data:', userData);
         
         document.getElementById('profilePhoto').src = user.photo || '';
