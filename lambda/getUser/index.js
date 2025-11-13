@@ -5,16 +5,28 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
+    const headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+    };
+    
+    if (event.httpMethod === 'OPTIONS') {
+        return { statusCode: 200, headers, body: '' };
+    }
+    
     try {
-        // Non-proxy integration: check if it's GET or POST
-        const isGet = event.userId !== undefined; // GET has userId in query
-        
-        if (!isGet) {
+        if (event.httpMethod === 'POST') {
             // POST - Create/Update user
-            const { userId, name, email, photo, firstName, lastName, username } = event;
+            const body = JSON.parse(event.body || '{}');
+            const { userId, name, email, photo, firstName, lastName, username } = body;
             
             if (!userId) {
-                return { success: false, error: 'userId required' };
+                return {
+                    statusCode: 400,
+                    headers,
+                    body: JSON.stringify({ success: false, error: 'userId required' })
+                };
             }
             
             // Check if username is taken
@@ -29,7 +41,11 @@ exports.handler = async (event) => {
                 }));
                 
                 if (scanResponse.Items && scanResponse.Items.length > 0) {
-                    return { success: false, error: 'Username already taken' };
+                    return {
+                        statusCode: 400,
+                        headers,
+                        body: JSON.stringify({ success: false, error: 'Username already taken' })
+                    };
                 }
             }
             
@@ -46,13 +62,21 @@ exports.handler = async (event) => {
                 }
             }));
             
-            return { success: true };
+            return {
+                statusCode: 200,
+                headers,
+                body: JSON.stringify({ success: true })
+            };
         } else {
             // GET - Retrieve user
-            const userId = event.userId;
+            const userId = event.queryStringParameters?.userId;
             
             if (!userId) {
-                return { success: false, error: 'userId is required' };
+                return {
+                    statusCode: 400,
+                    headers,
+                    body: JSON.stringify({ success: false, error: 'userId is required' })
+                };
             }
             
             const command = new GetCommand({
@@ -62,9 +86,17 @@ exports.handler = async (event) => {
             
             const response = await docClient.send(command);
             
-            return response.Item || {};
+            return {
+                statusCode: 200,
+                headers,
+                body: JSON.stringify(response.Item || {})
+            };
         }
     } catch (error) {
-        return { success: false, error: error.message };
+        return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ success: false, error: error.message })
+        };
     }
 };
