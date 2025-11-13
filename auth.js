@@ -1,6 +1,6 @@
 // Google Sign-In
 const GOOGLE_CLIENT_ID = '795368355462-ci2fsn6o37aig5do8670jm6sr3hr4786.apps.googleusercontent.com';
-const API_URL = 'https://YOUR_NEW_API_ID.execute-api.eu-central-1.amazonaws.com/prod';
+const API_URL = 'https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod';
 
 // Google SDK yükle
 function loadGoogleSDK() {
@@ -12,7 +12,7 @@ function loadGoogleSDK() {
 }
 
 // Google ile giriş
-function handleGoogleSignIn(response) {
+async function handleGoogleSignIn(response) {
     const credential = response.credential;
     
     // JWT token'ı decode et
@@ -27,6 +27,24 @@ function handleGoogleSignIn(response) {
     
     // LocalStorage'a kaydet
     localStorage.setItem('santa_user', JSON.stringify(userData));
+    
+    // Database'e kullanıcıyı ekle (0 skor ile)
+    try {
+        await fetch(`${API_URL}/update-score`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: userData.userId,
+                name: userData.name,
+                email: userData.email,
+                photo: userData.photo,
+                score: 0,
+                streak: 0
+            })
+        });
+    } catch (error) {
+        console.error('Kullanıcı kaydedilemedi:', error);
+    }
     
     // Sayfayı yenile
     window.location.reload();
