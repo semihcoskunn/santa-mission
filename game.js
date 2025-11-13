@@ -131,12 +131,113 @@ class GameManager {
 
     startGame() {
         this.updateScoreDisplay();
+        this.setupQuests();
+        this.loadQuests();
         
         const firstDelay = Math.random() * 60000;
         setTimeout(() => {
             this.spawnRandomIcon();
             setInterval(() => this.spawnRandomIcon(), 30000);
         }, firstDelay);
+    }
+    
+    setupQuests() {
+        const toggleBtn = document.getElementById('toggleQuests');
+        const questsContent = document.getElementById('questsContent');
+        
+        if (toggleBtn && questsContent) {
+            toggleBtn.addEventListener('click', () => {
+                questsContent.classList.toggle('collapsed');
+                toggleBtn.textContent = questsContent.classList.contains('collapsed') ? '+' : '−';
+            });
+        }
+        
+        document.querySelectorAll('.quest-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (item.classList.contains('completed') && !item.classList.contains('claimed')) {
+                    const questId = item.dataset.quest;
+                    this.claimQuest(questId, item);
+                }
+            });
+        });
+    }
+    
+    loadQuests() {
+        const savedQuests = localStorage.getItem(`quests_${this.userId}`);
+        this.quests = savedQuests ? JSON.parse(savedQuests) : {
+            collect5: { progress: 0, claimed: false },
+            collect10: { progress: 0, claimed: false },
+            combo5: { progress: 0, claimed: false },
+            score200: { progress: 0, claimed: false }
+        };
+        this.updateQuestsUI();
+    }
+    
+    saveQuests() {
+        localStorage.setItem(`quests_${this.userId}`, JSON.stringify(this.quests));
+    }
+    
+    updateQuestProgress(type, value = 1) {
+        if (!this.quests) return;
+        
+        if (type === 'collect') {
+            this.quests.collect5.progress = Math.min(this.quests.collect5.progress + 1, 5);
+            this.quests.collect10.progress = Math.min(this.quests.collect10.progress + 1, 10);
+        } else if (type === 'combo') {
+            this.quests.combo5.progress = Math.min(this.quests.combo5.progress + 1, 5);
+        } else if (type === 'score') {
+            this.quests.score200.progress = Math.min(this.quests.score200.progress + value, 200);
+        }
+        
+        this.saveQuests();
+        this.updateQuestsUI();
+    }
+    
+    updateQuestsUI() {
+        if (!this.quests) return;
+        
+        const configs = {
+            collect5: { max: 5 },
+            collect10: { max: 10 },
+            combo5: { max: 5 },
+            score200: { max: 200 }
+        };
+        
+        Object.keys(configs).forEach(questId => {
+            const quest = this.quests[questId];
+            const config = configs[questId];
+            const item = document.querySelector(`[data-quest="${questId}"]`);
+            
+            if (item) {
+                const progress = Math.min(quest.progress, config.max);
+                item.querySelector('.quest-progress-mini').textContent = `${progress}/${config.max}`;
+                
+                if (quest.claimed) {
+                    item.classList.add('claimed');
+                    item.querySelector('.quest-progress-mini').textContent = '✓';
+                } else if (progress >= config.max) {
+                    item.classList.add('completed');
+                }
+            }
+        });
+    }
+    
+    claimQuest(questId, item) {
+        const rewards = {
+            collect5: 50,
+            collect10: 100,
+            combo5: 150,
+            score200: 200
+        };
+        
+        const reward = rewards[questId];
+        this.score += reward;
+        this.quests[questId].claimed = true;
+        
+        this.saveQuests();
+        this.updateQuestsUI();
+        this.updateScoreDisplay(reward);
+        this.showCombo(1, reward);
     }
 
     spawnRandomIcon() {
@@ -227,7 +328,13 @@ class GameManager {
         this.createParticles(x, y, iconData.emoji);
         this.playSound(this.combo > 1 ? 'combo' : 'collect');
         
-        if (comboMultiplier > 1) this.showCombo(comboMultiplier, totalPoints);
+        if (comboMultiplier > 1) {
+            this.showCombo(comboMultiplier, totalPoints);
+            this.updateQuestProgress('combo');
+        }
+        
+        this.updateQuestProgress('collect');
+        this.updateQuestProgress('score', totalPoints);
         this.updateScoreDisplay(totalPoints);
         
         icon.style.animation = 'collectPulse 0.3s ease';
