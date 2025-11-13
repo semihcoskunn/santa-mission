@@ -18,9 +18,13 @@
                 <span class="logo-text">Santa'nın Gizli Görevi</span>
             </div>
             <div class="nav-right">
-                <button class="back-btn" onclick="window.location.href='index.html'">🏠 Ana Sayfa</button>
+                <button class="home-btn" onclick="window.location.href='index.html'">🏠 Ana Sayfa</button>
                 <button class="leaderboard-btn" onclick="window.location.href='leaderboard.html'">🏆 Liderlik</button>
-                <button class="login-btn" onclick="window.location.href='index.html'">🏠 Ana Sayfa</button>
+                <button class="login-btn" id="loginBtn">Giriş Yap</button>
+                <div class="language-switcher">
+                    <button class="lang-btn active" data-lang="tr">🇹🇷 TR</button>
+                    <button class="lang-btn" data-lang="en">🇺🇸 EN</button>
+                </div>
             </div>
         </div>
     </nav>
@@ -128,5 +132,10 @@
             <p>© 2025 Santa'nın Gizli Görevi - Tüm hakları saklıdır</p>
         </div>
     </footer>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2922505559554247" crossorigin="anonymous"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

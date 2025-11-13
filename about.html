@@ -18,9 +18,44 @@
                 <span class="logo-text">Santa'nın Gizli Görevi</span>
             </div>
             <div class="nav-right">
-                <button class="back-btn" onclick="window.location.href='index.html'">🏠 Ana Sayfa</button>
+                <button class="home-btn" onclick="window.location.href='index.html'">🏠 Ana Sayfa</button>
                 <button class="leaderboard-btn" onclick="window.location.href='leaderboard.html'">🏆 Liderlik</button>
-                <button class="login-btn" onclick="window.location.href='index.html'">Giriş Yap</button>
+                <button class="login-btn" id="loginBtn">Giriş Yap</button>
+                <div class="language-switcher">
+                    <button class="lang-btn active" data-lang="tr">🇹🇷 TR</button>
+                    <button class="lang-btn" data-lang="en">🇺🇸 EN</button>
+                </div>
+                
+                <!-- User Profile Menu -->
+                <div class="user-menu" id="userMenu" style="display: none;">
+                    <div class="user-menu-header">
+                        <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
+                        <div class="user-info">
+                            <span class="user-name" id="userName"></span>
+                            <span class="user-email" id="userEmail"></span>
+                        </div>
+                    </div>
+                    <div class="user-menu-items">
+                        <a href="#" class="menu-item" id="profileBtn">
+                            <span class="menu-icon">👤</span>
+                            <span>Profil</span>
+                        </a>
+                        <a href="#" class="menu-item" id="notificationsBtn">
+                            <span class="menu-icon">🔔</span>
+                            <span>Bildirimler</span>
+                            <span class="notification-badge">3</span>
+                        </a>
+                        <a href="#" class="menu-item" id="settingsBtn">
+                            <span class="menu-icon">⚙️</span>
+                            <span>Ayarlar</span>
+                        </a>
+                        <hr class="menu-divider">
+                        <a href="#" class="menu-item" id="logoutBtn">
+                            <span class="menu-icon">🚪</span>
+                            <span>Çıkış Yap</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
@@ -118,5 +153,10 @@
             <p>© 2025 Santa'nın Gizli Görevi - Tüm hakları saklıdır</p>
         </div>
     </footer>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2922505559554247" crossorigin="anonymous"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
