@@ -34,6 +34,7 @@ body {
     font-size: 1.5em;
     animation: fall linear infinite;
     text-shadow: 0 0 10px rgba(255,255,255,0.8);
+    will-change: transform;
 }
 
 .snowflake:nth-child(odd) {
@@ -95,6 +96,7 @@ body {
     align-items: center;
     gap: 0.5rem;
     transition: transform 0.3s ease;
+    will-change: transform;
 }
 
 .logo:hover {
@@ -498,6 +500,7 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     transition: transform 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    will-change: transform;
 }
 
 .mission-card:hover {

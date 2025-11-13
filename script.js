@@ -7,6 +7,7 @@ class LanguageManager {
     }
 
     init() {
+        this.checkUserStatus();
         this.createSnowfall();
         this.setupLanguageSwitcher();
         this.setupMissionButton();
@@ -54,9 +55,6 @@ class LanguageManager {
         const loginBtn = document.getElementById('loginBtn');
         const loginModal = document.getElementById('loginModal');
         const closeModal = document.getElementById('closeModal');
-        
-        // Kullanıcı durumunu kontrol et
-        this.checkUserStatus();
         
         if (loginBtn && loginModal) {
             // Modal aç (sadece giriş yapılmamışsa)
@@ -151,7 +149,7 @@ class LanguageManager {
         const snowfall = document.querySelector('.snowfall');
         if (!snowfall) return;
         
-        const snowflakeCount = 80;
+        const snowflakeCount = 50;
         const snowflakeTypes = ['❄', '❅', '✻'];
 
         for (let i = 0; i < snowflakeCount; i++) {
