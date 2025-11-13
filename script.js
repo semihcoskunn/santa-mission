@@ -123,17 +123,17 @@ class LanguageManager {
             // Menü butonları
             document.getElementById('profileBtn').onclick = (e) => {
                 e.preventDefault();
-                window.location.href = 'profile.html';
+                alert(this.currentLang === 'tr' ? 'Profil sayfası yakında!' : 'Profile page coming soon!');
             };
             
             document.getElementById('notificationsBtn').onclick = (e) => {
                 e.preventDefault();
-                alert(this.currentLang === 'tr' ? 'Bildirimler yakında!' : 'Notifications coming soon!');
+                window.location.href = 'notifications.html';
             };
             
             document.getElementById('settingsBtn').onclick = (e) => {
                 e.preventDefault();
-                alert(this.currentLang === 'tr' ? 'Ayarlar yakında!' : 'Settings coming soon!');
+                window.location.href = 'settings.html';
             };
             
             document.getElementById('logoutBtn').onclick = (e) => {

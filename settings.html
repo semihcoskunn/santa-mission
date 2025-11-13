@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayarlar | Santa'nın Gizli Görevi</title>
+    <link rel="icon" type="image/png" href="logo/santas-secret-mission.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="snowfall"></div>
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                <span class="logo-icon">🎅</span>
+                <span class="logo-text">Santa'nın Gizli Görevi</span>
+            </div>
+            <div class="nav-right">
+                <button class="back-btn" onclick="window.location.href='index.html'">🏠 Ana Sayfa</button>
+                <button class="leaderboard-btn" onclick="window.location.href='leaderboard.html'">🏆 Liderlik</button>
+            </div>
+        </div>
+    </nav>
+
+    <section style="padding: 120px 20px 60px; min-height: 100vh;">
+        <div class="container" style="max-width: 800px;">
+            <h1 style="color: white; text-align: center; font-family: 'Mountains of Christmas', cursive; font-size: 3rem; margin-bottom: 40px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">⚙️ Ayarlar</h1>
+            
+            <div style="background: rgba(255,255,255,0.95); border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <div style="font-size: 5rem; margin-bottom: 20px;">🎅</div>
+                    <h2 style="color: #1e3c72; margin-bottom: 15px;">Ayarlar Yakında!</h2>
+                    <p style="color: #666; font-size: 1.1rem;">Ayarlar sayfası üzerinde çalışıyoruz.</p>
+                </div>
+
+                <div style="text-align: center;">
+                    <button onclick="window.location.href='index.html'" style="background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 15px 40px; font-size: 1.1rem; font-weight: 700; border-radius: 50px; cursor: pointer; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4); margin-right: 15px;">
+                        🏠 Ana Sayfa
+                    </button>
+                    <button onclick="window.location.href='game.html'" style="background: linear-gradient(135deg, #dc3545, #c82333); border: none; color: white; padding: 15px 40px; font-size: 1.1rem; font-weight: 700; border-radius: 50px; cursor: pointer; box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);">
+                        🎮 Oyuna Başla
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="auth.js"></script>
+    <script>
+        const user = getCurrentUser();
+        if (!user) window.location.href = 'index.html';
+
+        // Kar efekti
+        const snowfall = document.querySelector('.snowfall');
+        const snowflakeTypes = ['❄', '❅', '✻'];
+        for (let i = 0; i < 80; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.textContent = snowflakeTypes[i % 3];
+            snowflake.style.left = Math.random() * 100 + '%';
+            snowflake.style.top = Math.random() * -100 + '%';
+            snowflake.style.animationDuration = (Math.random() * 8 + 6) + 's';
+            snowflake.style.animationDelay = '0s';
+            snowflake.style.fontSize = (Math.random() * 10 + 15) + 'px';
+            snowflake.style.opacity = Math.random() * 0.6 + 0.3;
+            snowfall.appendChild(snowflake);
+        }
+    </script>
+</body>
+</html>
