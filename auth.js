@@ -15,8 +15,13 @@ function loadGoogleSDK() {
 async function handleGoogleSignIn(response) {
     const credential = response.credential;
     
-    // JWT token'ı decode et
-    const payload = JSON.parse(atob(credential.split('.')[1]));
+    // JWT token'ı decode et (UTF-8 desteği ile)
+    const base64Url = credential.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    const payload = JSON.parse(jsonPayload);
     
     const userData = {
         userId: payload.sub,
