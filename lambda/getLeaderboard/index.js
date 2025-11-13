@@ -26,7 +26,7 @@ exports.handler = async (event) => {
         
         const leaderboard = response.Items
             .sort((a, b) => (b.total_score || 0) - (a.total_score || 0))
-            .slice(0, 100);
+            .slice(0, 1000);
         
         return {
             statusCode: 200,
