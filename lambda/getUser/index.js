@@ -72,13 +72,21 @@ exports.handler = async (event) => {
             };
         } else {
             // GET - Retrieve user
-            const userId = event.queryStringParameters?.userId;
+            const userId = event.queryStringParameters?.userId || event.params?.querystring?.userId || event.userId;
             
             if (!userId) {
                 return {
                     statusCode: 400,
                     headers,
-                    body: JSON.stringify({ success: false, error: 'userId is required' })
+                    body: JSON.stringify({ 
+                        success: false, 
+                        error: 'userId is required',
+                        debug: {
+                            queryStringParameters: event.queryStringParameters,
+                            params: event.params,
+                            userId: event.userId
+                        }
+                    })
                 };
             }
             
