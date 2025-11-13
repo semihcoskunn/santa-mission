@@ -40,31 +40,13 @@ class LeaderboardManager {
                     loginModal.classList.remove('active');
                 }
             });
-            
-            const googleBtn = document.querySelector('.google-btn');
-            if (googleBtn) {
-                googleBtn.addEventListener('click', () => {
-                    window.location.href = 'https://santa-mission.onrender.com/auth/google';
-                });
-            }
         }
     }
     
     async checkUserStatus() {
-        try {
-            const response = await fetch('https://api.semihcoskun.com.tr/api/user', {
-                credentials: 'include'
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    this.user = data.user;
-                    this.updateUIForLoggedInUser();
-                }
-            }
-        } catch (error) {
-            console.log('Backend bağlantısı yok');
+        this.user = getCurrentUser();
+        if (this.user) {
+            this.updateUIForLoggedInUser();
         }
     }
     
@@ -111,7 +93,7 @@ class LeaderboardManager {
             document.getElementById('logoutBtn').onclick = (e) => {
                 e.preventDefault();
                 if (confirm('Çıkış yapmak istiyor musunuz?')) {
-                    window.location.href = 'https://api.semihcoskun.com.tr/logout';
+                    logout();
                 }
             };
         }
@@ -134,18 +116,13 @@ class LeaderboardManager {
     async loadMyRank() {
         if (!this.user) return;
         
-        try {
-            const response = await fetch('https://api.semihcoskun.com.tr/api/my-rank', {
-                credentials: 'include'
-            });
-            const data = await response.json();
-            
-            if (data.success && data.rank) {
-                this.myRank = data.rank;
-                this.renderMyRank();
-            }
-        } catch (error) {
-            console.log('Sıralama bilgisi alınamadı');
+        const myRank = this.leaderboard.findIndex(u => u.userId === this.user.userId) + 1;
+        if (myRank > 0) {
+            this.myRank = {
+                rank: myRank,
+                total_score: this.leaderboard[myRank - 1].total_score
+            };
+            this.renderMyRank();
         }
     }
 
