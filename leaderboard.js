@@ -116,7 +116,7 @@ class LeaderboardManager {
     async loadMyRank() {
         if (!this.user) return;
         
-        const myRank = this.leaderboard.findIndex(u => u.userId === this.user.userId) + 1;
+        const myRank = this.leaderboard.findIndex(u => u.userID === this.user.userId) + 1;
         if (myRank > 0) {
             this.myRank = {
                 rank: myRank,

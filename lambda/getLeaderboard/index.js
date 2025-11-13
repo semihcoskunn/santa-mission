@@ -18,7 +18,7 @@ exports.handler = async (event) => {
     try {
         const command = new ScanCommand({
             TableName: 'SantaUsers',
-            ProjectionExpression: 'userId, #n, photo, total_score, max_streak',
+            ProjectionExpression: 'userID, #n, photo, total_score, max_streak',
             ExpressionAttributeNames: { '#n': 'name' }
         });
         
