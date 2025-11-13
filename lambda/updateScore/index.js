@@ -18,6 +18,8 @@ exports.handler = async (event) => {
     }
     
     try {
+        console.log('Event:', JSON.stringify(event));
+        
         let body;
         if (event['body-json']) {
             body = event['body-json'];
@@ -26,6 +28,8 @@ exports.handler = async (event) => {
         } else {
             body = event.body || {};
         }
+        
+        console.log('Parsed body:', JSON.stringify(body));
         
         const { userId, score, streak } = body;
         
@@ -37,7 +41,7 @@ exports.handler = async (event) => {
                     'Access-Control-Allow-Methods': 'POST,OPTIONS',
                     'Access-Control-Allow-Headers': 'Content-Type'
                 },
-                body: JSON.stringify({ success: false, error: 'userId and score required' })
+                body: JSON.stringify({ success: false, error: 'userId and score required', debug: { userId, score, body } })
             };
         }
         
