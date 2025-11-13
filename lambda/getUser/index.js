@@ -5,13 +5,23 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
+    const headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+    };
+    
+    if (event.httpMethod === 'OPTIONS') {
+        return { statusCode: 200, headers, body: '' };
+    }
+    
     try {
         const userId = event.queryStringParameters?.userId;
         
         if (!userId) {
             return {
                 statusCode: 400,
-                headers: { 'Access-Control-Allow-Origin': '*' },
+                headers,
                 body: JSON.stringify({ success: false, error: 'userId is required' })
             };
         }
@@ -26,20 +36,20 @@ exports.handler = async (event) => {
         if (!response.Item) {
             return {
                 statusCode: 404,
-                headers: { 'Access-Control-Allow-Origin': '*' },
+                headers,
                 body: JSON.stringify({ success: false, error: 'User not found' })
             };
         }
         
         return {
             statusCode: 200,
-            headers: { 'Access-Control-Allow-Origin': '*' },
+            headers,
             body: JSON.stringify(response.Item || {})
         };
     } catch (error) {
         return {
             statusCode: 500,
-            headers: { 'Access-Control-Allow-Origin': '*' },
+            headers,
             body: JSON.stringify({ success: false, error: error.message })
         };
     }

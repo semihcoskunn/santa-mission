@@ -5,6 +5,16 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
+    const headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+    };
+    
+    if (event.httpMethod === 'OPTIONS') {
+        return { statusCode: 200, headers, body: '' };
+    }
+    
     try {
         const command = new ScanCommand({
             TableName: 'SantaUsers',
@@ -20,7 +30,7 @@ exports.handler = async (event) => {
         
         return {
             statusCode: 200,
-            headers: { 'Access-Control-Allow-Origin': '*' },
+            headers,
             body: JSON.stringify({
                 success: true,
                 leaderboard
@@ -29,7 +39,7 @@ exports.handler = async (event) => {
     } catch (error) {
         return {
             statusCode: 500,
-            headers: { 'Access-Control-Allow-Origin': '*' },
+            headers,
             body: JSON.stringify({ success: false, error: error.message })
         };
     }

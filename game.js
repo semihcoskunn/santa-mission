@@ -79,8 +79,17 @@ class GameManager {
         
         this.isLoggedIn = true;
         this.userId = user.userId;
-        this.score = user.total_score || 0;
-        this.streak = user.max_streak || 0;
+        
+        // LocalStorage'dan skoru yükle
+        const savedGame = localStorage.getItem(`game_${this.userId}`);
+        if (savedGame) {
+            const gameData = JSON.parse(savedGame);
+            this.score = gameData.score || 0;
+            this.streak = gameData.streak || 0;
+        } else {
+            this.score = user.total_score || 0;
+            this.streak = user.max_streak || 0;
+        }
         
         if (loginBtn && userMenu) {
             loginBtn.textContent = user.name;
@@ -350,14 +359,25 @@ class GameManager {
     }
     
     async saveScoreToDatabase(score, streak) {
+        // LocalStorage'a kaydet
+        localStorage.setItem(`game_${this.userId}`, JSON.stringify({
+            score: this.score,
+            streak: this.streak
+        }));
+        
+        // DynamoDB'ye kaydet
         try {
+            const user = getCurrentUser();
             await fetch('https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/update-score', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     userId: this.userId,
                     score: this.score,
-                    streak: this.streak
+                    streak: this.streak,
+                    name: user?.name || 'Unknown',
+                    email: user?.email || '',
+                    photo: user?.photo || ''
                 })
             });
         } catch (error) {

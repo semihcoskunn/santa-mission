@@ -5,13 +5,29 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'POST,OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type'
+            },
+            body: ''
+        };
+    }
+    
     try {
         const { userId, score, streak } = JSON.parse(event.body);
         
         if (!userId) {
             return {
                 statusCode: 400,
-                headers: { 'Access-Control-Allow-Origin': '*' },
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'POST,OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type'
+                },
                 body: JSON.stringify({ success: false, error: 'userId is required' })
             };
         }
