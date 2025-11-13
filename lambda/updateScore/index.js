@@ -18,7 +18,15 @@ exports.handler = async (event) => {
     }
     
     try {
-        const body = event['body-json'] || JSON.parse(event.body || '{}');
+        let body;
+        if (event['body-json']) {
+            body = event['body-json'];
+        } else if (typeof event.body === 'string') {
+            body = JSON.parse(event.body);
+        } else {
+            body = event.body || {};
+        }
+        
         const { userId, score, streak } = body;
         
         if (!userId || score === undefined) {
