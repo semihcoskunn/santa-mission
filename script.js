@@ -123,7 +123,7 @@ class LanguageManager {
             // Menü butonları
             document.getElementById('profileBtn').onclick = (e) => {
                 e.preventDefault();
-                alert(this.currentLang === 'tr' ? 'Profil sayfası yakında!' : 'Profile page coming soon!');
+                window.location.href = 'profile.html';
             };
             
             document.getElementById('notificationsBtn').onclick = (e) => {
