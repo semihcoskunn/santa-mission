@@ -18,13 +18,27 @@ async function loadProfile() {
         document.getElementById('profileUsername').textContent = `@${userData.username || 'username'}`;
         document.getElementById('profileEmail').textContent = user.email;
         
-        // Get scores from SantaScores
+        // Get leaderboard data
         const scoresResponse = await fetch(`${API_URL}/leaderboard`);
         const scoresData = await scoresResponse.json();
-        const userScore = scoresData.leaderboard?.find(u => u.userID === user.userId);
+        const leaderboard = scoresData.leaderboard || [];
         
+        // Find user rank
+        const userRank = leaderboard.findIndex(u => u.userID === user.userId) + 1;
+        const userScore = leaderboard.find(u => u.userID === user.userId);
+        
+        document.getElementById('userRank').textContent = userRank > 0 ? `#${userRank}` : '-';
         document.getElementById('totalScore').textContent = userScore?.total_score || 0;
         document.getElementById('maxStreak').textContent = userScore?.max_streak || 0;
+        
+        // Get total games from SantaScores
+        try {
+            const gamesResponse = await fetch(`${API_URL}/user-stats?userId=${user.userId}`);
+            const gamesData = await gamesResponse.json();
+            document.getElementById('totalGames').textContent = gamesData.totalGames || 0;
+        } catch (err) {
+            document.getElementById('totalGames').textContent = '0';
+        }
         
         // Check if profile can be edited (profileEdited flag)
         if (userData.profileEdited) {
