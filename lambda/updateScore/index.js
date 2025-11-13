@@ -19,11 +19,10 @@ exports.handler = async (event) => {
         const command = new UpdateCommand({
             TableName: 'SantaUsers',
             Key: { userId },
-            UpdateExpression: 'ADD total_score :score SET max_streak = if_not_exists(max_streak, :zero) + :streak',
+            UpdateExpression: 'SET total_score = :score, max_streak = :streak',
             ExpressionAttributeValues: {
                 ':score': score,
-                ':streak': streak,
-                ':zero': 0
+                ':streak': streak
             },
             ReturnValues: 'ALL_NEW'
         });
