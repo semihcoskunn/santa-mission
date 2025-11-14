@@ -1,5 +1,3 @@
-const API_URL = 'https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod';
-
 const user = getCurrentUser();
 if (!user) {
     window.location.href = 'index.html';
