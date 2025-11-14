@@ -126,15 +126,21 @@ class LanguageManager {
                 window.location.href = 'profile.html';
             };
             
-            document.getElementById('notificationsBtn').onclick = (e) => {
-                e.preventDefault();
-                window.location.href = 'notifications.html';
-            };
+            const notifBtn = document.getElementById('notificationsBtn');
+            if (notifBtn) {
+                notifBtn.onclick = (e) => {
+                    e.preventDefault();
+                    window.location.href = 'notifications.html';
+                };
+            }
             
-            document.getElementById('settingsBtn').onclick = (e) => {
-                e.preventDefault();
-                window.location.href = 'settings.html';
-            };
+            const settingsBtn = document.getElementById('settingsBtn');
+            if (settingsBtn) {
+                settingsBtn.onclick = (e) => {
+                    e.preventDefault();
+                    window.location.href = 'settings.html';
+                };
+            }
             
             document.getElementById('logoutBtn').onclick = (e) => {
                 e.preventDefault();

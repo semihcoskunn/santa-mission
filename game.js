@@ -117,12 +117,12 @@ class GameManager {
             
             document.getElementById('notificationsBtn').onclick = (e) => {
                 e.preventDefault();
-                alert('Bildirimler yakında!');
+                window.location.href = 'notifications.html';
             };
             
             document.getElementById('settingsBtn').onclick = (e) => {
                 e.preventDefault();
-                alert('Ayarlar yakında!');
+                window.location.href = 'settings.html';
             };
             
             document.getElementById('logoutBtn').onclick = (e) => {

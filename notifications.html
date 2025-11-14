@@ -6,105 +6,144 @@
     <title>Bildirimler | Santa'nın Gizli Görevi</title>
     <link rel="icon" type="image/png" href="logo/santas-secret-mission.png">
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .notifications-section {
+            padding: 120px 20px 60px;
+            min-height: 100vh;
+        }
+        .notifications-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .notifications-card h1 {
+            color: #1e3c72;
+            margin-bottom: 30px;
+            font-family: 'Mountains of Christmas', cursive;
+        }
+        .notification-item {
+            display: flex;
+            gap: 15px;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.3s;
+        }
+        .notification-item:hover {
+            background: #f8f9fa;
+        }
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        .notification-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+        .notification-content h3 {
+            color: #1e3c72;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        .notification-content p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        .notification-time {
+            color: #999;
+            font-size: 0.8rem;
+        }
+        .notification-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="snowfall"></div>
     
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+            <div class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
                 <span class="logo-icon">🎅</span>
                 <span class="logo-text">Santa'nın Gizli Görevi</span>
             </div>
             <div class="nav-right">
-                <button class="home-btn" onclick="window.location.href='index.html'">🏠 Ana Sayfa</button>
-                <button class="leaderboard-btn" onclick="window.location.href='leaderboard.html'">🏆 Liderlik</button>
+                <button class="home-btn" onclick="window.location.href='/'">Ana Sayfa</button>
+                <button class="leaderboard-btn" onclick="window.location.href='leaderboard.html'">Liderlik</button>
                 <button class="login-btn" id="loginBtn">Giriş Yap</button>
-                <div class="language-switcher">
-                    <button class="lang-btn active" data-lang="tr">🇹🇷 TR</button>
-                    <button class="lang-btn" data-lang="en">🇺🇸 EN</button>
-                </div>
-                
-                <div class="user-menu" id="userMenu" style="display: none;">
-                    <div class="user-menu-header">
-                        <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
-                        <div class="user-info">
-                            <span class="user-name" id="userName"></span>
-                            <span class="user-email" id="userEmail"></span>
-                        </div>
-                    </div>
-                    <div class="user-menu-items">
-                        <a href="#" class="menu-item" id="profileBtn">
-                            <span class="menu-icon">👤</span>
-                            <span>Profil</span>
-                        </a>
-                        <a href="#" class="menu-item" id="notificationsBtn">
-                            <span class="menu-icon">🔔</span>
-                            <span>Bildirimler</span>
-                        </a>
-                        <a href="#" class="menu-item" id="settingsBtn">
-                            <span class="menu-icon">⚙️</span>
-                            <span>Ayarlar</span>
-                        </a>
-                        <hr class="menu-divider">
-                        <a href="#" class="menu-item" id="logoutBtn">
-                            <span class="menu-icon">🚪</span>
-                            <span>Çıkış Yap</span>
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
     </nav>
 
-    <section style="padding: 120px 20px 60px; min-height: 100vh;">
-        <div class="container" style="max-width: 800px;">
-            <h1 style="color: white; text-align: center; font-family: 'Mountains of Christmas', cursive; font-size: 3rem; margin-bottom: 40px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">🔔 Bildirimler</h1>
+    <section class="notifications-section">
+        <div class="notifications-card">
+            <h1>🔔 Bildirimler</h1>
             
-            <div style="background: rgba(255,255,255,0.95); border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center;">
-                <div style="font-size: 5rem; margin-bottom: 20px;">🎄</div>
-                <h2 style="color: #1e3c72; margin-bottom: 15px;">Bildirim Yok</h2>
-                <p style="color: #666; font-size: 1.1rem;">Şu anda hiç bildirimin yok. Oyuna devam et!</p>
-                <button onclick="window.location.href='game.html'" style="margin-top: 30px; background: linear-gradient(135deg, #dc3545, #c82333); border: none; color: white; padding: 15px 40px; font-size: 1.1rem; font-weight: 700; border-radius: 50px; cursor: pointer; box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);">
-                    🎮 Oyuna Başla
-                </button>
+            <div id="notificationsList">
+                <div class="notification-item">
+                    <div class="notification-icon">🎉</div>
+                    <div class="notification-content">
+                        <h3>Hoş Geldin! <span class="notification-badge">YENİ</span></h3>
+                        <p>Santa'nın Gizli Görevi'ne katıldığın için teşekkürler! Hediyeleri topla ve liderlik tablosunda yüksel.</p>
+                        <div class="notification-time">Az önce</div>
+                    </div>
+                </div>
+                
+                <div class="notification-item">
+                    <div class="notification-icon">🏆</div>
+                    <div class="notification-content">
+                        <h3>Yeni Görev Açıldı!</h3>
+                        <p>Günlük görevleri tamamla ve ekstra puanlar kazan. 5 hediye topla ve 50 puan kazan!</p>
+                        <div class="notification-time">1 saat önce</div>
+                    </div>
+                </div>
+                
+                <div class="notification-item">
+                    <div class="notification-icon">⭐</div>
+                    <div class="notification-content">
+                        <h3>Liderlik Tablosu Güncellendi</h3>
+                        <p>Sıralaman değişti! Liderlik tablosunu kontrol et ve rakiplerini gör.</p>
+                        <div class="notification-time">3 saat önce</div>
+                    </div>
+                </div>
+                
+                <div class="notification-item">
+                    <div class="notification-icon">🎁</div>
+                    <div class="notification-content">
+                        <h3>Yeni Hediye Türü!</h3>
+                        <p>Oyunda yeni hediye türleri eklendi. Daha fazla puan kazanma şansı!</p>
+                        <div class="notification-time">1 gün önce</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <footer class="footer">
         <div class="container">
-            <div class="ad-container" style="text-align: center; margin: 20px 0;">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-2922505559554247"
-                     data-ad-slot="AUTO"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-            <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
-                <a href="how-to-play.html" style="color: #fff; text-decoration: none;">Nasıl Oynanır</a>
-                <a href="privacy-policy.html" style="color: #fff; text-decoration: none;">Gizlilik Politikası</a>
-                <a href="terms.html" style="color: #fff; text-decoration: none;">Kullanım Koşulları</a>
-                <a href="contact.html" style="color: #fff; text-decoration: none;">İletişim</a>
-                <a href="about.html" style="color: #fff; text-decoration: none;">Hakkımızda</a>
-            </div>
             <p>© 2025 Santa'nın Gizli Görevi - Tüm hakları saklıdır</p>
         </div>
     </footer>
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2922505559554247" crossorigin="anonymous"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="auth.js"></script>
-    <script src="common.js"></script>
-    <script>
-        const user = getCurrentUser();
-        if (!user) window.location.href = 'index.html';
-    </script>
+    <script src="notifications.js"></script>
 </body>
 </html>
