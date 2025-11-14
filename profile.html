@@ -156,21 +156,21 @@
         }
         
         // Update login button with user name and setup menu
-        const user = getCurrentUser();
-        if (user) {
+        const currentUser = getCurrentUser();
+        if (currentUser) {
             const loginBtn = document.getElementById('loginBtn');
             const userMenu = document.getElementById('userMenu');
             const loginModal = document.getElementById('loginModal');
             
             if (loginBtn && userMenu) {
-                const fullName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.name;
+                const fullName = currentUser.firstName && currentUser.lastName ? `${currentUser.firstName} ${currentUser.lastName}` : currentUser.name;
                 loginBtn.textContent = fullName;
                 loginBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
                 
                 // Fill user menu
-                document.getElementById('userAvatar').src = user.photo;
+                document.getElementById('userAvatar').src = currentUser.photo;
                 document.getElementById('userName').textContent = fullName;
-                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('userEmail').textContent = currentUser.email;
                 
                 // Toggle menu on click
                 loginBtn.onclick = (e) => {
