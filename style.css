@@ -146,7 +146,7 @@ body {
 
 .home-btn,
 .back-btn {
-    background: #4CAF50;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
     border: none;
     color: white;
     padding: 0.5rem 1.5rem;
@@ -162,7 +162,7 @@ body {
 
 .home-btn:hover,
 .back-btn:hover {
-    background: #45a049;
+    background: linear-gradient(135deg, #45a049, #3d8b40);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
 }
