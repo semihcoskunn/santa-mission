@@ -129,7 +129,8 @@
         if (user) {
             const loginBtn = document.getElementById('loginBtn');
             if (loginBtn) {
-                loginBtn.textContent = user.firstName || user.name;
+                const fullName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.name;
+                loginBtn.textContent = fullName;
                 loginBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
                 loginBtn.onclick = () => window.location.href = 'profile.html';
             }
