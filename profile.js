@@ -72,31 +72,6 @@ async function loadProfile() {
             document.getElementById('maxStreak').textContent = '0';
         }
         
-        // Get total games from SantaScores
-        try {
-            const gamesResponse = await fetch(`${API_URL}/user-stats?userId=${user.userId}`);
-            
-            if (gamesResponse.ok) {
-                let gamesData = await gamesResponse.json();
-                
-                if (gamesData.body) {
-                    gamesData = JSON.parse(gamesData.body);
-                }
-                
-                console.log('Games data:', gamesData);
-                document.getElementById('totalGames').textContent = gamesData.totalGames || 0;
-            } else {
-                console.warn('user-stats API not available, using fallback');
-                // Fallback: estimate from score (rough estimate: 1 game = ~50 points average)
-                const estimatedGames = window.userScoreData ? Math.ceil(window.userScoreData.total_score / 50) : 0;
-                document.getElementById('totalGames').textContent = estimatedGames;
-            }
-        } catch (err) {
-            console.error('Games stats error:', err);
-            // Fallback
-            const estimatedGames = window.userScoreData ? Math.ceil(window.userScoreData.total_score / 50) : 0;
-            document.getElementById('totalGames').textContent = estimatedGames;
-        }
         
         // Check if profile can be edited (profileEdited flag)
         if (userData.profileEdited) {
