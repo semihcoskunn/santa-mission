@@ -36,9 +36,14 @@ async function handleGoogleSignIn(response) {
     // Check if user profile is complete
     try {
         const response = await fetch(`${API_URL}/user?userId=${userData.userId}`);
-        const data = await response.json();
+        let data = await response.json();
         
-        if (data.username) {
+        // Handle non-proxy integration response format
+        if (data.body) {
+            data = JSON.parse(data.body);
+        }
+        
+        if (data.username && data.username.trim() !== '') {
             // Profile complete, reload page
             userData.profileCompleted = true;
             userData.firstName = data.firstName;
@@ -51,6 +56,7 @@ async function handleGoogleSignIn(response) {
             window.location.href = 'complete-profile.html';
         }
     } catch (error) {
+        console.log('User not found or error:', error);
         // New user, redirect to complete profile
         window.location.href = 'complete-profile.html';
     }
