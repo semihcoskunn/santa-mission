@@ -13,19 +13,10 @@ async function loadProfile() {
         console.log('Loading profile for userId:', user.userId);
         const response = await fetch(`${API_URL}/user?userId=${user.userId}`);
         console.log('Response status:', response.status);
-        const rawData = await response.json();
-        console.log('Raw data:', rawData);
-        console.log('Raw data type:', typeof rawData);
-        console.log('Has body?', rawData.body);
         
-        // Handle non-proxy response
-        if (rawData.body) {
-            console.log('Parsing body...');
-            userData = JSON.parse(rawData.body);
-        } else {
-            userData = rawData;
-        }
-        console.log('User data after parse:', userData);
+        // API Gateway non-proxy returns Lambda's body directly as JSON
+        userData = await response.json();
+        console.log('User data:', userData);
         console.log('firstName:', userData.firstName);
         console.log('lastName:', userData.lastName);
         console.log('username:', userData.username);
@@ -45,15 +36,8 @@ async function loadProfile() {
         try {
             const scoresResponse = await fetch(`${API_URL}/leaderboard`);
             console.log('Leaderboard response status:', scoresResponse.status);
-            let scoresData = await scoresResponse.json();
-            console.log('Leaderboard raw data:', scoresData);
-            
-            // Handle non-proxy response
-            if (scoresData.body) {
-                scoresData = JSON.parse(scoresData.body);
-            }
-            
-            console.log('Leaderboard parsed data:', scoresData);
+            const scoresData = await scoresResponse.json();
+            console.log('Leaderboard data:', scoresData);
             const leaderboard = scoresData.leaderboard || [];
             console.log('Leaderboard array length:', leaderboard.length);
             
@@ -75,12 +59,8 @@ async function loadProfile() {
         // Get total games from SantaScores
         try {
             const gamesResponse = await fetch(`${API_URL}/user-stats?userId=${user.userId}`);
-            let gamesData = await gamesResponse.json();
-            
-            // Handle non-proxy response
-            if (gamesData.body) {
-                gamesData = JSON.parse(gamesData.body);
-            }
+            const gamesData = await gamesResponse.json();
+            console.log('Games data:', gamesData);
             
             document.getElementById('totalGames').textContent = gamesData.totalGames || 0;
         } catch (err) {
@@ -134,12 +114,7 @@ document.getElementById('editUsername').addEventListener('input', (e) => {
     usernameTimeout = setTimeout(async () => {
         try {
             const response = await fetch(`${API_URL}/check-username?username=${username}`);
-            let data = await response.json();
-            
-            // Handle non-proxy response
-            if (data.body) {
-                data = JSON.parse(data.body);
-            }
+            const data = await response.json();
             
             if (data.available) {
                 check.textContent = '✓ Kullanıcı adı müsait';
@@ -189,12 +164,8 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
             })
         });
         
-        let data = await response.json();
-        
-        // Handle non-proxy response
-        if (data.body) {
-            data = JSON.parse(data.body);
-        }
+        const data = await response.json();
+        console.log('Save response:', data);
         
         if (data.success) {
             alert('Profil güncellendi! Artık bilgilerinizi değiştiremezsiniz.');
