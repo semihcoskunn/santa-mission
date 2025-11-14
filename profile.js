@@ -15,40 +15,62 @@ async function loadProfile() {
         console.log('Response status:', response.status);
         const rawData = await response.json();
         console.log('Raw data:', rawData);
+        console.log('Raw data type:', typeof rawData);
+        console.log('Has body?', rawData.body);
         
         // Handle non-proxy response
         if (rawData.body) {
+            console.log('Parsing body...');
             userData = JSON.parse(rawData.body);
         } else {
             userData = rawData;
         }
-        console.log('User data:', userData);
+        console.log('User data after parse:', userData);
+        console.log('firstName:', userData.firstName);
+        console.log('lastName:', userData.lastName);
+        console.log('username:', userData.username);
+        
+        const fullName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
+        console.log('Full name:', fullName);
         
         document.getElementById('profilePhoto').src = user.photo || '';
-        document.getElementById('profileName').textContent = `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || user.name || 'Kullanıcı';
+        document.getElementById('profileName').textContent = fullName || user.name || 'Kullanıcı';
         document.getElementById('profileUsername').textContent = `@${userData.username || 'username'}`;
         document.getElementById('profileEmail').textContent = user.email || 'Email yok';
         
+        console.log('Profile UI updated');
+        
         // Get leaderboard data
         console.log('Loading leaderboard...');
-        const scoresResponse = await fetch(`${API_URL}/leaderboard`);
-        let scoresData = await scoresResponse.json();
-        
-        // Handle non-proxy response
-        if (scoresData.body) {
-            scoresData = JSON.parse(scoresData.body);
+        try {
+            const scoresResponse = await fetch(`${API_URL}/leaderboard`);
+            console.log('Leaderboard response status:', scoresResponse.status);
+            let scoresData = await scoresResponse.json();
+            console.log('Leaderboard raw data:', scoresData);
+            
+            // Handle non-proxy response
+            if (scoresData.body) {
+                scoresData = JSON.parse(scoresData.body);
+            }
+            
+            console.log('Leaderboard parsed data:', scoresData);
+            const leaderboard = scoresData.leaderboard || [];
+            console.log('Leaderboard array length:', leaderboard.length);
+            
+            // Find user rank
+            const userRank = leaderboard.findIndex(u => u.userID === user.userId) + 1;
+            const userScore = leaderboard.find(u => u.userID === user.userId);
+            console.log('User rank:', userRank, 'User score:', userScore);
+            
+            document.getElementById('userRank').textContent = userRank > 0 ? `#${userRank}` : '-';
+            document.getElementById('totalScore').textContent = userScore?.total_score || 0;
+            document.getElementById('maxStreak').textContent = userScore?.max_streak || 0;
+        } catch (err) {
+            console.error('Leaderboard error:', err);
+            document.getElementById('userRank').textContent = '-';
+            document.getElementById('totalScore').textContent = '0';
+            document.getElementById('maxStreak').textContent = '0';
         }
-        
-        console.log('Leaderboard data:', scoresData);
-        const leaderboard = scoresData.leaderboard || [];
-        
-        // Find user rank
-        const userRank = leaderboard.findIndex(u => u.userID === user.userId) + 1;
-        const userScore = leaderboard.find(u => u.userID === user.userId);
-        
-        document.getElementById('userRank').textContent = userRank > 0 ? `#${userRank}` : '-';
-        document.getElementById('totalScore').textContent = userScore?.total_score || 0;
-        document.getElementById('maxStreak').textContent = userScore?.max_streak || 0;
         
         // Get total games from SantaScores
         try {
