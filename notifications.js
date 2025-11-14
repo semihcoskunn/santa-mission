@@ -31,6 +31,7 @@ async function loadNotifications() {
                         <p>${notif.message}</p>
                         <div class="notification-time">${timeAgo}</div>
                     </div>
+                    <button class="delete-btn" onclick="deleteNotification('${notif.userID}', ${notif.timestamp})">🗑️</button>
                 `;
                 notificationsList.appendChild(item);
             });
@@ -62,6 +63,21 @@ function getTimeAgo(timestamp) {
     if (minutes < 60) return `${minutes} dakika önce`;
     if (hours < 24) return `${hours} saat önce`;
     return `${days} gün önce`;
+}
+
+async function deleteNotification(userId, timestamp) {
+    try {
+        const response = await fetch('https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/notifications', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, timestamp })
+        });
+        let data = await response.json();
+        if (data.body) data = JSON.parse(data.body);
+        if (data.success) loadNotifications();
+    } catch (error) {
+        console.error('Delete error:', error);
+    }
 }
 
 // Update login button and setup menu

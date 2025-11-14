@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, QueryCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, QueryCommand, PutCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -7,7 +7,7 @@ const docClient = DynamoDBDocumentClient.from(client);
 exports.handler = async (event) => {
     const headers = {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+        'Access-Control-Allow-Methods': 'GET,POST,DELETE,OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type'
     };
     
@@ -40,6 +40,32 @@ exports.handler = async (event) => {
                     title: title,
                     message: message,
                     read: false
+                }
+            }));
+            
+            return {
+                statusCode: 200,
+                headers,
+                body: JSON.stringify({ success: true })
+            };
+        } else if (event.httpMethod === 'DELETE') {
+            // DELETE - Remove notification
+            const body = JSON.parse(event.body || '{}');
+            const { userId, timestamp } = body;
+            
+            if (!userId || !timestamp) {
+                return {
+                    statusCode: 400,
+                    headers,
+                    body: JSON.stringify({ success: false, error: 'Missing userId or timestamp' })
+                };
+            }
+            
+            await docClient.send(new DeleteCommand({
+                TableName: 'SantaNotifications',
+                Key: {
+                    userID: userId,
+                    timestamp: timestamp
                 }
             }));
             
