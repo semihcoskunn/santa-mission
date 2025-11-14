@@ -123,6 +123,17 @@
         if (typeof API_URL === 'undefined') {
             window.API_URL = 'https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod';
         }
+        
+        // Update login button with user name
+        const user = getCurrentUser();
+        if (user) {
+            const loginBtn = document.getElementById('loginBtn');
+            if (loginBtn) {
+                loginBtn.textContent = user.firstName || user.name;
+                loginBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+                loginBtn.onclick = () => window.location.href = 'profile.html';
+            }
+        }
     </script>
     <script src="profile.js"></script>
 </body>
