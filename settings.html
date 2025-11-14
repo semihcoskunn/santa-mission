@@ -96,6 +96,35 @@
                 <button class="home-btn" onclick="window.location.href='/'">Ana Sayfa</button>
                 <button class="leaderboard-btn" onclick="window.location.href='leaderboard.html'">Liderlik</button>
                 <button class="login-btn" id="loginBtn">Giriş Yap</button>
+                
+                <div class="user-menu" id="userMenu" style="display: none;">
+                    <div class="user-menu-header">
+                        <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
+                        <div class="user-info">
+                            <span class="user-name" id="userName"></span>
+                            <span class="user-email" id="userEmail"></span>
+                        </div>
+                    </div>
+                    <div class="user-menu-items">
+                        <a href="#" class="menu-item" id="profileBtn">
+                            <span class="menu-icon">👤</span>
+                            <span>Profil</span>
+                        </a>
+                        <a href="#" class="menu-item" id="notificationsBtn">
+                            <span class="menu-icon">🔔</span>
+                            <span>Bildirimler</span>
+                        </a>
+                        <a href="#" class="menu-item" id="settingsBtn">
+                            <span class="menu-icon">⚙️</span>
+                            <span>Ayarlar</span>
+                        </a>
+                        <hr class="menu-divider">
+                        <a href="#" class="menu-item" id="logoutBtn">
+                            <span class="menu-icon">🚪</span>
+                            <span>Çıkış Yap</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
