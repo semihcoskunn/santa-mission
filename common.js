@@ -31,17 +31,17 @@ function checkUserStatus() {
             
             document.getElementById('profileBtn').onclick = (e) => {
                 e.preventDefault();
-                window.location.href = '/profile';
+                window.location.href = 'profile.html';
             };
             
             document.getElementById('notificationsBtn').onclick = (e) => {
                 e.preventDefault();
-                window.location.href = '/notifications';
+                window.location.href = 'notifications.html';
             };
             
             document.getElementById('settingsBtn').onclick = (e) => {
                 e.preventDefault();
-                window.location.href = '/settings';
+                window.location.href = 'settings.html';
             };
             
             document.getElementById('logoutBtn').onclick = (e) => {

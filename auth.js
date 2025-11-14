@@ -48,11 +48,11 @@ async function handleGoogleSignIn(response) {
             window.location.reload();
         } else {
             // Profile incomplete, redirect to complete profile
-            window.location.href = '/complete-profile';
+            window.location.href = 'complete-profile.html';
         }
     } catch (error) {
         // New user, redirect to complete profile
-        window.location.href = '/complete-profile';
+        window.location.href = 'complete-profile.html';
     }
 }
 
@@ -61,7 +61,7 @@ function logout() {
     // Google oturumunu kapat
     google.accounts.id.disableAutoSelect();
     localStorage.removeItem('santa_user');
-    window.location.href = '/';
+    window.location.href = 'index.html';
 }
 
 // Kullanıcı kontrolü
