@@ -14,8 +14,16 @@ async function loadProfile() {
         const response = await fetch(`${API_URL}/user?userId=${user.userId}`);
         console.log('Response status:', response.status);
         
-        // API Gateway non-proxy returns Lambda's body directly as JSON
-        userData = await response.json();
+        const rawData = await response.json();
+        console.log('Raw data:', rawData);
+        
+        // API Gateway returns Lambda response with body field
+        if (rawData.body) {
+            userData = JSON.parse(rawData.body);
+        } else {
+            userData = rawData;
+        }
+        
         console.log('User data:', userData);
         console.log('firstName:', userData.firstName);
         console.log('lastName:', userData.lastName);
@@ -36,7 +44,12 @@ async function loadProfile() {
         try {
             const scoresResponse = await fetch(`${API_URL}/leaderboard`);
             console.log('Leaderboard response status:', scoresResponse.status);
-            const scoresData = await scoresResponse.json();
+            let scoresData = await scoresResponse.json();
+            
+            if (scoresData.body) {
+                scoresData = JSON.parse(scoresData.body);
+            }
+            
             console.log('Leaderboard data:', scoresData);
             const leaderboard = scoresData.leaderboard || [];
             console.log('Leaderboard array length:', leaderboard.length);
@@ -59,7 +72,12 @@ async function loadProfile() {
         // Get total games from SantaScores
         try {
             const gamesResponse = await fetch(`${API_URL}/user-stats?userId=${user.userId}`);
-            const gamesData = await gamesResponse.json();
+            let gamesData = await gamesResponse.json();
+            
+            if (gamesData.body) {
+                gamesData = JSON.parse(gamesData.body);
+            }
+            
             console.log('Games data:', gamesData);
             
             document.getElementById('totalGames').textContent = gamesData.totalGames || 0;
@@ -114,7 +132,11 @@ document.getElementById('editUsername').addEventListener('input', (e) => {
     usernameTimeout = setTimeout(async () => {
         try {
             const response = await fetch(`${API_URL}/check-username?username=${username}`);
-            const data = await response.json();
+            let data = await response.json();
+            
+            if (data.body) {
+                data = JSON.parse(data.body);
+            }
             
             if (data.available) {
                 check.textContent = '✓ Kullanıcı adı müsait';
@@ -164,7 +186,12 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
             })
         });
         
-        const data = await response.json();
+        let data = await response.json();
+        
+        if (data.body) {
+            data = JSON.parse(data.body);
+        }
+        
         console.log('Save response:', data);
         
         if (data.success) {

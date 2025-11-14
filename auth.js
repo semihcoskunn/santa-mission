@@ -37,11 +37,14 @@ async function handleGoogleSignIn(response) {
     try {
         const response = await fetch(`${API_URL}/user?userId=${userData.userId}`);
         let data = await response.json();
+        console.log('Auth check raw data:', data);
         
-        // Handle non-proxy integration response format
+        // API Gateway returns Lambda response with body field
         if (data.body) {
             data = JSON.parse(data.body);
         }
+        
+        console.log('Auth check parsed data:', data);
         
         if (data.username && data.username.trim() !== '') {
             // Profile complete, reload page
