@@ -3,6 +3,67 @@ if (!user) {
     window.location.href = 'index.html';
 }
 
+// Load notifications from API
+async function loadNotifications() {
+    try {
+        const response = await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/notifications?userId=${user.userId}`);
+        let data = await response.json();
+        
+        if (data.body) {
+            data = JSON.parse(data.body);
+        }
+        
+        if (data.success && data.notifications && data.notifications.length > 0) {
+            const notificationsList = document.getElementById('notificationsList');
+            notificationsList.innerHTML = '';
+            
+            data.notifications.forEach(notif => {
+                const timeAgo = getTimeAgo(notif.timestamp);
+                const icon = getNotificationIcon(notif.type);
+                const badge = notif.read ? '' : '<span class="notification-badge">YENİ</span>';
+                
+                const item = document.createElement('div');
+                item.className = 'notification-item';
+                item.innerHTML = `
+                    <div class="notification-icon">${icon}</div>
+                    <div class="notification-content">
+                        <h3>${notif.title} ${badge}</h3>
+                        <p>${notif.message}</p>
+                        <div class="notification-time">${timeAgo}</div>
+                    </div>
+                `;
+                notificationsList.appendChild(item);
+            });
+        }
+    } catch (error) {
+        console.error('Notifications load error:', error);
+    }
+}
+
+function getNotificationIcon(type) {
+    const icons = {
+        welcome: '🎉',
+        quest: '🏆',
+        leaderboard: '⭐',
+        achievement: '🎁',
+        system: '🔔'
+    };
+    return icons[type] || '🔔';
+}
+
+function getTimeAgo(timestamp) {
+    const now = Date.now();
+    const diff = now - timestamp;
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+    
+    if (minutes < 1) return 'Az önce';
+    if (minutes < 60) return `${minutes} dakika önce`;
+    if (hours < 24) return `${hours} saat önce`;
+    return `${days} gün önce`;
+}
+
 // Update login button and setup menu
 const loginBtn = document.getElementById('loginBtn');
 const userMenu = document.getElementById('userMenu');
@@ -63,3 +124,5 @@ for (let i = 0; i < 80; i++) {
     snowflake.style.opacity = Math.random() * 0.6 + 0.3;
     snowfall.appendChild(snowflake);
 }
+
+loadNotifications();
