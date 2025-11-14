@@ -32,7 +32,13 @@ async function loadProfile() {
         // Get leaderboard data
         console.log('Loading leaderboard...');
         const scoresResponse = await fetch(`${API_URL}/leaderboard`);
-        const scoresData = await scoresResponse.json();
+        let scoresData = await scoresResponse.json();
+        
+        // Handle non-proxy response
+        if (scoresData.body) {
+            scoresData = JSON.parse(scoresData.body);
+        }
+        
         console.log('Leaderboard data:', scoresData);
         const leaderboard = scoresData.leaderboard || [];
         
@@ -47,9 +53,16 @@ async function loadProfile() {
         // Get total games from SantaScores
         try {
             const gamesResponse = await fetch(`${API_URL}/user-stats?userId=${user.userId}`);
-            const gamesData = await gamesResponse.json();
+            let gamesData = await gamesResponse.json();
+            
+            // Handle non-proxy response
+            if (gamesData.body) {
+                gamesData = JSON.parse(gamesData.body);
+            }
+            
             document.getElementById('totalGames').textContent = gamesData.totalGames || 0;
         } catch (err) {
+            console.error('Games stats error:', err);
             document.getElementById('totalGames').textContent = '0';
         }
         
@@ -99,7 +112,12 @@ document.getElementById('editUsername').addEventListener('input', (e) => {
     usernameTimeout = setTimeout(async () => {
         try {
             const response = await fetch(`${API_URL}/check-username?username=${username}`);
-            const data = await response.json();
+            let data = await response.json();
+            
+            // Handle non-proxy response
+            if (data.body) {
+                data = JSON.parse(data.body);
+            }
             
             if (data.available) {
                 check.textContent = '✓ Kullanıcı adı müsait';
@@ -149,7 +167,12 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
             })
         });
         
-        const data = await response.json();
+        let data = await response.json();
+        
+        // Handle non-proxy response
+        if (data.body) {
+            data = JSON.parse(data.body);
+        }
         
         if (data.success) {
             alert('Profil güncellendi! Artık bilgilerinizi değiştiremezsiniz.');
