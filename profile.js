@@ -9,16 +9,11 @@ let userData = null;
 async function loadProfile() {
     try {
         console.log('Loading profile for userId:', user.userId);
-        console.log('API_URL:', API_URL);
-        console.log('Full URL:', `${API_URL}/user?userId=${user.userId}`);
-        
         const response = await fetch(`${API_URL}/user?userId=${user.userId}`);
         console.log('Response status:', response.status);
-        console.log('Response ok:', response.ok);
         
         const rawData = await response.json();
         console.log('Raw data:', rawData);
-        console.log('Raw data type:', typeof rawData);
         
         // API Gateway returns Lambda response with body field
         if (rawData.body) {
@@ -28,16 +23,9 @@ async function loadProfile() {
         }
         
         console.log('User data:', userData);
-        console.log('User data keys:', Object.keys(userData));
         console.log('firstName:', userData.firstName);
         console.log('lastName:', userData.lastName);
         console.log('username:', userData.username);
-        
-        if (!userData.firstName || !userData.lastName || !userData.username) {
-            console.error('Missing user data fields!');
-            document.getElementById('profileName').textContent = 'Veri eksik - Lütfen sayfayı yenileyin';
-            return;
-        }
         
         const fullName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
         console.log('Full name:', fullName);
