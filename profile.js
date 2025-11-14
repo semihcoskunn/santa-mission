@@ -37,7 +37,7 @@ async function loadProfile() {
         document.getElementById('profileUsername').textContent = `@${userData.username || 'username'}`;
         document.getElementById('profileEmail').textContent = user.email || 'Email yok';
         
-        console.log('Profile UI updated');
+        console.log('Profile UI updated successfully');
         
         // Get leaderboard data
         console.log('Loading leaderboard...');
@@ -62,6 +62,11 @@ async function loadProfile() {
             document.getElementById('userRank').textContent = userRank > 0 ? `#${userRank}` : '-';
             document.getElementById('totalScore').textContent = userScore?.total_score || 0;
             document.getElementById('maxStreak').textContent = userScore?.max_streak || 0;
+            
+            // Calculate total games from leaderboard if user-stats fails
+            if (userScore) {
+                window.userScoreData = userScore;
+            }
         } catch (err) {
             console.error('Leaderboard error:', err);
             document.getElementById('userRank').textContent = '-';
@@ -72,18 +77,27 @@ async function loadProfile() {
         // Get total games from SantaScores
         try {
             const gamesResponse = await fetch(`${API_URL}/user-stats?userId=${user.userId}`);
-            let gamesData = await gamesResponse.json();
             
-            if (gamesData.body) {
-                gamesData = JSON.parse(gamesData.body);
+            if (gamesResponse.ok) {
+                let gamesData = await gamesResponse.json();
+                
+                if (gamesData.body) {
+                    gamesData = JSON.parse(gamesData.body);
+                }
+                
+                console.log('Games data:', gamesData);
+                document.getElementById('totalGames').textContent = gamesData.totalGames || 0;
+            } else {
+                console.warn('user-stats API not available, using fallback');
+                // Fallback: estimate from score (rough estimate: 1 game = ~50 points average)
+                const estimatedGames = window.userScoreData ? Math.ceil(window.userScoreData.total_score / 50) : 0;
+                document.getElementById('totalGames').textContent = estimatedGames;
             }
-            
-            console.log('Games data:', gamesData);
-            
-            document.getElementById('totalGames').textContent = gamesData.totalGames || 0;
         } catch (err) {
             console.error('Games stats error:', err);
-            document.getElementById('totalGames').textContent = '0';
+            // Fallback
+            const estimatedGames = window.userScoreData ? Math.ceil(window.userScoreData.total_score / 50) : 0;
+            document.getElementById('totalGames').textContent = estimatedGames;
         }
         
         // Check if profile can be edited (profileEdited flag)
