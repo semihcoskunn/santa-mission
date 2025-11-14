@@ -50,13 +50,20 @@ exports.handler = async (event) => {
             };
         } else {
             // GET - Retrieve notifications for user
-            const userId = event.queryStringParameters?.userId;
+            const userId = event.queryStringParameters?.userId || event.params?.querystring?.userId;
             
             if (!userId) {
                 return {
                     statusCode: 400,
                     headers,
-                    body: JSON.stringify({ success: false, error: 'userId required' })
+                    body: JSON.stringify({ 
+                        success: false, 
+                        error: 'userId required',
+                        debug: {
+                            queryStringParameters: event.queryStringParameters,
+                            params: event.params
+                        }
+                    })
                 };
             }
             

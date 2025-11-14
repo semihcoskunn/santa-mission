@@ -53,6 +53,23 @@ async function handleGoogleSignIn(response) {
             userData.lastName = data.lastName;
             userData.username = data.username;
             localStorage.setItem('santa_user', JSON.stringify(userData));
+            
+            // Create welcome notification if first login
+            const hasWelcomeNotif = localStorage.getItem(`welcome_${userData.userId}`);
+            if (!hasWelcomeNotif) {
+                fetch(`${API_URL}/notifications`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: userData.userId,
+                        type: 'welcome',
+                        title: 'Hoş Geldin!',
+                        message: 'Santa\'nın Gizli Görevi\'ne katıldığın için teşekkürler! Hediyeleri topla ve liderlik tablosunda yüksel.'
+                    })
+                }).catch(e => console.log('Notification error:', e));
+                localStorage.setItem(`welcome_${userData.userId}`, 'true');
+            }
+            
             window.location.reload();
         } else {
             // Profile incomplete, redirect to complete profile
