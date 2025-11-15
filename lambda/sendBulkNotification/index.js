@@ -11,7 +11,7 @@ exports.handler = async (event) => {
         'Access-Control-Allow-Headers': 'Content-Type'
     };
     
-    if (event.httpMethod === 'OPTIONS') {
+    if (event.httpMethod === 'OPTIONS' || event.requestContext?.http?.method === 'OPTIONS') {
         return { statusCode: 200, headers, body: '' };
     }
     
