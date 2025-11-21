@@ -59,7 +59,17 @@ async function loadProfile() {
             
             document.getElementById('userRank').textContent = userRank > 0 ? `#${userRank}` : '-';
             document.getElementById('totalScore').textContent = userScore?.total_score || 0;
-            document.getElementById('maxStreak').textContent = userScore?.max_streak || 0;
+            
+            // Get daily quest streak from SantaQuests
+            try {
+                const questsResponse = await fetch(`${API_URL}/quests?userId=${user.userId}`);
+                const questsData = await questsResponse.json();
+                const quests = questsData.body ? JSON.parse(questsData.body).quests : questsData.quests;
+                document.getElementById('maxStreak').textContent = quests?.currentStreak || 0;
+            } catch (err) {
+                console.error('Quests error:', err);
+                document.getElementById('maxStreak').textContent = '0';
+            }
             
             // Calculate total games from leaderboard if user-stats fails
             if (userScore) {
@@ -69,7 +79,16 @@ async function loadProfile() {
             console.error('Leaderboard error:', err);
             document.getElementById('userRank').textContent = '-';
             document.getElementById('totalScore').textContent = '0';
-            document.getElementById('maxStreak').textContent = '0';
+            
+            // Try to get streak even if leaderboard fails
+            try {
+                const questsResponse = await fetch(`${API_URL}/quests?userId=${user.userId}`);
+                const questsData = await questsResponse.json();
+                const quests = questsData.body ? JSON.parse(questsData.body).quests : questsData.quests;
+                document.getElementById('maxStreak').textContent = quests?.currentStreak || 0;
+            } catch (questErr) {
+                document.getElementById('maxStreak').textContent = '0';
+            }
         }
         
         
