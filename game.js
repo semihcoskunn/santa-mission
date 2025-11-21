@@ -5,7 +5,7 @@ class GameManager {
         this.isLoggedIn = false;
         this.activeIcon = null;
         this.combo = 0;
-        this.streak = 0;
+        this.dailyStreak = 0;
         this.lastCollectTime = 0;
         this.comboTimeout = null;
         this.userId = null;
@@ -113,10 +113,8 @@ class GameManager {
         if (savedGame) {
             const gameData = JSON.parse(savedGame);
             this.score = gameData.score || 0;
-            this.streak = gameData.streak || 0;
         } else {
             this.score = user.total_score || 0;
-            this.streak = user.max_streak || 0;
         }
         
         if (loginBtn && userMenu) {
@@ -200,40 +198,73 @@ class GameManager {
     }
     
     async loadQuests() {
-        const today = new Date().toISOString().split('T')[0];
-        const savedQuests = localStorage.getItem(`quests_${this.userId}_${today}`);
-        
-        if (savedQuests) {
-            this.quests = JSON.parse(savedQuests);
-        } else {
-            this.quests = {
-                collect5: { progress: 0, claimed: false },
-                collect10: { progress: 0, claimed: false },
-                combo5: { progress: 0, claimed: false },
-                score200: { progress: 0, claimed: false }
-            };
+        try {
+            const response = await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/quests?userId=${this.userId}`);
+            const data = await response.json();
+            
+            if (data.success && data.quests) {
+                this.quests = data.quests;
+                this.dailyStreak = data.quests.currentStreak || 0;
+            } else {
+                this.quests = {
+                    collect5: { progress: 0, claimed: false },
+                    collect10: { progress: 0, claimed: false },
+                    combo5: { progress: 0, claimed: false },
+                    score200: { progress: 0, claimed: false }
+                };
+                this.dailyStreak = 0;
+            }
+            this.updateQuestsUI();
+        } catch (error) {
+            console.log('Görevler yüklenemedi:', error);
         }
-        this.updateQuestsUI();
     }
     
-    saveQuests() {
-        const today = new Date().toISOString().split('T')[0];
-        localStorage.setItem(`quests_${this.userId}_${today}`, JSON.stringify(this.quests));
-    }
+
     
-    updateQuestProgress(type, value = 1) {
+    async updateQuestProgress(type, value = 1) {
         if (!this.quests) return;
         
+        let questId = null;
+        let newProgress = 0;
+        
         if (type === 'collect') {
-            this.quests.collect5.progress = Math.min(this.quests.collect5.progress + 1, 5);
-            this.quests.collect10.progress = Math.min(this.quests.collect10.progress + 1, 10);
+            if (this.quests.collect5.progress < 5) {
+                questId = 'collect5';
+                newProgress = Math.min(this.quests.collect5.progress + 1, 5);
+                this.quests.collect5.progress = newProgress;
+            }
+            if (this.quests.collect10.progress < 10) {
+                questId = 'collect10';
+                newProgress = Math.min(this.quests.collect10.progress + 1, 10);
+                this.quests.collect10.progress = newProgress;
+            }
         } else if (type === 'combo') {
-            this.quests.combo5.progress = Math.min(this.quests.combo5.progress + 1, 5);
+            if (this.quests.combo5.progress < 5) {
+                questId = 'combo5';
+                newProgress = Math.min(this.quests.combo5.progress + 1, 5);
+                this.quests.combo5.progress = newProgress;
+            }
         } else if (type === 'score') {
-            this.quests.score200.progress = Math.min(this.quests.score200.progress + value, 200);
+            if (this.quests.score200.progress < 200) {
+                questId = 'score200';
+                newProgress = Math.min(this.quests.score200.progress + value, 200);
+                this.quests.score200.progress = newProgress;
+            }
         }
         
-        this.saveQuests();
+        if (questId) {
+            try {
+                await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/quests?userId=${this.userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ questId, progress: newProgress })
+                });
+            } catch (error) {
+                console.log('Görev güncellenemedi:', error);
+            }
+        }
+        
         this.updateQuestsUI();
     }
     
@@ -266,7 +297,7 @@ class GameManager {
         });
     }
     
-    claimQuest(questId, item) {
+    async claimQuest(questId, item) {
         const rewards = {
             collect5: 50,
             collect10: 100,
@@ -278,7 +309,21 @@ class GameManager {
         this.score += reward;
         this.quests[questId].claimed = true;
         
-        this.saveQuests();
+        try {
+            const response = await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/quests?userId=${this.userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ questId, claimed: true, rewardPoints: reward })
+            });
+            
+            const data = await response.json();
+            if (data.success && data.streak) {
+                this.dailyStreak = data.streak;
+            }
+        } catch (error) {
+            console.log('Görev tamamlanamadı:', error);
+        }
+        
         this.updateQuestsUI();
         this.updateScoreDisplay(reward);
         this.showCombo(1, reward);
@@ -352,22 +397,20 @@ class GameManager {
         const now = Date.now();
         if (now - this.lastCollectTime < 5000) {
             this.combo++;
-            this.streak++;
         } else {
             this.combo = 1;
-            this.streak++;
         }
         this.lastCollectTime = now;
         
         let comboMultiplier = 1;
-        if (this.streak >= 10) {
+        if (this.combo >= 10) {
             comboMultiplier = 2;
         }
         const totalPoints = iconData.points * comboMultiplier;
         this.score += totalPoints;
         
         // Veritabanına kaydet
-        await this.saveScoreToDatabase(totalPoints, this.streak);
+        await this.saveScoreToDatabase(totalPoints);
         
         this.createParticles(x, y, iconData.emoji);
         this.playSound(this.combo > 1 ? 'combo' : 'collect');
@@ -393,11 +436,10 @@ class GameManager {
         }, 5000);
     }
     
-    async saveScoreToDatabase(score, streak) {
+    async saveScoreToDatabase(score) {
         // LocalStorage'a kaydet
         localStorage.setItem(`game_${this.userId}`, JSON.stringify({
-            score: this.score,
-            streak: this.streak
+            score: this.score
         }));
         
         // DynamoDB'ye kaydet
@@ -409,7 +451,6 @@ class GameManager {
                 body: JSON.stringify({ 
                     userId: this.userId,
                     score: this.score,
-                    streak: this.streak,
                     name: user?.name || 'Unknown',
                     email: user?.email || '',
                     photo: user?.photo || ''
@@ -433,7 +474,7 @@ class GameManager {
             <div class="score-label">Puan</div>
             <div class="streak-container">
                 <span class="streak-icon">🔥</span>
-                <span class="streak-count">${this.streak}</span>
+                <span class="streak-count">${this.dailyStreak}</span>
             </div>
         `;
         

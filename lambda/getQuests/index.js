@@ -107,6 +107,52 @@ exports.handler = async (event) => {
                 }));
             }
             
+            // Check if all quests are completed
+            const questsResponse = await docClient.send(new GetCommand({
+                TableName: 'SantaQuests',
+                Key: { userID: userId, date: today }
+            }));
+            
+            const quests = questsResponse.Item;
+            const allCompleted = quests && 
+                quests.collect5?.claimed && 
+                quests.collect10?.claimed && 
+                quests.combo5?.claimed && 
+                quests.score200?.claimed;
+            
+            // Update streak if all quests completed
+            if (allCompleted && !quests.streakUpdated) {
+                const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+                const yesterdayQuests = await docClient.send(new GetCommand({
+                    TableName: 'SantaQuests',
+                    Key: { userID: userId, date: yesterday }
+                }));
+                
+                const yesterdayCompleted = yesterdayQuests.Item?.collect5?.claimed && 
+                    yesterdayQuests.Item?.collect10?.claimed && 
+                    yesterdayQuests.Item?.combo5?.claimed && 
+                    yesterdayQuests.Item?.score200?.claimed;
+                
+                const streakIncrement = yesterdayCompleted ? 1 : 0;
+                const newStreak = (yesterdayQuests.Item?.currentStreak || 0) + 1;
+                
+                await docClient.send(new UpdateCommand({
+                    TableName: 'SantaQuests',
+                    Key: { userID: userId, date: today },
+                    UpdateExpression: 'SET streakUpdated = :true, currentStreak = :streak',
+                    ExpressionAttributeValues: { 
+                        ':true': true,
+                        ':streak': yesterdayCompleted ? newStreak : 1
+                    }
+                }));
+                
+                return {
+                    statusCode: 200,
+                    headers,
+                    body: JSON.stringify({ success: true, streak: yesterdayCompleted ? newStreak : 1 })
+                };
+            }
+            
             return {
                 statusCode: 200,
                 headers,

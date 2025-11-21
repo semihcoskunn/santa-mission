@@ -9,7 +9,7 @@ exports.handler = async (event) => {
         console.log('Event:', JSON.stringify(event));
         
         // Non-proxy integration: body comes directly as event
-        const { userId, score, streak } = event;
+        const { userId, score } = event;
         
         if (!userId || score === undefined) {
             return { success: false, error: 'userId and score required', debug: { userId, score, event } };
@@ -21,8 +21,7 @@ exports.handler = async (event) => {
             Item: {
                 userID: userId,
                 timestamp: Date.now(),
-                score: score,
-                streak: streak || 0
+                score: score
             }
         }));
         
