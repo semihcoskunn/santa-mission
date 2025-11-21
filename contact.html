@@ -106,5 +106,19 @@
     </footer>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2922505559554247" crossorigin="anonymous"></script>
     <script src="auth.js"></script>
+    <script>
+        // Update login button with user name
+        window.addEventListener('load', () => {
+            const user = getCurrentUser();
+            if (user && user.profileCompleted) {
+                const loginBtn = document.getElementById('loginBtn');
+                if (loginBtn) {
+                    const fullName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.name;
+                    loginBtn.textContent = fullName;
+                    loginBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
