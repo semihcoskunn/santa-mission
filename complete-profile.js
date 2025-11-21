@@ -106,17 +106,20 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
             user.profileCompleted = true;
             localStorage.setItem('santa_user', JSON.stringify(user));
             
-            // Create welcome notification for new user
-            fetch(`${API_URL}/notifications`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userId: user.userId,
-                    type: 'welcome',
-                    title: 'Hoş Geldin!',
-                    message: 'Santa\'nın Gizli Görevi\'ne katıldığın için teşekkürler! Hediyeleri topla ve liderlik tablosunda yüksel.'
-                })
-            }).catch(e => console.log('Notification error:', e));
+            // Create welcome notification for new user (if notifications enabled)
+            const settings = JSON.parse(localStorage.getItem('santa_settings') || '{}');
+            if (settings.notifications !== false) {
+                fetch(`${API_URL}/notifications`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.userId,
+                        type: 'welcome',
+                        title: 'Hoş Geldin!',
+                        message: 'Santa\'nın Gizli Görevi\'ne katıldığın için teşekkürler! Hediyeleri topla ve liderlik tablosunda yüksel.'
+                    })
+                }).catch(e => console.log('Notification error:', e));
+            }
             
             window.location.href = 'index.html';
         } else {

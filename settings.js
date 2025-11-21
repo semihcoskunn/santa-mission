@@ -44,6 +44,21 @@ function applySettings(settings) {
     } else {
         document.body.style.filter = 'none';
     }
+    
+    // Store sound setting globally
+    window.soundEnabled = settings.sound !== false;
+    
+    // Store notifications setting globally
+    window.notificationsEnabled = settings.notifications !== false;
+    
+    // Auto-start game
+    if (settings.autoStart && window.location.pathname === '/' || window.location.pathname === '/index.html') {
+        setTimeout(() => {
+            if (getCurrentUser()) {
+                window.location.href = 'game.html';
+            }
+        }, 1000);
+    }
 }
 
 // Add event listeners

@@ -528,6 +528,10 @@ class GameManager {
     }
     
     playSound(type) {
+        // Check if sound is enabled
+        const settings = JSON.parse(localStorage.getItem('santa_settings') || '{}');
+        if (settings.sound === false) return;
+        
         try {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioContext.createOscillator();
@@ -554,6 +558,13 @@ class GameManager {
     createSnowfall() {
         const snowfall = document.querySelector('.snowfall');
         if (!snowfall) return;
+        
+        // Check if snow effect is enabled
+        const settings = JSON.parse(localStorage.getItem('santa_settings') || '{}');
+        if (settings.snow === false) {
+            snowfall.style.display = 'none';
+            return;
+        }
         
         const snowflakeTypes = ['❄', '❅', '✻'];
         for (let i = 0; i < 80; i++) {
