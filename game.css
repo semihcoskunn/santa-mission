@@ -1,3 +1,52 @@
+/* Fullscreen Button */
+.fullscreen-btn {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10000;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fullscreen-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.fullscreen-btn:active {
+    transform: scale(0.95);
+}
+
+/* Fullscreen Mode */
+body.fullscreen {
+    overflow: hidden;
+}
+
+body.fullscreen .navbar,
+body.fullscreen .ad-sidebar {
+    display: none;
+}
+
+body.fullscreen .game-section {
+    padding-top: 20px;
+    height: 100vh;
+}
+
+body.fullscreen .fullscreen-btn {
+    top: 20px;
+}
+
 /* Game Page Styles */
 .back-btn {
     background: rgba(255, 255, 255, 0.25);
@@ -129,25 +178,74 @@
 /* Responsive */
 @media (max-width: 768px) {
     .game-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
     
     .game-subtitle {
-        font-size: 1.1rem;
+        font-size: 0.95rem;
     }
     
     .game-info {
-        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .info-card {
+        width: 140px;
+        height: 140px;
+        padding: 0.8rem;
+    }
+    
+    .info-icon {
+        font-size: 2rem;
     }
     
     .game-section {
-        padding: 100px 20px 50px 20px;
+        padding: 100px 15px 50px 15px;
     }
     
     .quests-panel {
-        width: calc(100% - 40px);
-        left: 20px;
-        right: 20px;
+        width: calc(100% - 30px);
+        left: 15px;
+        right: 15px;
+        bottom: 15px;
+    }
+    
+    .fullscreen-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+        top: 70px;
+        right: 15px;
+    }
+    
+    .navbar .nav-right {
+        gap: 0.5rem;
+    }
+    
+    .back-btn, .leaderboard-btn, .login-btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .ad-sidebar {
+        display: none;
+    }
+    
+    /* Mobile Fullscreen */
+    body.fullscreen .game-section {
+        padding: 10px;
+    }
+    
+    body.fullscreen .quests-panel {
+        width: calc(100% - 20px);
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+    }
+    
+    body.fullscreen .fullscreen-btn {
+        top: 10px;
+        right: 10px;
     }
 }
 
@@ -341,4 +439,22 @@
     padding: 0;
     opacity: 0;
     transform: scaleY(0) rotateX(90deg);
+}
+
+/* Mobile Touch Optimization */
+@media (hover: none) and (pointer: coarse) {
+    .gift-box {
+        width: 70px !important;
+        height: 70px !important;
+        font-size: 50px !important;
+    }
+    
+    .info-card {
+        min-height: 120px;
+    }
+    
+    .quest-item {
+        padding: 15px;
+        min-height: 60px;
+    }
 }

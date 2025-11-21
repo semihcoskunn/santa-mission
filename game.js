@@ -15,7 +15,35 @@ class GameManager {
     init() {
         this.createSnowfall();
         this.setupLoginButton();
+        this.setupFullscreen();
         this.checkUserStatus();
+    }
+    
+    setupFullscreen() {
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        if (!fullscreenBtn) return;
+        
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log('Fullscreen error:', err);
+                });
+                document.body.classList.add('fullscreen');
+                fullscreenBtn.textContent = '❌';
+            } else {
+                document.exitFullscreen();
+                document.body.classList.remove('fullscreen');
+                fullscreenBtn.textContent = '⛶';
+            }
+        });
+        
+        // Listen for fullscreen changes
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                document.body.classList.remove('fullscreen');
+                fullscreenBtn.textContent = '⛶';
+            }
+        });
     }
 
     setupLoginButton() {
@@ -172,99 +200,40 @@ class GameManager {
     }
     
     async loadQuests() {
-        try {
-            const response = await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/quests?userId=${this.userId}`);
-            let data = await response.json();
-            if (data.body) data = JSON.parse(data.body);
-            
-            if (data.success && data.quests) {
-                this.quests = {
-                    collect5: data.quests.collect5 || { progress: 0, claimed: false },
-                    collect10: data.quests.collect10 || { progress: 0, claimed: false },
-                    combo5: data.quests.combo5 || { progress: 0, claimed: false },
-                    score200: data.quests.score200 || { progress: 0, claimed: false }
-                };
-            } else {
-                this.quests = {
-                    collect5: { progress: 0, claimed: false },
-                    collect10: { progress: 0, claimed: false },
-                    combo5: { progress: 0, claimed: false },
-                    score200: { progress: 0, claimed: false }
-                };
-            }
-            this.updateQuestsUI();
-        } catch (error) {
-            console.error('Quests load error:', error);
+        const today = new Date().toISOString().split('T')[0];
+        const savedQuests = localStorage.getItem(`quests_${this.userId}_${today}`);
+        
+        if (savedQuests) {
+            this.quests = JSON.parse(savedQuests);
+        } else {
             this.quests = {
                 collect5: { progress: 0, claimed: false },
                 collect10: { progress: 0, claimed: false },
                 combo5: { progress: 0, claimed: false },
                 score200: { progress: 0, claimed: false }
             };
-            this.updateQuestsUI();
         }
+        this.updateQuestsUI();
     }
     
-    async saveQuests() {
-        // Save to database
-        try {
-            await fetch('https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/quests', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userId: this.userId,
-                    quests: this.quests
-                })
-            });
-        } catch (error) {
-            console.error('Quests save error:', error);
-        }
+    saveQuests() {
+        const today = new Date().toISOString().split('T')[0];
+        localStorage.setItem(`quests_${this.userId}_${today}`, JSON.stringify(this.quests));
     }
     
-    async updateQuestProgress(type, value = 1) {
+    updateQuestProgress(type, value = 1) {
         if (!this.quests) return;
         
-        const updates = [];
-        
         if (type === 'collect') {
-            const newProgress5 = Math.min(this.quests.collect5.progress + 1, 5);
-            const newProgress10 = Math.min(this.quests.collect10.progress + 1, 10);
-            
-            if (newProgress5 !== this.quests.collect5.progress) {
-                this.quests.collect5.progress = newProgress5;
-                updates.push({ questId: 'collect5', progress: newProgress5 });
-            }
-            if (newProgress10 !== this.quests.collect10.progress) {
-                this.quests.collect10.progress = newProgress10;
-                updates.push({ questId: 'collect10', progress: newProgress10 });
-            }
+            this.quests.collect5.progress = Math.min(this.quests.collect5.progress + 1, 5);
+            this.quests.collect10.progress = Math.min(this.quests.collect10.progress + 1, 10);
         } else if (type === 'combo') {
-            const newProgress = Math.min(this.quests.combo5.progress + 1, 5);
-            if (newProgress !== this.quests.combo5.progress) {
-                this.quests.combo5.progress = newProgress;
-                updates.push({ questId: 'combo5', progress: newProgress });
-            }
+            this.quests.combo5.progress = Math.min(this.quests.combo5.progress + 1, 5);
         } else if (type === 'score') {
-            const newProgress = Math.min(this.quests.score200.progress + value, 200);
-            if (newProgress !== this.quests.score200.progress) {
-                this.quests.score200.progress = newProgress;
-                updates.push({ questId: 'score200', progress: newProgress });
-            }
+            this.quests.score200.progress = Math.min(this.quests.score200.progress + value, 200);
         }
         
-        // Update database
-        for (const update of updates) {
-            try {
-                await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/quests?userId=${this.userId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(update)
-                });
-            } catch (error) {
-                console.error('Quest update error:', error);
-            }
-        }
-        
+        this.saveQuests();
         this.updateQuestsUI();
     }
     
@@ -297,7 +266,7 @@ class GameManager {
         });
     }
     
-    async claimQuest(questId, item) {
+    claimQuest(questId, item) {
         const rewards = {
             collect5: 50,
             collect10: 100,
@@ -309,21 +278,7 @@ class GameManager {
         this.score += reward;
         this.quests[questId].claimed = true;
         
-        // Update database with claimed status and add reward points
-        try {
-            await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/quests?userId=${this.userId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    questId: questId,
-                    claimed: true,
-                    rewardPoints: reward
-                })
-            });
-        } catch (error) {
-            console.error('Quest claim error:', error);
-        }
-        
+        this.saveQuests();
         this.updateQuestsUI();
         this.updateScoreDisplay(reward);
         this.showCombo(1, reward);
