@@ -96,4 +96,15 @@ function getCurrentUser() {
     return userStr ? JSON.parse(userStr) : null;
 }
 
+// Disable Google One Tap if user is already logged in
+window.addEventListener('load', () => {
+    const user = getCurrentUser();
+    if (user && user.profileCompleted) {
+        // User is logged in, disable One Tap
+        if (window.google && google.accounts && google.accounts.id) {
+            google.accounts.id.cancel();
+        }
+    }
+});
+
 loadGoogleSDK();
