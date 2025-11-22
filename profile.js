@@ -365,14 +365,68 @@ async function saveSelectedAvatar() {
             user.avatar = selectedAvatar;
             localStorage.setItem('santa_user', JSON.stringify(user));
             
-            alert('Avatar değiştirildi! ✅');
+            showToast('Avatar değiştirildi! ✅');
             selectedAvatar = null;
         }
     } catch (error) {
         console.error('Avatar update error:', error);
-        alert('Bir hata oluştu');
+        showToast('Bir hata oluştu ❌', true);
     } finally {
         saveBtn.disabled = false;
         saveBtn.textContent = 'Kaydet';
     }
+}
+
+
+// Toast notification
+function showToast(message, isError = false) {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 30px;
+        background: ${isError ? 'linear-gradient(135deg, #e74c3c, #c0392b)' : 'linear-gradient(135deg, #2ecc71, #27ae60)'};
+        color: white;
+        padding: 20px 30px;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        z-index: 100000;
+        animation: slideInRight 0.5s ease, slideOutRight 0.5s ease 2.5s;
+    `;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => toast.remove(), 3000);
+}
+
+// CSS animasyonları ekle
+if (!document.getElementById('toastStyles')) {
+    const style = document.createElement('style');
+    style.id = 'toastStyles';
+    style.textContent = `
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
 }
