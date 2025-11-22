@@ -82,17 +82,18 @@ class GameManager {
     
     async loadUserFromDatabase(userId) {
         try {
-            const response = await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/user?userId=${userId}`);
-            if (response.ok) {
-                const data = await response.json();
-                const user = getCurrentUser();
-                const fullUser = {
-                    ...user,
-                    total_score: data.total_score || 0,
-                    max_streak: data.max_streak || 0
-                };
-                this.updateUIForLoggedInUser(fullUser);
-            }
+            // Liderlik tablosundan toplam skoru çek
+            const leaderboardResponse = await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/leaderboard`);
+            const leaderboardData = await leaderboardResponse.json();
+            const data = leaderboardData.body ? JSON.parse(leaderboardData.body) : leaderboardData;
+            
+            const userScore = data.leaderboard?.find(u => u.userID === userId);
+            const user = getCurrentUser();
+            const fullUser = {
+                ...user,
+                total_score: userScore?.total_score || 0
+            };
+            this.updateUIForLoggedInUser(fullUser);
         } catch (error) {
             console.log('Kullanıcı verileri yüklenemedi:', error);
             const user = getCurrentUser();
@@ -108,8 +109,8 @@ class GameManager {
         this.isLoggedIn = true;
         this.userId = user.userId;
         
-        // Skoru sıfırdan başlat (her oyun yeni)
-        this.score = 0;
+        // Toplam skoru yükle
+        this.score = user.total_score || 0;
         
         if (loginBtn && userMenu) {
             loginBtn.textContent = user.name;
