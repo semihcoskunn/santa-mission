@@ -146,15 +146,16 @@ body {
 
 .home-btn,
 .back-btn {
-    background: linear-gradient(135deg, #4CAF50, #45a049);
-    border: none;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.4);
     color: white;
     padding: 0.5rem 1.5rem;
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 700;
-    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
     min-width: 140px;
     width: 140px;
     text-align: center;
@@ -162,9 +163,9 @@ body {
 
 .home-btn:hover,
 .back-btn:hover {
-    background: linear-gradient(135deg, #45a049, #3d8b40);
+    background: rgba(255, 255, 255, 0.35);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
 }
 
 .leaderboard-btn {
