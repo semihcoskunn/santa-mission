@@ -430,7 +430,7 @@ class GameManager {
     }
     
     async saveScoreToDatabase(score) {
-        // Sadece DynamoDB'ye kaydet
+        // Sadece kazanılan puanı kaydet
         try {
             const user = getCurrentUser();
             await fetch('https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/update-score', {
@@ -438,7 +438,7 @@ class GameManager {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     userId: this.userId,
-                    score: this.score,
+                    score: score,
                     name: user?.name || 'Unknown',
                     email: user?.email || '',
                     photo: user?.photo || ''
