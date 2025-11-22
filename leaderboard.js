@@ -175,7 +175,21 @@ class LeaderboardManager {
         const name = element.querySelector('.podium-name');
         const score = element.querySelector('.podium-score');
         
-        avatar.src = user.photo || 'https://via.placeholder.com/80';
+        // Avatar emoji kullan
+        if (user.avatar) {
+            avatar.style.display = 'none';
+            const emojiDiv = avatar.nextElementSibling?.classList.contains('avatar-emoji') ? avatar.nextElementSibling : document.createElement('div');
+            emojiDiv.className = 'avatar-emoji';
+            emojiDiv.textContent = user.avatar;
+            emojiDiv.style.cssText = 'font-size: 4rem; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.2); border-radius: 50%; border: 3px solid rgba(255,255,255,0.5);';
+            if (!avatar.nextElementSibling?.classList.contains('avatar-emoji')) {
+                avatar.parentNode.insertBefore(emojiDiv, avatar.nextSibling);
+            }
+        } else {
+            avatar.src = user.photo || 'https://via.placeholder.com/80';
+            avatar.style.display = 'block';
+        }
+        
         name.textContent = user.name;
         score.textContent = user.total_score || 0;
     }
@@ -184,9 +198,14 @@ class LeaderboardManager {
         const item = document.createElement('div');
         item.className = 'leaderboard-item';
         
+        // Avatar emoji veya fotoğraf
+        const avatarHTML = user.avatar 
+            ? `<div style="font-size: 2.5rem; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.2); border-radius: 50%; border: 2px solid rgba(255,255,255,0.5);">${user.avatar}</div>`
+            : `<img class="item-avatar" src="${user.photo || 'https://via.placeholder.com/50'}" alt="${user.name}">`;
+        
         item.innerHTML = `
             <div class="item-rank">#${rank}</div>
-            <img class="item-avatar" src="${user.photo || 'https://via.placeholder.com/50'}" alt="${user.name}">
+            ${avatarHTML}
             <div class="item-info">
                 <div class="item-name">${user.name}</div>
                 <div class="item-streak">🔥 ${user.max_streak || 0} Streak</div>

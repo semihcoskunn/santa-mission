@@ -19,7 +19,7 @@ exports.handler = async (event) => {
         // Get all users
         const usersResponse = await docClient.send(new ScanCommand({
             TableName: 'SantaUsers',
-            ProjectionExpression: 'userID, username, photo',
+            ProjectionExpression: 'userID, username, photo, avatar',
         }));
         
         // Get all scores
@@ -43,6 +43,7 @@ exports.handler = async (event) => {
                 userID: user.userID,
                 name: user.username || 'User',
                 photo: user.photo,
+                avatar: user.avatar,
                 total_score: userStats[user.userID]?.total_score || 0,
                 max_streak: userStats[user.userID]?.max_streak || 0
             }))
