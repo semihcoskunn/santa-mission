@@ -409,26 +409,24 @@ class GameManager {
         const totalPoints = iconData.points * comboMultiplier;
         this.score += totalPoints;
         
-        // Veritabanına kaydet
-        await this.saveScoreToDatabase(totalPoints);
-        
+        // ANINDA UI güncelle
+        icon.remove();
+        this.activeIcon = null;
         this.createParticles(x, y, iconData.emoji);
         this.playSound(this.combo > 1 ? 'combo' : 'collect');
+        this.updateScoreDisplay(totalPoints);
         
         if (comboMultiplier > 1) {
             this.showCombo(comboMultiplier, totalPoints);
-            this.updateQuestProgress('combo');
         }
         
+        // Veritabanı işlemlerini arka planda yap (await yok)
+        this.saveScoreToDatabase(totalPoints);
         this.updateQuestProgress('collect');
         this.updateQuestProgress('score', totalPoints);
-        this.updateScoreDisplay(totalPoints);
-        
-        icon.style.animation = 'collectPulse 0.3s ease';
-        setTimeout(() => {
-            icon.remove();
-            this.activeIcon = null;
-        }, 300);
+        if (comboMultiplier > 1) {
+            this.updateQuestProgress('combo');
+        }
         
         clearTimeout(this.comboTimeout);
         this.comboTimeout = setTimeout(() => {
