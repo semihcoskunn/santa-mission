@@ -48,6 +48,7 @@
                 <button class="home-btn" onclick="window.location.href='/'">Ana Sayfa</button>
                 <button class="leaderboard-btn" onclick="window.location.href='leaderboard.html'">Liderlik</button>
                 <button class="login-btn" id="loginBtn">Giriş Yap</button>
+                <script>(function(){const u=localStorage.getItem('santa_user');if(u){try{const d=JSON.parse(u);const n=d.firstName&&d.lastName?`${d.firstName} ${d.lastName}`:d.name;document.getElementById('loginBtn').textContent=n;document.getElementById('loginBtn').style.background='linear-gradient(135deg, #2ecc71, #27ae60)';}catch(e){}}})();</script>
                 <div class="language-switcher">
                     <button class="lang-btn active" data-lang="tr">🇹🇷 TR</button>
                     <button class="lang-btn" data-lang="en">🇺🇸 EN</button>

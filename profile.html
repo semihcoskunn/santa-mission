@@ -23,6 +23,20 @@
                 <button class="home-btn" onclick="window.location.href='/'">Ana Sayfa</button>
                 <button class="leaderboard-btn" onclick="window.location.href='leaderboard.html'">Liderlik</button>
                 <button class="login-btn" id="loginBtn">Giriş Yap</button>
+                <script>
+                    // ANINDA kullanıcı adını göster (sayfa yüklenmeden önce)
+                    (function() {
+                        const user = localStorage.getItem('santa_user');
+                        if (user) {
+                            try {
+                                const userData = JSON.parse(user);
+                                const fullName = userData.firstName && userData.lastName ? `${userData.firstName} ${userData.lastName}` : userData.name;
+                                document.getElementById('loginBtn').textContent = fullName;
+                                document.getElementById('loginBtn').style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+                            } catch(e) {}
+                        }
+                    })();
+                </script>
                 <div class="language-switcher">
                     <button class="lang-btn active" data-lang="tr">🇹🇷 TR</button>
                     <button class="lang-btn" data-lang="en">🇺🇸 EN</button>
