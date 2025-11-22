@@ -108,14 +108,8 @@ class GameManager {
         this.isLoggedIn = true;
         this.userId = user.userId;
         
-        // LocalStorage'dan skoru yükle
-        const savedGame = localStorage.getItem(`game_${this.userId}`);
-        if (savedGame) {
-            const gameData = JSON.parse(savedGame);
-            this.score = gameData.score || 0;
-        } else {
-            this.score = user.total_score || 0;
-        }
+        // Skoru sıfırdan başlat (her oyun yeni)
+        this.score = 0;
         
         if (loginBtn && userMenu) {
             loginBtn.textContent = user.name;
@@ -435,12 +429,7 @@ class GameManager {
     }
     
     async saveScoreToDatabase(score) {
-        // LocalStorage'a kaydet
-        localStorage.setItem(`game_${this.userId}`, JSON.stringify({
-            score: this.score
-        }));
-        
-        // DynamoDB'ye kaydet
+        // Sadece DynamoDB'ye kaydet
         try {
             const user = getCurrentUser();
             await fetch('https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/update-score', {
