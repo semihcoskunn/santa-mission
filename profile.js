@@ -4,6 +4,15 @@ if (!user) {
 }
 
 let userData = null;
+let currentStreak = 0;
+
+const avatars = {
+    basic: ['🎅', '🎄', '⛄'],
+    streak3: ['🦌', '🎁'],
+    streak7: ['⭐', '🔔'],
+    streak14: ['🎊', '🎉'],
+    streak30: ['👑', '💎']
+};
 
 // Load user data
 async function loadProfile() {
@@ -30,7 +39,10 @@ async function loadProfile() {
         const fullName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
         console.log('Full name:', fullName);
         
-        document.getElementById('profilePhoto').src = user.photo || '';
+        // Avatar göster
+        const avatar = userData.avatar || '🎅';
+        document.getElementById('profilePhoto').textContent = avatar;
+        
         document.getElementById('profileName').textContent = fullName || user.name || 'Kullanıcı';
         document.getElementById('profileUsername').textContent = `@${userData.username || 'username'}`;
         document.getElementById('profileEmail').textContent = user.email || 'Email yok';
@@ -65,10 +77,13 @@ async function loadProfile() {
                 const questsResponse = await fetch(`${API_URL}/quests?userId=${user.userId}`);
                 const questsData = await questsResponse.json();
                 const quests = questsData.body ? JSON.parse(questsData.body).quests : questsData.quests;
-                document.getElementById('maxStreak').textContent = quests?.currentStreak || 0;
+                currentStreak = quests?.currentStreak || 0;
+                document.getElementById('maxStreak').textContent = currentStreak;
+                loadAvatars();
             } catch (err) {
                 console.error('Quests error:', err);
                 document.getElementById('maxStreak').textContent = '0';
+                loadAvatars();
             }
             
             // Calculate total games from leaderboard if user-stats fails
@@ -85,9 +100,12 @@ async function loadProfile() {
                 const questsResponse = await fetch(`${API_URL}/quests?userId=${user.userId}`);
                 const questsData = await questsResponse.json();
                 const quests = questsData.body ? JSON.parse(questsData.body).quests : questsData.quests;
-                document.getElementById('maxStreak').textContent = quests?.currentStreak || 0;
+                currentStreak = quests?.currentStreak || 0;
+                document.getElementById('maxStreak').textContent = currentStreak;
+                loadAvatars();
             } catch (questErr) {
                 document.getElementById('maxStreak').textContent = '0';
+                loadAvatars();
             }
         }
         
@@ -232,3 +250,92 @@ for (let i = 0; i < 80; i++) {
 }
 
 loadProfile();
+
+
+// Avatar sistemi
+function loadAvatars() {
+    const createAvatarBtn = (emoji, unlocked) => {
+        const btn = document.createElement('div');
+        btn.style.cssText = `
+            width: 80px; height: 80px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; cursor: ${unlocked ? 'pointer' : 'not-allowed'};
+            background: ${unlocked ? 'rgba(46, 204, 113, 0.2)' : 'rgba(0,0,0,0.1)'};
+            border: 3px solid ${unlocked ? 'rgba(46, 204, 113, 0.5)' : 'rgba(0,0,0,0.2)'};
+            transition: all 0.3s ease; position: relative;
+            ${unlocked ? '' : 'filter: grayscale(100%); opacity: 0.5;'}
+        `;
+        btn.textContent = emoji;
+        
+        if (!unlocked) {
+            const lock = document.createElement('div');
+            lock.textContent = '🔒';
+            lock.style.cssText = 'position: absolute; bottom: -5px; right: -5px; font-size: 1.5rem;';
+            btn.appendChild(lock);
+        } else {
+            btn.onmouseover = () => btn.style.transform = 'scale(1.1)';
+            btn.onmouseout = () => btn.style.transform = 'scale(1)';
+            btn.onclick = () => selectAvatar(emoji);
+        }
+        
+        return btn;
+    };
+    
+    document.getElementById('basicAvatars').innerHTML = '';
+    avatars.basic.forEach(emoji => {
+        document.getElementById('basicAvatars').appendChild(createAvatarBtn(emoji, true));
+    });
+    
+    document.getElementById('streak3Avatars').innerHTML = '';
+    avatars.streak3.forEach(emoji => {
+        document.getElementById('streak3Avatars').appendChild(createAvatarBtn(emoji, currentStreak >= 3));
+    });
+    
+    document.getElementById('streak7Avatars').innerHTML = '';
+    avatars.streak7.forEach(emoji => {
+        document.getElementById('streak7Avatars').appendChild(createAvatarBtn(emoji, currentStreak >= 7));
+    });
+    
+    document.getElementById('streak14Avatars').innerHTML = '';
+    avatars.streak14.forEach(emoji => {
+        document.getElementById('streak14Avatars').appendChild(createAvatarBtn(emoji, currentStreak >= 14));
+    });
+    
+    document.getElementById('streak30Avatars').innerHTML = '';
+    avatars.streak30.forEach(emoji => {
+        document.getElementById('streak30Avatars').appendChild(createAvatarBtn(emoji, currentStreak >= 30));
+    });
+}
+
+async function selectAvatar(emoji) {
+    try {
+        const response = await fetch(`${API_URL}/user`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: user.userId,
+                avatar: emoji,
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                username: userData.username,
+                email: user.email,
+                photo: user.photo
+            })
+        });
+        
+        const data = await response.json();
+        if (data.success || data.body) {
+            document.getElementById('profilePhoto').textContent = emoji;
+            document.getElementById('avatarModal').style.display = 'none';
+            
+            // localStorage'ı güncelle
+            user.avatar = emoji;
+            localStorage.setItem('santa_user', JSON.stringify(user));
+            
+            alert('Avatar değiştirildi! ✅');
+        }
+    } catch (error) {
+        console.error('Avatar update error:', error);
+        alert('Bir hata oluştu');
+    }
+}

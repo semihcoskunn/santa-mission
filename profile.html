@@ -81,7 +81,10 @@
             <!-- Profile Header Card -->
             <div class="profile-header" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 25px; padding: 40px; margin-bottom: 25px; box-shadow: 0 15px 50px rgba(0,0,0,0.2);">
                 <div style="display: flex; align-items: center; gap: 30px; flex-wrap: wrap;">
-                    <img id="profilePhoto" src="" alt="Profil" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid rgba(255, 255, 255, 0.5); box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
+                    <div style="position: relative;">
+                        <div id="profilePhoto" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid rgba(255, 255, 255, 0.5); box-shadow: 0 8px 25px rgba(0,0,0,0.2); background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 4rem; cursor: pointer;" onclick="document.getElementById('avatarModal').style.display='flex'">🎅</div>
+                        <button style="position: absolute; bottom: 0; right: 0; width: 35px; height: 35px; border-radius: 50%; background: rgba(46, 204, 113, 0.9); border: 2px solid white; color: white; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" onclick="document.getElementById('avatarModal').style.display='flex'">✏️</button>
+                    </div>
                     <div style="flex: 1; min-width: 200px;">
                         <h1 id="profileName" style="color: white; font-size: 2.2rem; margin-bottom: 8px; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); font-family: 'Mountains of Christmas', cursive;">Yükleniyor...</h1>
                         <p id="profileUsername" style="color: rgba(255, 255, 255, 0.9); font-size: 1.1rem; font-weight: 600; margin-bottom: 5px;">@username</p>
@@ -165,6 +168,41 @@
             <p>© 2025 Santa'nın Gizli Görevi - Tüm hakları saklıdır</p>
         </div>
     </footer>
+
+    <!-- Avatar Seçici Modal -->
+    <div id="avatarModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="background: rgba(255,255,255,0.95); border-radius: 25px; padding: 40px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2 style="color: #1e3c72; margin: 0; font-family: 'Mountains of Christmas', cursive;">🎭 Avatar Seç</h2>
+                <button onclick="document.getElementById('avatarModal').style.display='none'" style="background: none; border: none; font-size: 2rem; cursor: pointer; color: #666;">&times;</button>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #1e3c72; margin-bottom: 15px;">Temel Avatarlar</h3>
+                <div id="basicAvatars" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 15px;"></div>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #1e3c72; margin-bottom: 15px;">🔥 3 Gün Streak</h3>
+                <div id="streak3Avatars" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 15px;"></div>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #1e3c72; margin-bottom: 15px;">🔥 7 Gün Streak</h3>
+                <div id="streak7Avatars" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 15px;"></div>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #1e3c72; margin-bottom: 15px;">🔥 14 Gün Streak</h3>
+                <div id="streak14Avatars" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 15px;"></div>
+            </div>
+            
+            <div>
+                <h3 style="color: #1e3c72; margin-bottom: 15px;">👑 30 Gün Streak</h3>
+                <div id="streak30Avatars" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 15px;"></div>
+            </div>
+        </div>
+    </div>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2922505559554247" crossorigin="anonymous"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
