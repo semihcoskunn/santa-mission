@@ -5,6 +5,7 @@ if (!user) {
 
 let userData = null;
 let currentStreak = 0;
+let selectedAvatar = null;
 
 const avatars = {
     basic: ['🎅', '🎄', '⛄'],
@@ -256,6 +257,8 @@ loadProfile();
 function loadAvatars() {
     const createAvatarBtn = (emoji, unlocked) => {
         const btn = document.createElement('div');
+        btn.className = 'avatar-btn';
+        btn.dataset.emoji = emoji;
         btn.style.cssText = `
             width: 80px; height: 80px; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center;
@@ -273,9 +276,9 @@ function loadAvatars() {
             lock.style.cssText = 'position: absolute; bottom: -5px; right: -5px; font-size: 1.5rem;';
             btn.appendChild(lock);
         } else {
-            btn.onmouseover = () => btn.style.transform = 'scale(1.1)';
-            btn.onmouseout = () => btn.style.transform = 'scale(1)';
-            btn.onclick = () => selectAvatar(emoji);
+            btn.onmouseover = () => { if (selectedAvatar !== emoji) btn.style.transform = 'scale(1.1)'; };
+            btn.onmouseout = () => { if (selectedAvatar !== emoji) btn.style.transform = 'scale(1)'; };
+            btn.onclick = () => selectAvatarForSave(emoji);
         }
         
         return btn;
@@ -307,14 +310,44 @@ function loadAvatars() {
     });
 }
 
-async function selectAvatar(emoji) {
+function selectAvatarForSave(emoji) {
+    selectedAvatar = emoji;
+    
+    // Tüm avatar butonlarını normal hale getir
+    document.querySelectorAll('.avatar-btn').forEach(btn => {
+        if (btn.dataset.emoji && btn.style.cursor === 'pointer') {
+            btn.style.border = '3px solid rgba(46, 204, 113, 0.5)';
+            btn.style.transform = 'scale(1)';
+        }
+    });
+    
+    // Seçili avatar'ı vurgula
+    const selectedBtn = document.querySelector(`[data-emoji="${emoji}"]`);
+    if (selectedBtn) {
+        selectedBtn.style.border = '4px solid #2ecc71';
+        selectedBtn.style.transform = 'scale(1.15)';
+        selectedBtn.style.boxShadow = '0 8px 25px rgba(46, 204, 113, 0.5)';
+    }
+    
+    // Kaydet butonunu aktif et
+    document.getElementById('saveAvatarBtn').disabled = false;
+    document.getElementById('saveAvatarBtn').style.opacity = '1';
+}
+
+async function saveSelectedAvatar() {
+    if (!selectedAvatar) return;
+    
+    const saveBtn = document.getElementById('saveAvatarBtn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Kaydediliyor...';
+    
     try {
         const response = await fetch(`${API_URL}/user`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 userId: user.userId,
-                avatar: emoji,
+                avatar: selectedAvatar,
                 firstName: userData.firstName,
                 lastName: userData.lastName,
                 username: userData.username,
@@ -325,17 +358,21 @@ async function selectAvatar(emoji) {
         
         const data = await response.json();
         if (data.success || data.body) {
-            document.getElementById('profilePhoto').textContent = emoji;
+            document.getElementById('profilePhoto').textContent = selectedAvatar;
             document.getElementById('avatarModal').style.display = 'none';
             
             // localStorage'ı güncelle
-            user.avatar = emoji;
+            user.avatar = selectedAvatar;
             localStorage.setItem('santa_user', JSON.stringify(user));
             
             alert('Avatar değiştirildi! ✅');
+            selectedAvatar = null;
         }
     } catch (error) {
         console.error('Avatar update error:', error);
         alert('Bir hata oluştu');
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Kaydet';
     }
 }
