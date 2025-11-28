@@ -96,7 +96,7 @@ function showLogoutModal() {
             <h2 style="color:#1e3c72;margin-bottom:15px;font-family:'Mountains of Christmas',cursive;font-size:1.8rem;">Çıkış Yap</h2>
             <p style="color:#666;margin-bottom:30px;font-size:1rem;">Çıkış yapmak istediğinize emin misiniz?</p>
             <div style="display:flex;gap:15px;">
-                <button onclick="confirmLogout()" style="flex:1;background:#e74c3c;border:none;color:white;padding:12px;font-size:1rem;font-weight:700;border-radius:10px;cursor:pointer;box-shadow:0 4px 15px rgba(231,76,60,0.3);">Evet, Çıkış Yap</button>
+                <button onclick="confirmLogout()" style="flex:1;background:#e74c3c;border:none;color:white;padding:12px;font-size:1rem;font-weight:700;border-radius:10px;cursor:pointer;box-shadow:0 4px 15px rgba(231,76,60,0.3);">Çıkış Yap</button>
                 <button onclick="this.closest('div[style*=fixed]').remove()" style="flex:1;background:#95a5a6;border:none;color:white;padding:12px;font-size:1rem;font-weight:700;border-radius:10px;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.2);">İptal</button>
             </div>
         </div>
