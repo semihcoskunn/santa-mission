@@ -84,7 +84,27 @@ async function handleGoogleSignIn(response) {
 
 // Çıkış
 function logout() {
-    // Google oturumunu kapat
+    showLogoutModal();
+}
+
+function showLogoutModal() {
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:10000;display:flex;align-items:center;justify-content:center;';
+    modal.innerHTML = `
+        <div style="background:rgba(255,255,255,0.95);border-radius:20px;padding:40px;max-width:400px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+            <div style="font-size:3rem;margin-bottom:20px;">🎅</div>
+            <h2 style="color:#1e3c72;margin-bottom:15px;font-family:'Mountains of Christmas',cursive;font-size:1.8rem;">Çıkış Yap</h2>
+            <p style="color:#666;margin-bottom:30px;font-size:1rem;">Çıkış yapmak istediğinize emin misiniz?</p>
+            <div style="display:flex;gap:15px;">
+                <button onclick="confirmLogout()" style="flex:1;background:#e74c3c;border:none;color:white;padding:12px;font-size:1rem;font-weight:700;border-radius:10px;cursor:pointer;box-shadow:0 4px 15px rgba(231,76,60,0.3);">Evet, Çıkış Yap</button>
+                <button onclick="this.closest('div[style*=fixed]').remove()" style="flex:1;background:#95a5a6;border:none;color:white;padding:12px;font-size:1rem;font-weight:700;border-radius:10px;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.2);">İptal</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function confirmLogout() {
     google.accounts.id.disableAutoSelect();
     localStorage.removeItem('santa_user');
     window.location.href = 'index.html';
