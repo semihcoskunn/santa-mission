@@ -98,9 +98,7 @@ if (loginBtn && userMenu && user) {
     
     document.getElementById('logoutBtn').onclick = (e) => {
         e.preventDefault();
-        if (confirm('Çıkış yapmak istiyor musunuz?')) {
-            logout();
-        }
+        logout();
     };
 }
 
