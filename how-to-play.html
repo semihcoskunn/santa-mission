@@ -23,9 +23,35 @@
                 <button class="home-btn" onclick="window.location.href='/'">🏠 Ana Sayfa</button>
                 <button class="leaderboard-btn" onclick="window.location.href='/leaderboard'">🏆 Liderlik</button>
                 <button class="login-btn" id="loginBtn">Giriş Yap</button>
-                <div class="language-switcher">
-                    <button class="lang-btn active" data-lang="tr">🇹🇷 TR</button>
-                    <button class="lang-btn" data-lang="en">🇺🇸 EN</button>
+                
+                <!-- User Profile Menu -->
+                <div class="user-menu" id="userMenu" style="display: none;">
+                    <div class="user-menu-header">
+                        <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
+                        <div class="user-info">
+                            <span class="user-name" id="userName"></span>
+                            <span class="user-email" id="userEmail"></span>
+                        </div>
+                    </div>
+                    <div class="user-menu-items">
+                        <a href="#" class="menu-item" id="profileBtn">
+                            <span class="menu-icon">👤</span>
+                            <span>Profil</span>
+                        </a>
+                        <a href="#" class="menu-item" id="notificationsBtn">
+                            <span class="menu-icon">🔔</span>
+                            <span>Bildirimler</span>
+                        </a>
+                        <a href="#" class="menu-item" id="settingsBtn">
+                            <span class="menu-icon">⚙️</span>
+                            <span>Ayarlar</span>
+                        </a>
+                        <hr class="menu-divider">
+                        <a href="#" class="menu-item" id="logoutBtn">
+                            <span class="menu-icon">🚪</span>
+                            <span>Çıkış Yap</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -225,21 +251,59 @@
     </footer>
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="auth.js"></script>
+    <script src="auth.js"></script>`r`n    <script src="common.js"></script>
     <script src="script.js"></script>
     <script>
-        // Update login button with user name
+        // Update login button with user name and setup menu
         window.addEventListener('load', () => {
             const user = getCurrentUser();
             if (user && user.profileCompleted) {
                 const loginBtn = document.getElementById('loginBtn');
-                if (loginBtn) {
+                const userMenu = document.getElementById('userMenu');
+                
+                if (loginBtn && userMenu) {
                     const fullName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.name;
                     loginBtn.textContent = fullName;
                     loginBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+                    
+                    document.getElementById('userAvatar').src = user.photo;
+                    document.getElementById('userName').textContent = fullName;
+                    document.getElementById('userEmail').textContent = user.email;
+                    
+                    loginBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        userMenu.style.display = userMenu.style.display === 'none' ? 'block' : 'none';
+                    };
+                    
+                    document.addEventListener('click', (e) => {
+                        if (!userMenu.contains(e.target) && e.target !== loginBtn) {
+                            userMenu.style.display = 'none';
+                        }
+                    });
+                    
+                    document.getElementById('profileBtn').onclick = (e) => {
+                        e.preventDefault();
+                        window.location.href = '/profile';
+                    };
+                    
+                    document.getElementById('notificationsBtn').onclick = (e) => {
+                        e.preventDefault();
+                        window.location.href = '/notifications';
+                    };
+                    
+                    document.getElementById('settingsBtn').onclick = (e) => {
+                        e.preventDefault();
+                        window.location.href = '/settings';
+                    };
+                    
+                    document.getElementById('logoutBtn').onclick = (e) => {
+                        e.preventDefault();
+                        logout();
+                    };
                 }
             }
         });
     </script>
 </body>
 </html>
+
