@@ -3,20 +3,35 @@ if (!user) {
     window.location.href = '/';
 }
 
-// Load settings from localStorage
-function loadSettings() {
-    const settings = JSON.parse(localStorage.getItem('santa_settings') || '{}');
-    
-    document.getElementById('notificationsToggle').checked = settings.notifications !== false;
-    document.getElementById('soundToggle').checked = settings.sound !== false;
-    document.getElementById('snowToggle').checked = settings.snow !== false;
-    document.getElementById('autoStartToggle').checked = settings.autoStart === true;
-    
-    applySettings(settings);
+// Load settings from database
+async function loadSettings() {
+    try {
+        const response = await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/settings?userId=${user.userId}`);
+        const data = await response.json();
+        const settings = data.settings || {};
+        
+        document.getElementById('notificationsToggle').checked = settings.notifications !== false;
+        document.getElementById('soundToggle').checked = settings.sound !== false;
+        document.getElementById('snowToggle').checked = settings.snow !== false;
+        document.getElementById('autoStartToggle').checked = settings.autoStart === true;
+        
+        // Cache in localStorage for offline access
+        localStorage.setItem('santa_settings', JSON.stringify(settings));
+        applySettings(settings);
+    } catch (error) {
+        console.log('Settings load error:', error);
+        // Fallback to localStorage
+        const settings = JSON.parse(localStorage.getItem('santa_settings') || '{}');
+        document.getElementById('notificationsToggle').checked = settings.notifications !== false;
+        document.getElementById('soundToggle').checked = settings.sound !== false;
+        document.getElementById('snowToggle').checked = settings.snow !== false;
+        document.getElementById('autoStartToggle').checked = settings.autoStart === true;
+        applySettings(settings);
+    }
 }
 
-// Save settings to localStorage
-function saveSettings() {
+// Save settings to database
+async function saveSettings() {
     const settings = {
         notifications: document.getElementById('notificationsToggle').checked,
         sound: document.getElementById('soundToggle').checked,
@@ -24,8 +39,20 @@ function saveSettings() {
         autoStart: document.getElementById('autoStartToggle').checked
     };
     
+    // Save to localStorage immediately for instant feedback
     localStorage.setItem('santa_settings', JSON.stringify(settings));
     applySettings(settings);
+    
+    // Save to database
+    try {
+        await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/settings?userId=${user.userId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(settings)
+        });
+    } catch (error) {
+        console.log('Settings save error:', error);
+    }
 }
 
 // Apply settings

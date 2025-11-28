@@ -70,13 +70,27 @@ async function handleGoogleSignIn(response) {
                 localStorage.setItem(`welcome_${userData.userId}`, 'true');
             }
             
-            // Check auto-start setting
-            const settings = JSON.parse(localStorage.getItem('santa_settings') || '{}');
-            if (settings.autoStart) {
-                window.location.href = '/game';
-            } else {
-                window.location.reload();
-            }
+            // Check auto-start setting from database
+            fetch(`${API_URL}/settings?userId=${userData.userId}`)
+                .then(res => res.json())
+                .then(data => {
+                    const settings = data.settings || {};
+                    localStorage.setItem('santa_settings', JSON.stringify(settings));
+                    if (settings.autoStart) {
+                        window.location.href = '/game';
+                    } else {
+                        window.location.reload();
+                    }
+                })
+                .catch(() => {
+                    // Fallback to localStorage
+                    const settings = JSON.parse(localStorage.getItem('santa_settings') || '{}');
+                    if (settings.autoStart) {
+                        window.location.href = '/game';
+                    } else {
+                        window.location.reload();
+                    }
+                });
         } else {
             // Profile incomplete, redirect to complete profile
             window.location.href = '/complete-profile';
