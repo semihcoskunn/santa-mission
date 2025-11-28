@@ -3,10 +3,15 @@ frontend:
   phases:
     build:
       commands:
-        - echo "Static site - no build required"
+        - echo "No build required for static site"
   artifacts:
     baseDirectory: /
     files:
       - '**/*'
   cache:
     paths: []
+customHeaders:
+  - pattern: '**/*'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
