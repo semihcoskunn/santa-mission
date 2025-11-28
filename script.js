@@ -144,9 +144,7 @@ class LanguageManager {
             
             document.getElementById('logoutBtn').onclick = (e) => {
                 e.preventDefault();
-                if (confirm(this.currentLang === 'tr' ? 'Çıkış yapmak istiyor musunuz?' : 'Do you want to logout?')) {
-                    logout();
-                }
+                logout();
             };
         }
     }
