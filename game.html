@@ -177,6 +177,14 @@
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="auth.js"></script>
+    <script>
+        // Google One Tap'i giriş yapılmışsa iptal et
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('santa_user') && typeof google !== 'undefined' && google.accounts) {
+                google.accounts.id.cancel();
+            }
+        });
+    </script>
     <script src="game.js"></script>
 </body>
 </html>
