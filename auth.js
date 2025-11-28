@@ -70,7 +70,13 @@ async function handleGoogleSignIn(response) {
                 localStorage.setItem(`welcome_${userData.userId}`, 'true');
             }
             
-            window.location.reload();
+            // Check auto-start setting
+            const settings = JSON.parse(localStorage.getItem('santa_settings') || '{}');
+            if (settings.autoStart) {
+                window.location.href = '/game';
+            } else {
+                window.location.reload();
+            }
         } else {
             // Profile incomplete, redirect to complete profile
             window.location.href = '/complete-profile';

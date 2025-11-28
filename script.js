@@ -47,7 +47,17 @@ class LanguageManager {
     setupMissionButton() {
         const ctaButton = document.querySelector('.cta-button');
         ctaButton.addEventListener('click', () => {
-            window.location.href = '/game';
+            const user = getCurrentUser();
+            if (user && user.profileCompleted) {
+                const settings = JSON.parse(localStorage.getItem('santa_settings') || '{}');
+                if (settings.autoStart) {
+                    window.location.href = '/game';
+                } else {
+                    window.location.href = '/game';
+                }
+            } else {
+                window.location.href = '/game';
+            }
         });
     }
 

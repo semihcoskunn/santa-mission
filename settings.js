@@ -42,14 +42,7 @@ function applySettings(settings) {
     // Store notifications setting globally
     window.notificationsEnabled = settings.notifications !== false;
     
-    // Auto-start game
-    if (settings.autoStart && window.location.pathname === '/' || window.location.pathname === '/index.html') {
-        setTimeout(() => {
-            if (getCurrentUser()) {
-                window.location.href = '/game';
-            }
-        }, 1000);
-    }
+
 }
 
 // Add event listeners
