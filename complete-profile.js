@@ -22,7 +22,7 @@ function createSnowfall() {
 // Check if user is logged in
 const userStr = localStorage.getItem('santa_user');
 if (!userStr) {
-    window.location.href = 'index.html';
+    window.location.href = '/';
 }
 
 const user = JSON.parse(userStr);
@@ -121,7 +121,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
                 }).catch(e => console.log('Notification error:', e));
             }
             
-            window.location.href = 'index.html';
+            window.location.href = '/';
         } else {
             alert(data.error || 'Bir hata oluştu');
             submitBtn.disabled = false;

@@ -1,6 +1,6 @@
 const user = getCurrentUser();
 if (!user) {
-    window.location.href = 'index.html';
+    window.location.href = '/';
 }
 
 // Load notifications from API
@@ -105,17 +105,17 @@ if (loginBtn && userMenu && user) {
     
     document.getElementById('profileBtn').onclick = (e) => {
         e.preventDefault();
-        window.location.href = 'profile.html';
+        window.location.href = '/profile';
     };
     
     document.getElementById('notificationsBtn').onclick = (e) => {
         e.preventDefault();
-        window.location.href = 'notifications.html';
+        window.location.href = '/notifications';
     };
     
     document.getElementById('settingsBtn').onclick = (e) => {
         e.preventDefault();
-        window.location.href = 'settings.html';
+        window.location.href = '/settings';
     };
     
     document.getElementById('logoutBtn').onclick = (e) => {

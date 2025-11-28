@@ -47,7 +47,7 @@ class LanguageManager {
     setupMissionButton() {
         const ctaButton = document.querySelector('.cta-button');
         ctaButton.addEventListener('click', () => {
-            window.location.href = 'game.html';
+            window.location.href = '/game';
         });
     }
 
@@ -123,14 +123,14 @@ class LanguageManager {
             // Menü butonları
             document.getElementById('profileBtn').onclick = (e) => {
                 e.preventDefault();
-                window.location.href = 'profile.html';
+                window.location.href = '/profile';
             };
             
             const notifBtn = document.getElementById('notificationsBtn');
             if (notifBtn) {
                 notifBtn.onclick = (e) => {
                     e.preventDefault();
-                    window.location.href = 'notifications.html';
+                    window.location.href = '/notifications';
                 };
             }
             
@@ -138,7 +138,7 @@ class LanguageManager {
             if (settingsBtn) {
                 settingsBtn.onclick = (e) => {
                     e.preventDefault();
-                    window.location.href = 'settings.html';
+                    window.location.href = '/settings';
                 };
             }
             

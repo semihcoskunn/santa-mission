@@ -1,6 +1,6 @@
 const user = getCurrentUser();
 if (!user) {
-    window.location.href = 'index.html';
+    window.location.href = '/';
 }
 
 let userData = null;

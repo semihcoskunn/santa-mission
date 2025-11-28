@@ -1,6 +1,6 @@
 const user = getCurrentUser();
 if (!user) {
-    window.location.href = 'index.html';
+    window.location.href = '/';
 }
 
 // Load settings from localStorage
@@ -46,7 +46,7 @@ function applySettings(settings) {
     if (settings.autoStart && window.location.pathname === '/' || window.location.pathname === '/index.html') {
         setTimeout(() => {
             if (getCurrentUser()) {
-                window.location.href = 'game.html';
+                window.location.href = '/game';
             }
         }, 1000);
     }
@@ -83,17 +83,17 @@ if (loginBtn && userMenu && user) {
     
     document.getElementById('profileBtn').onclick = (e) => {
         e.preventDefault();
-        window.location.href = 'profile.html';
+        window.location.href = '/profile';
     };
     
     document.getElementById('notificationsBtn').onclick = (e) => {
         e.preventDefault();
-        window.location.href = 'notifications.html';
+        window.location.href = '/notifications';
     };
     
     document.getElementById('settingsBtn').onclick = (e) => {
         e.preventDefault();
-        window.location.href = 'settings.html';
+        window.location.href = '/settings';
     };
     
     document.getElementById('logoutBtn').onclick = (e) => {
