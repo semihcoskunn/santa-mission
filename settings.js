@@ -10,7 +10,6 @@ function loadSettings() {
     document.getElementById('notificationsToggle').checked = settings.notifications !== false;
     document.getElementById('soundToggle').checked = settings.sound !== false;
     document.getElementById('snowToggle').checked = settings.snow !== false;
-    document.getElementById('darkModeToggle').checked = settings.darkMode === true;
     document.getElementById('autoStartToggle').checked = settings.autoStart === true;
     
     applySettings(settings);
@@ -22,7 +21,6 @@ function saveSettings() {
         notifications: document.getElementById('notificationsToggle').checked,
         sound: document.getElementById('soundToggle').checked,
         snow: document.getElementById('snowToggle').checked,
-        darkMode: document.getElementById('darkModeToggle').checked,
         autoStart: document.getElementById('autoStartToggle').checked
     };
     
@@ -36,13 +34,6 @@ function applySettings(settings) {
     const snowfall = document.querySelector('.snowfall');
     if (snowfall) {
         snowfall.style.display = settings.snow !== false ? 'block' : 'none';
-    }
-    
-    // Dark mode
-    if (settings.darkMode) {
-        document.body.style.filter = 'invert(0.9) hue-rotate(180deg)';
-    } else {
-        document.body.style.filter = 'none';
     }
     
     // Store sound setting globally
@@ -65,7 +56,6 @@ function applySettings(settings) {
 document.getElementById('notificationsToggle').addEventListener('change', saveSettings);
 document.getElementById('soundToggle').addEventListener('change', saveSettings);
 document.getElementById('snowToggle').addEventListener('change', saveSettings);
-document.getElementById('darkModeToggle').addEventListener('change', saveSettings);
 document.getElementById('autoStartToggle').addEventListener('change', saveSettings);
 
 // Update login button and setup menu
