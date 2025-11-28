@@ -553,6 +553,17 @@ body {
     padding: 2rem 0;
     position: relative;
     z-index: 10;
+    margin-top: auto;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main, section {
+    flex: 1;
 }
 
 /* Responsive - Mobile App Style */
