@@ -196,6 +196,13 @@
     <script src="auth.js"></script>
     <script src="script.js"></script>
     <script>
+        // Redirect .html URLs to clean URLs
+        if (window.location.pathname.endsWith('.html')) {
+            const cleanPath = window.location.pathname.replace('.html', '');
+            window.location.replace(cleanPath + window.location.search + window.location.hash);
+        }
+    </script>
+    <script>
         // Hamburger Menu
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const hamburgerMenu = document.getElementById('hamburgerMenu');
