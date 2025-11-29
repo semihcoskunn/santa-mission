@@ -195,7 +195,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2rem;
+    padding: 0 0.5rem 0 0;
+    gap: 1rem;
 }
 
 .nav-right {
@@ -208,25 +209,16 @@ body {
 .logo {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
     transition: transform 0.3s ease;
     will-change: transform;
+    flex: 1;
 }
 
 .logo:hover {
     transform: scale(1.05);
 }
 
-.logo-icon {
-    font-size: 2.2rem;
-    animation: santaBounce 2s ease-in-out infinite;
-}
 
-@keyframes santaBounce {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    25% { transform: translateY(-5px) rotate(-5deg); }
-    75% { transform: translateY(-5px) rotate(5deg); }
-}
 
 .logo-text {
     font-family: 'Mountains of Christmas', cursive;
