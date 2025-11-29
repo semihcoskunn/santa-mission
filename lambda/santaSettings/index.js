@@ -58,7 +58,7 @@ exports.handler = async (event) => {
                 Item: {
                     userId,
                     notifications: notifications !== false,
-                    sound: sound !== false,
+                    sound: snow !== false,
                     snow: snow !== false,
                     autoStart: autoStart === true,
                     updatedAt: new Date().toISOString()
