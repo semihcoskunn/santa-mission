@@ -99,7 +99,7 @@ class LeaderboardManager {
 
     async loadLeaderboard() {
         try {
-            const response = await fetch('https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/leaderboard');
+            const response = await fetch('https://pmd3r077ml.execute-api.eu-central-1.amazonaws.com/prod/leaderboard');
             const rawData = await response.json();
             
             // Handle non-proxy response

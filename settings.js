@@ -6,7 +6,7 @@ if (!user) {
 // Load settings from database
 async function loadSettings() {
     try {
-        const response = await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/settings?userId=${user.userId}`);
+        const response = await fetch(`https://pmd3r077ml.execute-api.eu-central-1.amazonaws.com/prod/settings?userId=${user.userId}`);
         const data = await response.json();
         const settings = data.settings || {};
         
@@ -45,7 +45,7 @@ async function saveSettings() {
     
     // Save to database
     try {
-        await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/settings?userId=${user.userId}`, {
+        await fetch(`https://pmd3r077ml.execute-api.eu-central-1.amazonaws.com/prod/settings?userId=${user.userId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(settings)

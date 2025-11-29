@@ -30,7 +30,7 @@ exports.handler = async (event) => {
         if (event.httpMethod === 'GET') {
             const result = await docClient.send(new GetCommand({
                 TableName: 'SantaSettings',
-                Key: { userId }
+                Key: { userID: userId }
             }));
 
             const settings = result.Item || {
@@ -56,9 +56,9 @@ exports.handler = async (event) => {
             await docClient.send(new PutCommand({
                 TableName: 'SantaSettings',
                 Item: {
-                    userId,
+                    userID: userId,
                     notifications: notifications !== false,
-                    sound: snow !== false,
+                    sound: sound !== false,
                     snow: snow !== false,
                     autoStart: autoStart === true,
                     updatedAt: new Date().toISOString()

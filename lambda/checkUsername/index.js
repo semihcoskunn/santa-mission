@@ -5,11 +5,25 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
+    const headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+    };
+    
+    if (event.httpMethod === 'OPTIONS') {
+        return { statusCode: 200, headers, body: '' };
+    }
+    
     try {
-        const username = event.username;
+        const username = event.queryStringParameters?.username || event.params?.querystring?.username;
         
         if (!username) {
-            return { available: false, error: 'username required' };
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({ available: false, error: 'username required' })
+            };
         }
         
         const response = await docClient.send(new ScanCommand({
@@ -20,8 +34,16 @@ exports.handler = async (event) => {
             }
         }));
         
-        return { available: !response.Items || response.Items.length === 0 };
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({ available: !response.Items || response.Items.length === 0 })
+        };
     } catch (error) {
-        return { available: false, error: error.message };
+        return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ available: false, error: error.message })
+        };
     }
 };

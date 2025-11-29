@@ -75,7 +75,7 @@ async function loadProfile() {
             
             // Get daily quest streak from SantaQuests
             try {
-                const questsResponse = await fetch(`${API_URL}/quests?userId=${user.userId}`);
+                const questsResponse = await fetch(`${API_URL}/quest?userId=${user.userId}`);
                 const questsData = await questsResponse.json();
                 const quests = questsData.body ? JSON.parse(questsData.body).quests : questsData.quests;
                 currentStreak = quests?.currentStreak || 0;
@@ -98,7 +98,7 @@ async function loadProfile() {
             
             // Try to get streak even if leaderboard fails
             try {
-                const questsResponse = await fetch(`${API_URL}/quests?userId=${user.userId}`);
+                const questsResponse = await fetch(`${API_URL}/quest?userId=${user.userId}`);
                 const questsData = await questsResponse.json();
                 const quests = questsData.body ? JSON.parse(questsData.body).quests : questsData.quests;
                 currentStreak = quests?.currentStreak || 0;

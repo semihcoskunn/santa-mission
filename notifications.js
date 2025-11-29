@@ -6,7 +6,7 @@ if (!user) {
 // Load notifications from API
 async function loadNotifications() {
     try {
-        const response = await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/notifications?userId=${user.userId}`);
+        const response = await fetch(`https://pmd3r077ml.execute-api.eu-central-1.amazonaws.com/prod/notifications?userId=${user.userId}`);
         let data = await response.json();
         
         if (data.body) {
@@ -67,7 +67,7 @@ function getTimeAgo(timestamp) {
 
 async function deleteNotification(userId, timestamp) {
     try {
-        const response = await fetch('https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/notifications', {
+        const response = await fetch('https://pmd3r077ml.execute-api.eu-central-1.amazonaws.com/prod/notifications', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId, timestamp })

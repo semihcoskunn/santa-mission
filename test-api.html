@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        .test-section { background: white; padding: 20px; margin: 10px 0; border-radius: 10px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; background: #2ecc71; color: white; border: none; border-radius: 5px; }
+        button:hover { background: #27ae60; }
+        .result { margin-top: 10px; padding: 10px; background: #ecf0f1; border-radius: 5px; white-space: pre-wrap; font-family: monospace; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        h2 { color: #2c3e50; }
+    </style>
+</head>
+<body>
+    <h1>🎅 API Gateway Test - Lambda Proxy Integration</h1>
+    <p style="background: #fff3cd; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+        ⚠️ <strong>Önemli:</strong> Tüm endpoint'lerde <strong>Lambda Proxy Integration</strong> aktif olmalı!<br>
+        API Gateway Console → Her method → Integration Request → ✅ Use Lambda Proxy integration
+    </p>
+    
+    <button onclick="testAll()" style="background: #3498db; font-size: 16px; padding: 15px 30px; margin-bottom: 20px;">🚀 Tümünü Test Et</button>
+    
+    <div class="test-section">
+        <h2>1. GET /leaderboard</h2>
+        <p>Beklenen: <code>{"success": true, "leaderboard": [...]}</code></p>
+        <button onclick="testLeaderboard()">Test Et</button>
+        <div id="leaderboard-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. GET /user?userId=test123</h2>
+        <p>Beklenen: User objesi veya <code>{}</code></p>
+        <button onclick="testGetUser()">Test Et</button>
+        <div id="user-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. GET /check-username?username=testuser</h2>
+        <p>Beklenen: <code>{"available": true/false}</code></p>
+        <button onclick="testCheckUsername()">Test Et</button>
+        <div id="username-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. GET /quests?userId=test123</h2>
+        <p>Beklenen: <code>{"success": true, "quests": {...}}</code></p>
+        <button onclick="testGetQuests()">Test Et</button>
+        <div id="quests-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. GET /notifications?userId=test123</h2>
+        <p>Beklenen: <code>{"success": true, "notifications": [...]}</code></p>
+        <button onclick="testGetNotifications()">Test Et</button>
+        <div id="notifications-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>6. GET /settings?userId=test123</h2>
+        <p>Beklenen: <code>{"success": true, "settings": {...}}</code></p>
+        <button onclick="testGetSettings()">Test Et</button>
+        <div id="settings-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>7. POST /update-score</h2>
+        <p>Beklenen: <code>{"success": true}</code></p>
+        <button onclick="testUpdateScore()">Test Et</button>
+        <div id="score-result" class="result"></div>
+    </div>
+
+    <script>
+        const API_URL = 'https://pmd3r077ml.execute-api.eu-central-1.amazonaws.com/prod';
+
+        async function testAPI(name, url, options = {}) {
+            const resultDiv = document.getElementById(name + '-result');
+            resultDiv.textContent = '⏳ Test ediliyor...';
+            resultDiv.className = 'result';
+            
+            try {
+                const startTime = Date.now();
+                const response = await fetch(url, options);
+                const responseTime = Date.now() - startTime;
+                const data = await response.json();
+                
+                // Check if response has wrapped format (non-proxy)
+                const isWrapped = data.statusCode && data.headers && data.body;
+                
+                if (isWrapped) {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ Lambda Proxy Integration KAPALI!\n\nAPI Gateway non-proxy response döndürüyor.\nLütfen Integration Request'te "Use Lambda Proxy integration" kutusunu işaretle.\n\nResponse Time: ${responseTime}ms\nStatus: ${response.status}\n\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    resultDiv.className = 'result ' + (response.ok ? 'success' : 'error');
+                    resultDiv.textContent = `${response.ok ? '✅' : '❌'} Status: ${response.status}\nResponse Time: ${responseTime}ms\n\n${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Network Error: ${error.message}\n\nCORS veya API Gateway problemi olabilir.`;
+            }
+        }
+        
+        async function testAll() {
+            testLeaderboard();
+            await new Promise(r => setTimeout(r, 500));
+            testGetUser();
+            await new Promise(r => setTimeout(r, 500));
+            testCheckUsername();
+            await new Promise(r => setTimeout(r, 500));
+            testGetQuests();
+            await new Promise(r => setTimeout(r, 500));
+            testGetNotifications();
+            await new Promise(r => setTimeout(r, 500));
+            testGetSettings();
+            await new Promise(r => setTimeout(r, 500));
+            testUpdateScore();
+        }
+
+        function testLeaderboard() {
+            testAPI('leaderboard', `${API_URL}/leaderboard`);
+        }
+
+        function testGetUser() {
+            testAPI('user', `${API_URL}/user?userId=test123`);
+        }
+
+        function testCheckUsername() {
+            testAPI('username', `${API_URL}/check-username?username=testuser`);
+        }
+
+        function testGetQuests() {
+            testAPI('quests', `${API_URL}/quest?userId=test123`);
+        }
+
+        function testGetNotifications() {
+            testAPI('notifications', `${API_URL}/notifications?userId=test123`);
+        }
+
+        function testGetSettings() {
+            testAPI('settings', `${API_URL}/settings?userId=test123`);
+        }
+
+        function testUpdateScore() {
+            testAPI('score', `${API_URL}/update-score`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: 'test123', score: 50 })
+            });
+        }
+    </script>
+</body>
+</html>

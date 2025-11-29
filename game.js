@@ -83,7 +83,7 @@ class GameManager {
     async loadUserFromDatabase(userId) {
         try {
             // Liderlik tablosundan toplam skoru çek
-            const leaderboardResponse = await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/leaderboard`);
+            const leaderboardResponse = await fetch(`https://pmd3r077ml.execute-api.eu-central-1.amazonaws.com/prod/leaderboard`);
             const leaderboardData = await leaderboardResponse.json();
             const data = leaderboardData.body ? JSON.parse(leaderboardData.body) : leaderboardData;
             
@@ -192,7 +192,7 @@ class GameManager {
     
     async loadQuests() {
         try {
-            const response = await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/quests?userId=${this.userId}`);
+            const response = await fetch(`https://pmd3r077ml.execute-api.eu-central-1.amazonaws.com/prod/quest?userId=${this.userId}`);
             const data = await response.json();
             
             if (data.success && data.quests) {
@@ -248,7 +248,7 @@ class GameManager {
         
         if (questId) {
             try {
-                await fetch(`https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/quests?userId=${this.userId}`, {
+                await fetch(`https://pmd3r077ml.execute-api.eu-central-1.amazonaws.com/prod/quest?userId=${this.userId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ questId, progress: newProgress })
@@ -431,7 +431,7 @@ class GameManager {
         // Sadece kazanılan puanı kaydet
         try {
             const user = getCurrentUser();
-            await fetch('https://btmzk05gh8.execute-api.eu-central-1.amazonaws.com/prod/update-score', {
+            await fetch('https://pmd3r077ml.execute-api.eu-central-1.amazonaws.com/prod/update-score', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
