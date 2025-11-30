@@ -230,7 +230,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2rem 0 70px;
+    padding: 0 2rem 0 110px;
     gap: 1rem;
     position: relative;
 }
