@@ -188,15 +188,15 @@
 
         window.addEventListener('load', () => {
             const user = JSON.parse(localStorage.getItem('santa_user'));
+            currentUser = user;
+            
             if (!user || !user.userId) {
                 document.getElementById('friendsList').innerHTML = '<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.7);"><p style="font-size: 1.1rem;">Arkadaşlarını görmek için giriş yapmalısın.</p><button onclick="document.getElementById(\'loginModal\').classList.add(\'active\')" style="margin-top: 20px; padding: 12px 30px; border-radius: 25px; border: none; background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; font-weight: 600; cursor: pointer;">Giriş Yap</button></div>';
-                return;
+            } else {
+                setupUserMenu();
+                loadFriends();
+                setupSearch();
             }
-            
-            currentUser = user;
-            setupUserMenu();
-            loadFriends();
-            setupSearch();
         });
 
         function setupUserMenu() {
