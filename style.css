@@ -771,47 +771,70 @@ main, section {
     
     /* Compact Navbar */
     .navbar {
-        padding: 0.4rem 0;
+        padding: 0.6rem 0;
         background: rgba(255, 255, 255, 0.15);
     }
     
     .nav-container {
-        padding: 0 0.8rem;
+        padding: 0 1rem 0 60px;
         gap: 0.5rem;
     }
     
-    .logo {
-        gap: 0.3rem;
+    .hamburger-btn {
+        left: 10px;
+        padding: 10px 12px;
     }
     
-    .logo-icon {
-        font-size: 1.5rem;
+    .hamburger-btn span {
+        width: 22px;
+    }
+    
+    .logo {
+        flex: 1;
+        justify-content: flex-start;
     }
     
     .logo-text {
-        font-size: 1rem;
+        font-size: 1.2rem;
     }
     
     .nav-right {
-        gap: 0.4rem;
+        gap: 0.5rem;
+        flex-shrink: 0;
     }
     
-    .leaderboard-btn,
-    .login-btn,
+    .leaderboard-btn {
+        display: none;
+    }
+    
     .home-btn {
-        padding: 0.35rem 0.8rem;
-        font-size: 0.75rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
         min-width: auto;
-        border-radius: 20px;
+        width: auto;
     }
     
-    .login-btn::before {
-        font-size: 1rem;
-        left: 6px;
+    .login-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        min-width: auto;
+        width: auto;
+        white-space: nowrap;
     }
     
     .language-switcher {
         display: none;
+    }
+    
+    /* User Menu Mobile */
+    .user-menu {
+        position: fixed;
+        top: 60px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+        max-width: 320px;
+        margin: 0 auto;
     }
     
     /* Compact Score Display */
@@ -940,26 +963,25 @@ main, section {
 
 @media (max-width: 480px) {
     .navbar {
-        padding: 0.3rem 0;
+        padding: 0.5rem 0;
     }
     
     .nav-container {
-        padding: 0 0.6rem;
+        padding: 0 0.8rem 0 55px;
     }
     
     .logo-text {
-        display: none;
+        font-size: 1rem;
     }
     
-    .logo-icon {
-        font-size: 1.8rem;
-    }
-    
-    .leaderboard-btn,
-    .login-btn,
     .home-btn {
-        padding: 0.3rem 0.7rem;
-        font-size: 0.7rem;
+        padding: 0.45rem 0.9rem;
+        font-size: 0.8rem;
+    }
+    
+    .login-btn {
+        padding: 0.45rem 0.9rem;
+        font-size: 0.8rem;
     }
     
     .score-display {
