@@ -97,8 +97,8 @@ body {
 .hamburger-menu {
     position: fixed;
     top: 0;
-    left: -280px;
-    width: 280px;
+    left: -240px;
+    width: 240px;
     height: 100vh;
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(20px);
