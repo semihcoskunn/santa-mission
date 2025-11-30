@@ -714,6 +714,61 @@ main, section {
         -webkit-tap-highlight-color: transparent;
     }
     
+    /* Full Screen Hamburger Menu for Mobile */
+    .hamburger-menu {
+        width: 100%;
+        left: -100%;
+        background: rgba(30, 60, 114, 0.98);
+        backdrop-filter: blur(30px);
+    }
+    
+    .hamburger-menu.active {
+        left: 0;
+    }
+    
+    .menu-header {
+        padding: 24px 20px;
+        background: rgba(0, 0, 0, 0.2);
+    }
+    
+    .menu-header h3 {
+        font-size: 2rem;
+    }
+    
+    .close-menu {
+        width: 44px;
+        height: 44px;
+        font-size: 2.5rem;
+    }
+    
+    .menu-items {
+        padding: 20px 0;
+    }
+    
+    .menu-link {
+        padding: 18px 24px;
+        font-size: 1.1rem;
+        color: white;
+        border-left: 4px solid transparent;
+    }
+    
+    .menu-link:hover,
+    .menu-link:active {
+        background: rgba(255, 255, 255, 0.15);
+        border-left-color: #f4c430;
+        padding-left: 28px;
+    }
+    
+    .menu-link-icon {
+        font-size: 1.6rem;
+        width: 32px;
+    }
+    
+    .menu-divider {
+        background: rgba(255, 255, 255, 0.2);
+        margin: 12px 24px;
+    }
+    
     /* Compact Navbar */
     .navbar {
         padding: 0.4rem 0;
