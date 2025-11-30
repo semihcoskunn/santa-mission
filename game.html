@@ -20,24 +20,76 @@
     <!-- Fullscreen Button -->
     <button class="fullscreen-btn" id="fullscreenBtn" title="Tam Ekran">⛶</button>
 
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu" id="hamburgerMenu">
+        <div class="menu-header">
+            <h3>Menü</h3>
+            <button class="close-menu" id="closeMenu">&times;</button>
+        </div>
+        <div class="menu-items">
+            <a href="/" class="menu-link">
+                <span class="menu-link-icon">🏠</span>
+                <span>Ana Sayfa</span>
+            </a>
+            <a href="/game" class="menu-link">
+                <span class="menu-link-icon">🎮</span>
+                <span>Oyun</span>
+            </a>
+            <a href="/leaderboard" class="menu-link">
+                <span class="menu-link-icon">🏆</span>
+                <span>Liderlik Tablosu</span>
+            </a>
+            <a href="/friends" class="menu-link">
+                <span class="menu-link-icon">👥</span>
+                <span>Arkadaşlar</span>
+            </a>
+            <a href="/profile" class="menu-link">
+                <span class="menu-link-icon">👤</span>
+                <span>Profil</span>
+            </a>
+            <a href="/notifications" class="menu-link">
+                <span class="menu-link-icon">🔔</span>
+                <span>Bildirimler</span>
+            </a>
+            <a href="/settings" class="menu-link">
+                <span class="menu-link-icon">⚙️</span>
+                <span>Ayarlar</span>
+            </a>
+            <div class="menu-divider"></div>
+            <a href="/how-to-play" class="menu-link">
+                <span class="menu-link-icon">❓</span>
+                <span>Nasıl Oynanır</span>
+            </a>
+            <a href="/about" class="menu-link">
+                <span class="menu-link-icon">ℹ️</span>
+                <span>Hakkımızda</span>
+            </a>
+        </div>
+    </div>
+    
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
+            <button class="hamburger-btn" id="hamburgerBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
             <div class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
-                <span class="logo-icon">🎅</span>
                 <span class="logo-text">Santa'nın Gizli Görevi</span>
             </div>
             <div class="nav-right">
-                <button class="back-btn" onclick="window.location.href='/'">Ana Sayfa</button>
+                <button class="home-btn" onclick="window.location.href='/'">Ana Sayfa</button>
                 <button class="leaderboard-btn" onclick="window.location.href='/leaderboard'">Liderlik</button>
                 <button class="login-btn" id="loginBtn">Giriş Yap</button>
-                <script>(function(){const u=localStorage.getItem('santa_user');if(u){try{const d=JSON.parse(u);const n=d.firstName&&d.lastName?`${d.firstName} ${d.lastName}`:d.name;document.getElementById('loginBtn').textContent=n;document.getElementById('loginBtn').style.background='linear-gradient(135deg, #2ecc71, #27ae60)';}catch(e){}}})();</script>
+                
+                <!-- User Profile Menu -->
                 <div class="user-menu" id="userMenu" style="display: none;">
                     <div class="user-menu-header">
-                        <img src="" alt="Avatar" class="user-avatar" id="userAvatar">
+                        <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
                         <div class="user-info">
-                            <div class="user-name" id="userName"></div>
-                            <div class="user-email" id="userEmail"></div>
+                            <span class="user-name" id="userName"></span>
+                            <span class="user-email" id="userEmail"></span>
                         </div>
                     </div>
                     <div class="user-menu-items">
