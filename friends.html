@@ -12,6 +12,22 @@
 <body>
     <div class="snowfall"></div>
     
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h2>Hoş Geldin! 🎅</h2>
+            <p class="modal-subtitle">Arkadaşlarını görmek için giriş yap</p>
+            <div class="social-login-buttons">
+                <div id="g_id_onload"
+                     data-client_id="795368355462-ci2fsn6o37aig5do8670jm6sr3hr4786.apps.googleusercontent.com"
+                     data-callback="handleGoogleSignIn">
+                </div>
+                <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left"></div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Hamburger Menu -->
     <div class="hamburger-menu" id="hamburgerMenu">
         <div class="menu-header">
@@ -154,10 +170,26 @@
     <script>
         let currentUser = null;
 
+        // Login modal setup
+        const loginModal = document.getElementById('loginModal');
+        const closeModal = document.getElementById('closeModal');
+        
+        if (closeModal) {
+            closeModal.addEventListener('click', () => {
+                loginModal.classList.remove('active');
+            });
+            
+            loginModal.addEventListener('click', (e) => {
+                if (e.target === loginModal) {
+                    loginModal.classList.remove('active');
+                }
+            });
+        }
+
         window.addEventListener('load', () => {
             currentUser = getCurrentUser();
             if (!currentUser) {
-                window.location.href = '/';
+                document.getElementById('friendsList').innerHTML = '<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.7);"><p style="font-size: 1.1rem;">Arkadaşlarını görmek için giriş yapmalısın.</p><button onclick="document.getElementById(\'loginModal\').classList.add(\'active\')" style="margin-top: 20px; padding: 12px 30px; border-radius: 25px; border: none; background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; font-weight: 600; cursor: pointer;">Giriş Yap</button></div>';
                 return;
             }
 
