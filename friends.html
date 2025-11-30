@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arkadaşlar | Santa'nın Gizli Görevi</title>
+    <link rel="icon" type="image/png" href="logo/santas-secret-mission.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="redirect.js"></script>
+</head>
+<body>
+    <div class="snowfall"></div>
+    
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu" id="hamburgerMenu">
+        <div class="menu-header">
+            <h3>Menü</h3>
+            <button class="close-menu" id="closeMenu">&times;</button>
+        </div>
+        <div class="menu-items">
+            <a href="/" class="menu-link">
+                <span class="menu-link-icon">🏠</span>
+                <span>Ana Sayfa</span>
+            </a>
+            <a href="/game" class="menu-link">
+                <span class="menu-link-icon">🎮</span>
+                <span>Oyun</span>
+            </a>
+            <a href="/leaderboard" class="menu-link">
+                <span class="menu-link-icon">🏆</span>
+                <span>Liderlik Tablosu</span>
+            </a>
+            <a href="/friends" class="menu-link">
+                <span class="menu-link-icon">👥</span>
+                <span>Arkadaşlar</span>
+            </a>
+            <a href="/profile" class="menu-link">
+                <span class="menu-link-icon">👤</span>
+                <span>Profil</span>
+            </a>
+            <a href="/notifications" class="menu-link">
+                <span class="menu-link-icon">🔔</span>
+                <span>Bildirimler</span>
+            </a>
+            <a href="/settings" class="menu-link">
+                <span class="menu-link-icon">⚙️</span>
+                <span>Ayarlar</span>
+            </a>
+            <div class="menu-divider"></div>
+            <a href="/how-to-play" class="menu-link">
+                <span class="menu-link-icon">❓</span>
+                <span>Nasıl Oynanır</span>
+            </a>
+            <a href="/about" class="menu-link">
+                <span class="menu-link-icon">ℹ️</span>
+                <span>Hakkımızda</span>
+            </a>
+        </div>
+    </div>
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <button class="hamburger-btn" id="hamburgerBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
+                <span class="logo-text">Santa'nın Gizli Görevi</span>
+            </div>
+            <div class="nav-right">
+                <button class="home-btn" onclick="window.location.href='/'">Ana Sayfa</button>
+                <button class="leaderboard-btn" onclick="window.location.href='/leaderboard'">Liderlik</button>
+                <button class="login-btn" id="loginBtn">Giriş Yap</button>
+                
+                <!-- User Profile Menu -->
+                <div class="user-menu" id="userMenu" style="display: none;">
+                    <div class="user-menu-header">
+                        <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
+                        <div class="user-info">
+                            <span class="user-name" id="userName"></span>
+                            <span class="user-email" id="userEmail"></span>
+                        </div>
+                    </div>
+                    <div class="user-menu-items">
+                        <a href="#" class="menu-item" id="profileBtn">
+                            <span class="menu-icon">👤</span>
+                            <span>Profil</span>
+                        </a>
+                        <a href="#" class="menu-item" id="notificationsBtn">
+                            <span class="menu-icon">🔔</span>
+                            <span>Bildirimler</span>
+                            <span class="notification-badge">3</span>
+                        </a>
+                        <a href="#" class="menu-item" id="settingsBtn">
+                            <span class="menu-icon">⚙️</span>
+                            <span>Ayarlar</span>
+                        </a>
+                        <hr class="menu-divider">
+                        <a href="#" class="menu-item" id="logoutBtn">
+                            <span class="menu-icon">🚪</span>
+                            <span>Çıkış Yap</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="friends-section" style="padding: 120px 20px 60px; min-height: 100vh;">
+        <div class="container" style="max-width: 1000px; margin: 0 auto;">
+            <h1 style="font-family: 'Mountains of Christmas', cursive; font-size: 3rem; color: #fff; text-align: center; margin-bottom: 2rem;">👥 Arkadaşlar</h1>
+            
+            <!-- Add Friend Section -->
+            <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; margin-bottom: 30px;">
+                <h2 style="color: #fff; margin-bottom: 20px; text-align: center;">🔍 Arkadaş Ekle</h2>
+                <div style="display: flex; gap: 10px; max-width: 500px; margin: 0 auto;">
+                    <input type="text" id="searchInput" placeholder="E-posta veya kullanıcı adı ara..." style="flex: 1; padding: 12px 20px; border-radius: 25px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff; font-size: 1rem;">
+                    <button id="searchBtn" style="padding: 12px 30px; border-radius: 25px; border: none; background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; font-weight: 600; cursor: pointer;">Ara</button>
+                </div>
+                <div id="searchResults" style="margin-top: 20px;"></div>
+            </div>
+
+            <!-- Friends List -->
+            <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px;">
+                <h2 style="color: #fff; margin-bottom: 20px; text-align: center;">👥 Arkadaş Listem</h2>
+                <div id="friendsList" style="display: grid; gap: 15px;">
+                    <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.7);">
+                        <p style="font-size: 1.1rem;">Henüz arkadaşın yok. Yukarıdan arkadaş ekle!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
+                <a href="/how-to-play" style="color: #fff; text-decoration: none;">Nasıl Oynanır</a>
+                <a href="/privacy-policy" style="color: #fff; text-decoration: none;">Gizlilik Politikası</a>
+                <a href="/terms" style="color: #fff; text-decoration: none;">Kullanım Koşulları</a>
+                <a href="/contact" style="color: #fff; text-decoration: none;">İletişim</a>
+                <a href="/about" style="color: #fff; text-decoration: none;">Hakkımızda</a>
+            </div>
+            <p>© 2025 Santa'nın Gizli Görevi - Tüm hakları saklıdır</p>
+        </div>
+    </footer>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="auth.js"></script>
+    <script src="hamburger.js"></script>
+    <script src="common.js"></script>
+    <script>
+        let currentUser = null;
+
+        window.addEventListener('load', () => {
+            currentUser = getCurrentUser();
+            if (!currentUser) {
+                window.location.href = '/';
+                return;
+            }
+
+            setupUserMenu();
+            loadFriends();
+            setupSearch();
+        });
+
+        function setupUserMenu() {
+            const loginBtn = document.getElementById('loginBtn');
+            const userMenu = document.getElementById('userMenu');
+            
+            if (loginBtn && userMenu && currentUser) {
+                const fullName = currentUser.firstName && currentUser.lastName ? 
+                    `${currentUser.firstName} ${currentUser.lastName}` : currentUser.name;
+                loginBtn.textContent = fullName;
+                loginBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+                
+                document.getElementById('userAvatar').src = currentUser.photo;
+                document.getElementById('userName').textContent = fullName;
+                document.getElementById('userEmail').textContent = currentUser.email;
+                
+                loginBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    userMenu.style.display = userMenu.style.display === 'none' ? 'block' : 'none';
+                };
+                
+                document.addEventListener('click', (e) => {
+                    if (!userMenu.contains(e.target) && e.target !== loginBtn) {
+                        userMenu.style.display = 'none';
+                    }
+                });
+                
+                document.getElementById('profileBtn').onclick = (e) => {
+                    e.preventDefault();
+                    window.location.href = '/profile';
+                };
+                
+                document.getElementById('notificationsBtn').onclick = (e) => {
+                    e.preventDefault();
+                    window.location.href = '/notifications';
+                };
+                
+                document.getElementById('settingsBtn').onclick = (e) => {
+                    e.preventDefault();
+                    window.location.href = '/settings';
+                };
+                
+                document.getElementById('logoutBtn').onclick = (e) => {
+                    e.preventDefault();
+                    logout();
+                };
+            }
+        }
+
+        async function loadFriends() {
+            const friendsList = document.getElementById('friendsList');
+            friendsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #fff;">Yükleniyor...</div>';
+
+            try {
+                const response = await fetch(`https://pmd3r077ml.execute-api.eu-central-1.amazonaws.com/prod/friends?userId=${currentUser.userId}`);
+                const data = await response.json();
+                
+                if (data.friends && data.friends.length > 0) {
+                    friendsList.innerHTML = data.friends.map(friend => `
+                        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; display: flex; align-items: center; gap: 15px;">
+                            <img src="${friend.photo || ''}" alt="${friend.name}" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #2ecc71;">
+                            <div style="flex: 1;">
+                                <div style="color: #fff; font-weight: 600; font-size: 1.1rem;">${friend.name}</div>
+                                <div style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Puan: ${friend.total_score || 0}</div>
+                            </div>
+                            <button onclick="removeFriend('${friend.userId}')" style="padding: 8px 20px; border-radius: 20px; border: none; background: rgba(231,76,60,0.8); color: white; cursor: pointer;">Kaldır</button>
+                        </div>
+                    `).join('');
+                } else {
+                    friendsList.innerHTML = '<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.7);"><p style="font-size: 1.1rem;">Henüz arkadaşın yok. Yukarıdan arkadaş ekle!</p></div>';
+                }
+            } catch (error) {
+                friendsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #ff6b6b;">Arkadaşlar yüklenemedi.</div>';
+            }
+        }
+
+        function setupSearch() {
+            const searchBtn = document.getElementById('searchBtn');
+            const searchInput = document.getElementById('searchInput');
+
+            searchBtn.addEventListener('click', searchUsers);
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchUsers();
+            });
+        }
+
+        async function searchUsers() {
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            const query = searchInput.value.trim();
+
+            if (!query) return;
+
+            searchResults.innerHTML = '<div style="text-align: center; padding: 20px; color: #fff;">Aranıyor...</div>';
+
+            try {
+                const response = await fetch(`https://pmd3r077ml.execute-api.eu-central-1.amazonaws.com/prod/search-users?query=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                if (data.users && data.users.length > 0) {
+                    searchResults.innerHTML = data.users.map(user => `
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                            <img src="${user.photo || ''}" alt="${user.name}" style="width: 40px; height: 40px; border-radius: 50%;">
+                            <div style="flex: 1;">
+                                <div style="color: #fff; font-weight: 600;">${user.name}</div>
+                                <div style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">${user.email}</div>
+                            </div>
+                            <button onclick="addFriend('${user.userId}', '${user.name}')" style="padding: 8px 20px; border-radius: 20px; border: none; background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; cursor: pointer;">Ekle</button>
+                        </div>
+                    `).join('');
+                } else {
+                    searchResults.innerHTML = '<div style="text-align: center; padding: 20px; color: rgba(255,255,255,0.7);">Kullanıcı bulunamadı.</div>';
+                }
+            } catch (error) {
+                searchResults.innerHTML = '<div style="text-align: center; padding: 20px; color: #ff6b6b;">Arama başarısız.</div>';
+            }
+        }
+
+        async function addFriend(friendId, friendName) {
+            try {
+                const response = await fetch('https://pmd3r077ml.execute-api.eu-central-1.amazonaws.com/prod/friends', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: currentUser.userId,
+                        friendId: friendId
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert(`${friendName} arkadaş olarak eklendi!`);
+                    loadFriends();
+                    document.getElementById('searchResults').innerHTML = '';
+                    document.getElementById('searchInput').value = '';
+                }
+            } catch (error) {
+                alert('Arkadaş eklenemedi.');
+            }
+        }
+
+        async function removeFriend(friendId) {
+            if (!confirm('Bu arkadaşı kaldırmak istediğinize emin misiniz?')) return;
+
+            try {
+                const response = await fetch(`https://pmd3r077ml.execute-api.eu-central-1.amazonaws.com/prod/friends?userId=${currentUser.userId}&friendId=${friendId}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    loadFriends();
+                }
+            } catch (error) {
+                alert('Arkadaş kaldırılamadı.');
+            }
+        }
+    </script>
+</body>
+</html>
